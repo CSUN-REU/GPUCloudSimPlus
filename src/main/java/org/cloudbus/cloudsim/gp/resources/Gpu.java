@@ -1,23 +1,22 @@
 package org.cloudbus.cloudsim.gp.resources;
 
+import org.cloudbus.cloudsim.gp.core.AbstractGpu;
+import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
+import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisioner;
+import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.ResourceManageable;
+import org.gpucloudsimplus.listeners.GpuEventInfo;
+import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
 
-import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
-import org.gpucloudsimplus.listeners.GpuEventInfo;
-import org.cloudsimplus.listeners.EventListener;
-
-import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisioner;
-import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
-import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
-import org.cloudbus.cloudsim.gp.resources.GpuCore;
-import org.cloudbus.cloudsim.gp.core.AbstractGpu;
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import java.util.List;
+import java.util.Set;
 
 public interface Gpu extends ChangeableId, Comparable<Gpu>, AbstractGpu,
 GpuResourceStatsComputer<GpuResourceStats> {

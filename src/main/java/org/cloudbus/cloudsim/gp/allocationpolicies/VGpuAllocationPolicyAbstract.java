@@ -1,11 +1,15 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static java.util.Objects.requireNonNull;

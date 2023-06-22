@@ -1,10 +1,16 @@
 package org.cloudbus.cloudsim.gp.resources;
 
-import java.util.*;
-import java.util.function.Predicate;
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
-
+import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
+import org.cloudbus.cloudsim.gp.provisioners.CoreProvisioner;
+import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisioner;
+import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisionerSimple;
+import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
+import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuSchedulerSpaceShared;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
+import org.cloudbus.cloudsim.gp.vgpu.VGpuStateHistoryEntry;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
+import org.cloudbus.cloudsim.gp.videocards.VideocardSimple;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
@@ -16,20 +22,19 @@ import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.util.BytesConversion;
 import org.cloudsimplus.util.TimeUtil;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
-
 import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
 
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
-import org.cloudbus.cloudsim.gp.vgpu.VGpuStateHistoryEntry;
-import org.cloudbus.cloudsim.gp.videocards.VideocardSimple;
-import org.cloudbus.cloudsim.gp.provisioners.CoreProvisioner;
-import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
-import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
-import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisioner;
-import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuSchedulerSpaceShared;
-import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisionerSimple;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 public class GpuSimple implements Gpu {
 	

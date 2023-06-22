@@ -1,6 +1,7 @@
 package org.cloudbus.cloudsim.gp.resources;
 
 import org.cloudbus.cloudsim.gp.core.GResourceStats;
+
 import java.util.function.Function;
  
 public class GpuResourceStats extends GResourceStats<Gpu> {

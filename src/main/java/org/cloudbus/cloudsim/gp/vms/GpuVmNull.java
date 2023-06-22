@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.gp.vms;
 
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-
 import org.cloudsimplus.autoscaling.HorizontalVmScaling;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.brokers.DatacenterBroker;

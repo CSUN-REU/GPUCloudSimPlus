@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.gp.schedulers.gputask;
 
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
-import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
 
 import java.io.Serial;
 import java.util.List;

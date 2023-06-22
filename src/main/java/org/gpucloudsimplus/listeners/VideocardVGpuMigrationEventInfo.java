@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.listeners;
 
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudsimplus.listeners.EventListener;
 
 

@@ -1,14 +1,13 @@
 package org.cloudbus.cloudsim.gp.vgpu;
 
-import org.cloudbus.cloudsim.gp.vms.GpuVm;
-import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.core.AbstractGpu;
-import org.cloudbus.cloudsim.gp.resources.VGpuCore;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
+import org.cloudbus.cloudsim.gp.core.AbstractGpu;
 import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
+import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudbus.cloudsim.gp.resources.VGpuCore;
 import org.cloudbus.cloudsim.gp.schedulers.gputask.GpuTaskScheduler;
-
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
+import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;

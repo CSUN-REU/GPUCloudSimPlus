@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.listeners;
 
-import org.cloudsimplus.listeners.EventListener;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.listeners.EventListener;
 
 public interface VGpuGpuEventInfo extends VGpuEventInfo, GpuEventInfo {
 	

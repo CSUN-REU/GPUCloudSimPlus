@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.gp.schedulers.gpucloudlet;
 
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
-
 import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.cloudlets.CloudletExecution;
 import org.cloudsimplus.listeners.CloudletResourceAllocationFailEventInfo;

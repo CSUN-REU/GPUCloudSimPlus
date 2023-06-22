@@ -1,16 +1,15 @@
 package org.cloudbus.cloudsim.gp.cloudlets.gputasks;
 
+import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.ResourceManageable;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.gpucloudsimplus.listeners.GpuTaskVGpuEventInfo;
-import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
-import org.cloudsimplus.listeners.EventListener;
-
-import java.util.*;
+import java.util.List;
 
 public interface GpuTask extends Comparable<GpuTask> {
 	

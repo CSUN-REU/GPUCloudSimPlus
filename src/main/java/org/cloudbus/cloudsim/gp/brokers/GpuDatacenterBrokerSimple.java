@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.gp.brokers;
 
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
+import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.VmCreation;

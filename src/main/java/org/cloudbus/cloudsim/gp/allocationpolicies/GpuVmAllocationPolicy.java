@@ -1,12 +1,8 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.function.BiFunction;
 // extends VmAllocationPolicy
 public interface GpuVmAllocationPolicy extends VmAllocationPolicy {
 	

@@ -1,24 +1,22 @@
 package org.cloudbus.cloudsim.gp.videocards;
 
-import org.cloudbus.cloudsim.gp.provisioners.VideocardBwProvisioner;
-import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicySimple;
 import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicy;
-//import org.gpucloudsimplus.listeners.VideocardVGpuMigrationEventInfo;
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.gp.resources.GpuSimple;
-//import org.cloudbus.cloudsim.gp.vms.GpuVm;
-//import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudsimplus.core.Simulation;
-import org.gpucloudsimplus.listeners.GpuEventInfo;
-import org.cloudsimplus.listeners.EventListener;
-import org.cloudbus.cloudsim.gp.resources.Gpu;
-//import org.cloudbus.cloudsim.gp.resources.GpuSimple;
-//import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenterSimple;
+import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicySimple;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
+import org.cloudbus.cloudsim.gp.provisioners.VideocardBwProvisioner;
+import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudbus.cloudsim.gp.resources.GpuSimple;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.listeners.EventListener;
+import org.gpucloudsimplus.listeners.GpuEventInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
-//import java.util.function.Predicate;
+
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.cloudsimplus.util.BytesConversion.bitsToBytes;

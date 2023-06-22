@@ -1,14 +1,14 @@
 package org.cloudbus.cloudsim.gp.schedulers.gputask;
 
-import java.util.List;
-import java.util.Collections;
-
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
+
+import java.util.Collections;
+import java.util.List;
 
 public class GpuTaskSchedulerNull implements GpuTaskScheduler {
 

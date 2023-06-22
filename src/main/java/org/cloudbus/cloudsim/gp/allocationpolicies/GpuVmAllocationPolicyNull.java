@@ -1,17 +1,19 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import java.util.*;
-import java.util.function.BiFunction;
-
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSuitability;
 import org.cloudsimplus.vms.Vm;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 final class GpuVmAllocationPolicyNull implements GpuVmAllocationPolicy {
 

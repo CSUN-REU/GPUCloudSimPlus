@@ -3,8 +3,8 @@ package org.cloudbus.cloudsim.gp.provisioners;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudsimplus.resources.ResourceManageable;
 
-import java.util.function.Function;
 import java.util.Objects;
+import java.util.function.Function;
 
 
 public abstract class GpuResourceProvisionerAbstract implements GpuResourceProvisioner {

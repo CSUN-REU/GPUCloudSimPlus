@@ -1,14 +1,10 @@
 package org.cloudbus.cloudsim.gp.hosts;
 
 import org.cloudbus.cloudsim.gp.videocards.Videocard;
-
-import java.util.*;
-
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.vms.Vm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.util.stream.Stream;
+
+import java.util.List;
 
 public interface GpuHost extends Host {
 	

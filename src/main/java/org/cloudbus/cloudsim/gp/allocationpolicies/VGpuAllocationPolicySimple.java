@@ -1,13 +1,13 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import java.util.stream.*;
+import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.autoscaling.VerticalVmScaling;
+
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiFunction;
-
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudsimplus.autoscaling.VerticalVmScaling;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 

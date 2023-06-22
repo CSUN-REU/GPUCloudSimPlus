@@ -1,9 +1,5 @@
 package org.cloudbus.cloudsim.gp.datacenters;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.stream.Stream;
-
 import org.cloudbus.cloudsim.gp.allocationpolicies.GpuVmAllocationPolicy;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
 import org.cloudsimplus.core.SimEntity;
@@ -19,6 +15,10 @@ import org.cloudsimplus.power.PowerAware;
 import org.cloudsimplus.power.models.PowerModelDatacenter;
 import org.cloudsimplus.resources.DatacenterStorage;
 import org.cloudsimplus.vms.Vm;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 final class GpuDatacenterNull implements GpuDatacenter, SimEntityNullBase {
 

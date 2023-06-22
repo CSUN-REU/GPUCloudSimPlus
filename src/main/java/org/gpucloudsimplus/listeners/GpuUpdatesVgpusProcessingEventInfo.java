@@ -1,6 +1,5 @@
 package org.gpucloudsimplus.listeners;
 
-import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudsimplus.listeners.EventListener;
 

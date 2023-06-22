@@ -1,9 +1,9 @@
 package org.cloudbus.cloudsim.gp.resources;
 
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.core.AbstractGpu;
 import org.cloudbus.cloudsim.gp.provisioners.GpuResourceProvisioner;
 import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
@@ -13,9 +13,9 @@ import org.cloudsimplus.resources.ResourceManageable;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
 import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.Collections;
 
 
 final class GpuNull implements Gpu {

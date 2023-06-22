@@ -1,15 +1,17 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
-
-import java.util.*;
-
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 public interface VGpuAllocationPolicy {

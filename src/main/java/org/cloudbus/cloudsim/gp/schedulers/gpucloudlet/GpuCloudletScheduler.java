@@ -2,8 +2,9 @@ package org.cloudbus.cloudsim.gp.schedulers.gpucloudlet;
 
 import org.cloudsimplus.schedulers.cloudlet.CloudletScheduler;
 import org.slf4j.Logger;
-import java.io.Serializable;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 
 public interface GpuCloudletScheduler extends Serializable, CloudletScheduler {

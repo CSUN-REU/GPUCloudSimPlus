@@ -1,10 +1,9 @@
 package org.cloudbus.cloudsim.gp.schedulers.gputask;
 
-import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
-import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
+import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-
+import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.Ram;
 import org.cloudsimplus.resources.ResourceManageable;
@@ -13,17 +12,23 @@ import org.cloudsimplus.util.Conversion;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.collectingAndThen;
-import static org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo.of;
-
-import java.util.function.BiPredicate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import java.util.*;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+import static org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo.of;
 
 
 public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {

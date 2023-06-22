@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.gp.vms;
 
 
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.schedulers.gpucloudlet.GpuCloudletScheduler;
+import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
 

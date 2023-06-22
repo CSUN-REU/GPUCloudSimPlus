@@ -2,7 +2,6 @@ package org.cloudbus.cloudsim.gp.schedulers.vgpu;
 
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-
 import org.cloudsimplus.schedulers.MipsShare;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

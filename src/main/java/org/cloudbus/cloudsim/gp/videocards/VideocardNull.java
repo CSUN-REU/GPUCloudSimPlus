@@ -1,17 +1,17 @@
 package org.cloudbus.cloudsim.gp.videocards;
 
-import java.util.*;
-import java.util.stream.Stream;
-
 import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicy;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-import org.cloudsimplus.core.Simulation;
 import org.cloudbus.cloudsim.gp.provisioners.VideocardBwProvisioner;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-
+import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class VideocardNull implements Videocard {
 

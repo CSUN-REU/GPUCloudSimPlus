@@ -1,45 +1,17 @@
 package org.cloudbus.cloudsim.gp.hosts;
 
 
-import org.cloudsimplus.core.AbstractMachine;
-import org.cloudsimplus.core.ResourceStatsComputer;
-import org.cloudsimplus.hosts.Host;
-import org.cloudsimplus.hosts.HostSimple;
-import org.cloudsimplus.hosts.HostStateHistoryEntry;
-import org.cloudsimplus.listeners.EventListener;
-import org.cloudsimplus.listeners.HostEventInfo;
-import org.cloudsimplus.listeners.HostUpdatesVmsProcessingEventInfo;
-
-import org.cloudbus.cloudsim.gp.vms.GpuVm;
-import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
-import org.cloudbus.cloudsim.gp.videocards.Videocard;
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
-import org.cloudbus.cloudsim.gp.videocards.VideocardSimple;
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenterSimple;
 import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicy;
 import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicySimple;
-import org.cloudsimplus.power.models.PowerModelHost;
+import org.cloudbus.cloudsim.gp.videocards.Videocard;
+import org.cloudsimplus.core.AbstractMachine;
+import org.cloudsimplus.hosts.HostSimple;
 import org.cloudsimplus.provisioners.ResourceProvisioner;
-import org.cloudsimplus.resources.FileStorage;
 import org.cloudsimplus.resources.HarddriveStorage;
 import org.cloudsimplus.resources.Pe;
-import org.cloudsimplus.resources.Ram;
-import org.cloudsimplus.resources.Resource;
-import org.cloudsimplus.resources.ResourceManageable;
-import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.util.BytesConversion;
-import org.cloudsimplus.util.TimeUtil;
-import org.cloudsimplus.vms.HostResourceStats;
-import org.cloudsimplus.vms.Vm;
-import org.cloudsimplus.vms.VmStateHistoryEntry;
 
-import java.util.*;
-import java.util.stream.Stream;
-import java.util.function.Predicate;
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
-import static org.cloudbus.cloudsim.gp.hosts.GpuHost.DEF_IDLE_SHUTDOWN_DEADLINE;
+import java.util.List;
 
 //  extends HostSimple 
 public class GpuHostSimple extends HostSimple implements GpuHost {

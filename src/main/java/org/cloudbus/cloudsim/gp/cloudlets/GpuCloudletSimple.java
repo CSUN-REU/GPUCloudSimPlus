@@ -4,8 +4,6 @@ import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudsimplus.cloudlets.CloudletSimple;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 
-import java.util.Objects;
-
 public class GpuCloudletSimple extends CloudletSimple implements GpuCloudlet {
 	
 	private GpuTask gpuTask;

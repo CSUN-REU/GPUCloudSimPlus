@@ -4,8 +4,7 @@ import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.cloudlets.CloudletExecution;
 
 import java.io.Serial;
-
-import java.util.*;
+import java.util.List;
 
 public class GpuCloudletSchedulerTimeShared extends GpuCloudletSchedulerAbstract {
 	@Serial

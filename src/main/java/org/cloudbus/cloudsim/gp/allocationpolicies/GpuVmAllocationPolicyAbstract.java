@@ -1,12 +1,10 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
+import org.cloudbus.cloudsim.gp.hosts.GpuHost;
+import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
-
-import org.cloudbus.cloudsim.gp.vms.GpuVm;
-import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSuitability;
@@ -14,7 +12,11 @@ import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.vms.Vm;
 
 import javax.annotation.processing.Processor;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import static java.util.Objects.requireNonNull;

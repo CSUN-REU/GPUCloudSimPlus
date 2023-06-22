@@ -1,7 +1,6 @@
 package org.cloudbus.cloudsim.gp.brokers;
 
 import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
-
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.VmCreation;
 import org.cloudsimplus.cloudlets.Cloudlet;
@@ -9,15 +8,15 @@ import org.cloudsimplus.core.SimEntity;
 import org.cloudsimplus.core.SimEntityNullBase;
 import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.listeners.DatacenterBrokerEventInfo;
-import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.EventInfo;
+import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.vms.Vm;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.Collections;
 
 final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNullBase {
 	

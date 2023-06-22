@@ -1,8 +1,9 @@
 package org.cloudbus.cloudsim.gp.hosts;
 
-import java.util.Objects;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
 import org.cloudsimplus.hosts.HostSuitability;
+
+import java.util.Objects;
 
 public final class GpuHostSuitability {
     public static final GpuHostSuitability NULL = new GpuHostSuitability();
