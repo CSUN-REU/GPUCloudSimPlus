@@ -2,7 +2,8 @@ package org.cloudbus.cloudsim.gp.resources;
 
 import org.cloudbus.cloudsim.gp.provisioners.CoreProvisioner;
 import org.cloudbus.cloudsim.gp.provisioners.CoreProvisionerSimple;
-import org.cloudbus.cloudsim.resources.ResourceManageableAbstract;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.resources.ResourceManageableAbstract;
 
 import java.util.Objects;
 
@@ -45,8 +46,9 @@ public class GpuCoreSimple extends ResourceManageableAbstract implements GpuCore
     }
 
     @Override
-    public final void setId (final long id) {
+    public final ChangeableId setId (final long id) {
         this.id = id;
+        return null;
     }
 
     @Override

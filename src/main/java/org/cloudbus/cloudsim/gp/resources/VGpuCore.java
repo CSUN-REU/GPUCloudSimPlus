@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.gp.resources;
 
-import org.cloudbus.cloudsim.resources.ResourceManageableAbstract;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.resources.ResourceManageableAbstract;
 
 public final class VGpuCore extends ResourceManageableAbstract {
 	public static final VGpuCore NULL = new VGpuCore(0);

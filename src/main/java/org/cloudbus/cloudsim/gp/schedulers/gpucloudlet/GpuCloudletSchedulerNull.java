@@ -2,13 +2,13 @@ package org.cloudbus.cloudsim.gp.schedulers.gpucloudlet;
 
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
 
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.cloudlets.CloudletExecution;
-import org.cloudbus.cloudsim.schedulers.cloudlet.network.CloudletTaskScheduler;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.cloudlets.CloudletExecution;
 import org.cloudsimplus.listeners.CloudletResourceAllocationFailEventInfo;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.schedulers.MipsShare;
+import org.cloudsimplus.schedulers.cloudlet.network.CloudletTaskScheduler;
+import org.cloudsimplus.vms.Vm;
 
 import java.io.Serial;
 import java.util.Collections;
@@ -34,6 +34,12 @@ final class GpuCloudletSchedulerNull implements GpuCloudletScheduler {
     @Override public <T extends Cloudlet> List<T> getCloudletSubmittedList () { 
     	return Collections.emptyList(); 
     }
+
+    @Override
+    public boolean isCloudletSubmittedListEnabled() {
+        return false;
+    }
+
     @Override public GpuCloudletScheduler enableCloudletSubmittedList () { return this; }
     @Override public double getCurrentRequestedBwPercentUtilization () { return 0.0; }
     @Override public double getCurrentRequestedRamPercentUtilization () { return 0.0; }
@@ -46,7 +52,7 @@ final class GpuCloudletSchedulerNull implements GpuCloudletScheduler {
     }
     @Override public void setTaskScheduler (CloudletTaskScheduler taskScheduler) {/**/}
     @Override public boolean isThereTaskScheduler () { return false; }
-    @Override public double updateProcessing (double currentTime, MipsShare mipsShare) { 
+    @Override public double updateProcessing (double currentTime, MipsShare mipsShare) {
     	return 0.0;
     }
     @Override public Vm getVm () { return Vm.NULL; }

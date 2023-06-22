@@ -1,13 +1,6 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import org.cloudbus.cloudsim.allocationpolicies.VmAllocationPolicy;
-import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
-//import org.cloudbus.cloudsim.gp.hosts.GpuHostSuitability;
-import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-import org.cloudbus.cloudsim.gp.vms.GpuVm;
-
-import org.cloudbus.cloudsim.hosts.HostSuitability;
-import org.cloudsimplus.autoscaling.VerticalVmScaling;
+import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.function.BiFunction;
 // extends VmAllocationPolicy
-public interface GpuVmAllocationPolicy extends VmAllocationPolicy{
+public interface GpuVmAllocationPolicy extends VmAllocationPolicy {
 	
     Logger LOGGER = LoggerFactory.getLogger(GpuVmAllocationPolicy.class.getSimpleName());
 

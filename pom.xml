@@ -25,7 +25,30 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <minimizeJar>false</minimizeJar>
+                    <filters>
+                        <filter>
+                            <artifact>org.cloudsimplus:cloudsim-plus</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     
@@ -40,12 +63,8 @@
     		<groupId>org.cloudsimplus</groupId>
     		<artifactId>cloudsim-plus</artifactId>
     		<!-- Set a specific version or use the latest one -->
-    		<version>7.3.0</version>
-		</dependency>
-		<dependency>
-    		<groupId>org.apache.commons</groupId>
-    		<artifactId>commons-collections4</artifactId>
-    		<version>4.4</version>
+    		<version>8.0.0</version>
+            <scope>compile</scope>
 		</dependency>
     </dependencies>
 

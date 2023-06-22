@@ -2,8 +2,8 @@ package org.cloudbus.cloudsim.gp.provisioners;
 
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.resources.GpuCore;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.resources.ResourceManageable;
 
 import java.util.Objects;
 

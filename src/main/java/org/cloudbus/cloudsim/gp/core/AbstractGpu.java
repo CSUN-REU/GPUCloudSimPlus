@@ -1,9 +1,9 @@
 package org.cloudbus.cloudsim.gp.core;
 
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.core.ChangeableId;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.Resourceful;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.Resourceful;
 
 //  <T extends Resource>
 public interface AbstractGpu extends ChangeableId, Resourceful {
@@ -22,7 +22,7 @@ public interface AbstractGpu extends ChangeableId, Resourceful {
 
     double getTotalMipsCapacity ();
 
-    Simulation getSimulation ();
+    Simulation getSimulation();
 
     double getStartTime ();
 
@@ -36,13 +36,13 @@ public interface AbstractGpu extends ChangeableId, Resourceful {
         return getIdleInterval() >= time;
     }
 
-    default double getIdleInterval () {
+    default double getIdleInterval() {
         return getSimulation().clock() - getLastBusyTime();
     }
 
-    double getLastBusyTime ();
+    double getLastBusyTime();
 
-    default boolean isIdle () {
+    default boolean isIdle() {
         return getIdleInterval() > 0;
     }
 

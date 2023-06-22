@@ -4,23 +4,21 @@ import java.util.List;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.cloudbus.cloudsim.core.SimEntityNullBase;
-import org.cloudbus.cloudsim.core.CloudSimTag;
-import org.cloudbus.cloudsim.core.SimEntity;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.core.events.SimEvent;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.datacenters.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.datacenters.TimeZoned;
 import org.cloudbus.cloudsim.gp.allocationpolicies.GpuVmAllocationPolicy;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.power.models.PowerModelDatacenter;
-import org.cloudbus.cloudsim.resources.DatacenterStorage;
-import org.cloudbus.cloudsim.vms.Vm;
+import org.cloudsimplus.core.SimEntity;
+import org.cloudsimplus.core.SimEntityNullBase;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.datacenters.DatacenterCharacteristics;
+import org.cloudsimplus.datacenters.TimeZoned;
+import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.listeners.DatacenterVmMigrationEventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.HostEventInfo;
+import org.cloudsimplus.power.PowerAware;
+import org.cloudsimplus.power.models.PowerModelDatacenter;
+import org.cloudsimplus.resources.DatacenterStorage;
+import org.cloudsimplus.vms.Vm;
 
 final class GpuDatacenterNull implements GpuDatacenter, SimEntityNullBase {
 
@@ -43,6 +41,8 @@ final class GpuDatacenterNull implements GpuDatacenter, SimEntityNullBase {
 	@Override public DatacenterCharacteristics getCharacteristics () {
 		return DatacenterCharacteristics.NULL;
 	}
+	@Override public Datacenter setCharacteristics(DatacenterCharacteristics datacenterCharacteristics) { return null; }
+
 	@Override public DatacenterStorage getDatacenterStorage () { return STORAGE; }
 	@Override public void setDatacenterStorage (DatacenterStorage datacenterStorage) { /**/ }
 	@Override public double getBandwidthPercentForMigration () { return 0; }
@@ -61,11 +61,13 @@ final class GpuDatacenterNull implements GpuDatacenter, SimEntityNullBase {
 	@Override public Datacenter setHostSearchRetryDelay (double delay) { return this; }
 	@Override public int compareTo (SimEntity o) { return 0; }
 	@Override public PowerModelDatacenter getPowerModel () { return PowerModelDatacenter.NULL; }
-	@Override public void setPowerModel (PowerModelDatacenter powerModel) { /**/ }
+	@Override public PowerAware<PowerModelDatacenter> setPowerModel (PowerModelDatacenter powerModel) { /**/
+		return null;
+	}
 	@Override public double getTimeZone () { return Integer.MAX_VALUE; }
 	@Override public TimeZoned setTimeZone (double timeZone) { return  this; }
 
-	@Override public GpuVmAllocationPolicy getVmAllocationPolicy () { 
+	@Override public GpuVmAllocationPolicy getVmAllocationPolicy () {
 		return GpuVmAllocationPolicy.NULL;}
 	
 }

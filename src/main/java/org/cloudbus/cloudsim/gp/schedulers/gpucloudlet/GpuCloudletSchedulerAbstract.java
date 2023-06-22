@@ -1,15 +1,5 @@
 package org.cloudbus.cloudsim.gp.schedulers.gpucloudlet;
 
-import org.cloudbus.cloudsim.resources.Ram;
-import org.cloudbus.cloudsim.util.Conversion;
-import org.cloudbus.cloudsim.core.CloudSimTag;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.cloudlets.CloudletExecution;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.schedulers.cloudlet.CloudletSchedulerAbstract;
-import org.cloudbus.cloudsim.schedulers.cloudlet.network.CloudletTaskScheduler;
-
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
@@ -17,6 +7,7 @@ import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 
 import org.cloudsimplus.listeners.CloudletResourceAllocationFailEventInfo;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerAbstract;
 
 import java.io.Serial;
 import java.util.*;
@@ -32,7 +23,7 @@ import static java.util.stream.Collectors.toList;
 import static org.cloudsimplus.listeners.CloudletResourceAllocationFailEventInfo.of;
 
 
-public abstract class GpuCloudletSchedulerAbstract extends CloudletSchedulerAbstract 
+public abstract class GpuCloudletSchedulerAbstract extends CloudletSchedulerAbstract
 implements GpuCloudletScheduler {
 	
 	/*@Serial

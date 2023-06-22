@@ -6,12 +6,11 @@ import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
 
 import java.util.*;
+
+import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.function.BiFunction;
-
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 public interface VGpuAllocationPolicy {
 
@@ -44,7 +43,7 @@ public interface VGpuAllocationPolicy {
      *                is being requested to be scaled
      * @return true if the requested resource was scaled, false otherwise
      */
-    //boolean scaleVmVertically (VerticalVmScaling scaling);
+    boolean scaleVmVertically (VerticalVmScaling scaling);
 
     void deallocateGpuForVGpu (VGpu vgpu);
 

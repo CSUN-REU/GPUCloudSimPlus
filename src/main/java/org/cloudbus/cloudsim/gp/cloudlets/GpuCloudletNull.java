@@ -1,25 +1,25 @@
 package org.cloudbus.cloudsim.gp.cloudlets;
 
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModel;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudsimplus.listeners.CloudletVmEventInfo;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.core.CustomerEntity;
-import org.cloudsimplus.listeners.EventListener;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.vms.Vm;
-
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.CustomerEntity;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.listeners.CloudletVmEventInfo;
+import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.utilizationmodels.UtilizationModel;
+import org.cloudsimplus.vms.Vm;
 
-import java.util.*;
-
+import java.util.Collections;
+import java.util.List;
 
 public class GpuCloudletNull implements GpuCloudlet {
 	
-	@Override public void setId(long id) {/**/}
+	@Override public ChangeableId setId(long id) { return null; }
     @Override public long getId() {
         return -1;
     }
@@ -66,9 +66,12 @@ public class GpuCloudletNull implements GpuCloudlet {
     @Override public int getNetServiceLevel() {
         return 0;
     }
-    @Override public long getNumberOfPes() {
+
+    @Override
+    public long getPesNumber() {
         return 0;
     }
+
     @Override public List<String> getRequiredFiles() {
         return Collections.emptyList();
     }
@@ -77,7 +80,7 @@ public class GpuCloudletNull implements GpuCloudlet {
     }
     @Override public boolean isReturnedToBroker() { return false; }
     @Override public long getJobId() { return 0; }
-    @Override public void setJobId(long jobId) {/**/}
+    @Override public Cloudlet setJobId(long jobId) { return null; }
     @Override public UtilizationModel getUtilizationModelBw() {
         return UtilizationModel.NULL;
     }
@@ -133,11 +136,16 @@ public class GpuCloudletNull implements GpuCloudlet {
     @Override public boolean setStatus(Status newStatus) {
         return false;
     }
-    @Override public void setNetServiceLevel(int netServiceLevel) {/**/}
-    @Override public GpuCloudlet setNumberOfPes(long numberOfPes) {
-        return GpuCloudlet.NULL;
+    @Override public Cloudlet setNetServiceLevel(int netServiceLevel) { return GpuCloudlet.NULL; }
+
+    @Override
+    public Cloudlet setPesNumber(long l) {
+        return null;
     }
-    @Override public void setBroker(DatacenterBroker broker) {/**/}
+
+    @Override public CustomerEntity setBroker(DatacenterBroker broker) {/**/
+        return null;
+    }
     @Override public DatacenterBroker getBroker() {
         return DatacenterBroker.NULL;
     }
@@ -156,24 +164,16 @@ public class GpuCloudletNull implements GpuCloudlet {
     @Override public GpuCloudlet setVm(Vm vm) {
         return GpuCloudlet.NULL;
     }
-    @Override public boolean removeOnFinishListener(EventListener<CloudletVmEventInfo> listener) { 
-    	return false; }
-    @Override public GpuCloudlet addOnFinishListener(EventListener<CloudletVmEventInfo> listener) { 
-    	return GpuCloudlet.NULL; }
     @Override public void notifyOnUpdateProcessingListeners(double time) {/**/}
     @Override public Simulation getSimulation() {
         return Simulation.NULL;
     }
-    @Override public void setLastTriedDatacenter(Datacenter lastTriedDatacenter) {/**/}
+    @Override public CustomerEntity setLastTriedDatacenter(Datacenter lastTriedDatacenter) { return null; }
     @Override public Datacenter getLastTriedDatacenter() { return Datacenter.NULL; }
     @Override public double getArrivedTime() { return 0; }
-    @Override public CustomerEntity setArrivedTime(double time) { return this; }
+    @Override public void setArrivedTime(double time) { /**/ }
     @Override public double getCreationTime() { return 0; }
     @Override public double getWaitTime() { return 0; }
-    @Override public boolean removeOnUpdateProcessingListener(
-    		EventListener<CloudletVmEventInfo> listener) { return false; }
-    @Override public GpuCloudlet addOnUpdateProcessingListener(
-    		EventListener<CloudletVmEventInfo> listener) { return GpuCloudlet.NULL; }
     @Override public double getSubmissionDelay() { return 0; }
     @Override public boolean isDelayed() { return false; }
     @Override public void setSubmissionDelay(double submissionDelay) {/**/}
@@ -188,10 +188,37 @@ public class GpuCloudletNull implements GpuCloudlet {
         return false;
     }
     @Override public void setExecStartTime(double clockTime) {/**/}
-    @Override public GpuCloudlet addOnStartListener(EventListener<CloudletVmEventInfo> listener) { 
-    	return this; }
-    @Override public boolean removeOnStartListener(EventListener<CloudletVmEventInfo> listener) { 
-    	return false; }
+
+    @Override
+    public Cloudlet addOnStartListener(org.cloudsimplus.listeners.EventListener<CloudletVmEventInfo> eventListener) {
+        return null;
+    }
+
+    @Override
+    public boolean removeOnStartListener(org.cloudsimplus.listeners.EventListener<CloudletVmEventInfo> eventListener) {
+        return false;
+    }
+
+    @Override
+    public Cloudlet addOnUpdateProcessingListener(org.cloudsimplus.listeners.EventListener<CloudletVmEventInfo> eventListener) {
+        return GpuCloudlet.NULL;
+    }
+
+    @Override
+    public boolean removeOnUpdateProcessingListener(org.cloudsimplus.listeners.EventListener<CloudletVmEventInfo> eventListener) {
+        return false;
+    }
+
+    @Override
+    public Cloudlet addOnFinishListener(EventListener<CloudletVmEventInfo> eventListener) {
+        return GpuCloudlet.NULL;
+    }
+
+    @Override
+    public boolean removeOnFinishListener(EventListener<CloudletVmEventInfo> eventListener) {
+        return false;
+    }
+
     @Override public double registerArrivalInDatacenter() {
         return -1;
     }

@@ -1,7 +1,8 @@
 package org.cloudbus.cloudsim.gp.cloudlets.gputasks;
 
-import org.cloudbus.cloudsim.util.Conversion;
-import org.cloudbus.cloudsim.core.Simulation;
+
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.util.Conversion;
 
 public class GpuTaskExecution {
 	

@@ -8,21 +8,20 @@ import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.resources.GpuSimple;
 //import org.cloudbus.cloudsim.gp.vms.GpuVm;
 //import org.cloudbus.cloudsim.hosts.Host;
+import org.cloudsimplus.core.Simulation;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 //import org.cloudbus.cloudsim.gp.resources.GpuSimple;
 //import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenterSimple;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-import org.cloudbus.cloudsim.core.Simulation;
-//import org.cloudbus.cloudsim.gp.core.GpuCloudsimTags;
-import static org.cloudbus.cloudsim.util.BytesConversion.bitesToBytes;
 
 import java.util.*;
 import java.util.stream.Stream;
 //import java.util.function.Predicate;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
+import static org.cloudsimplus.util.BytesConversion.bitsToBytes;
 
 public class VideocardSimple implements Videocard {
 	
@@ -413,7 +412,7 @@ public class VideocardSimple implements Videocard {
     }*/
 	
 	private double timeToMigrateVGpu (final VGpu vgpu, final Gpu targetGpu) {
-        return vgpu.getGddram().getCapacity() / bitesToBytes(targetGpu.getBw().getCapacity() * 
+        return vgpu.getGddram().getCapacity() / bitsToBytes(targetGpu.getBw().getCapacity() *
         		getBandwidthPercentForMigration());
     }
 

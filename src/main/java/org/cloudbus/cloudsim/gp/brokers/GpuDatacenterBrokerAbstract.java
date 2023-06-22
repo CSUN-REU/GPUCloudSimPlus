@@ -6,28 +6,30 @@ import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudbus.cloudsim.gp.datacenters.TimeZoned;
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
 import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
-//import org.cloudbus.cloudsim.gp.core.GpuCloudsimTags;
 import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
-import org.cloudbus.cloudsim.util.InvalidEventDataTypeException;
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModel;
-import org.cloudbus.cloudsim.core.events.CloudSimEvent;
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.core.events.SimEvent;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.core.*;
-import org.cloudbus.cloudsim.vms.Vm;
 
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.CloudSimEntity;
+import org.cloudsimplus.core.CloudSimPlus;
+import org.cloudsimplus.core.CloudSimTag;
+import org.cloudsimplus.core.CustomerEntity;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.core.events.CloudSimEvent;
+import org.cloudsimplus.core.events.SimEvent;
+import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.listeners.DatacenterBrokerEventInfo;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.EventInfo;
+import org.cloudsimplus.util.InvalidEventDataTypeException;
+import org.cloudsimplus.utilizationmodels.UtilizationModel;
+import org.cloudsimplus.vms.Vm;
 
 import java.util.ArrayList;
-//import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -35,7 +37,7 @@ import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity implements 
+public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity implements
 GpuDatacenterBroker {
 	
 	private static final Function<GpuVm, Double> DEF_GPUVM_DESTRUCTION_DELAY_FUNC = 
@@ -83,7 +85,7 @@ GpuDatacenterBroker {
     private boolean shutdownWhenIdle;
     private boolean gpuvmCreationRetrySent;
     
-	public GpuDatacenterBrokerAbstract (final CloudSim simulation, final String name) {
+	public GpuDatacenterBrokerAbstract (final CloudSimPlus simulation, final String name) {
 		super (simulation);
 		if(!name.isEmpty()) {
             setName(name);
@@ -118,7 +120,7 @@ GpuDatacenterBroker {
 	
 	@Override
     public final GpuDatacenterBroker setVmMapper (final Function<Cloudlet, Vm> vmMapper) {
-		return setGpuVmMapper ((Function)vmMapper);
+		return setGpuVmMapper((Function)vmMapper);
     }
 	
 	public final GpuDatacenterBroker setGpuVmMapper (final Function<GpuCloudlet, GpuVm> vmMapper) {
@@ -152,7 +154,7 @@ GpuDatacenterBroker {
     }
 	
 	@Override
-    public final GpuDatacenterBroker setDatacenterMapper (final BiFunction<Datacenter, Vm, 
+    public final GpuDatacenterBroker setDatacenterMapper (final BiFunction<Datacenter, Vm,
     		Datacenter> datacenterMapper) {
         return setGpuDatacenterMapper((BiFunction)datacenterMapper);
     }
@@ -213,7 +215,7 @@ GpuDatacenterBroker {
                 continue;
             }
 
-            ((GpuVmSimple) lastSelectedGpuVm).removeExpectedFreePesNumber(cloudlet.getNumberOfPes());
+            ((GpuVmSimple) lastSelectedGpuVm).removeExpectedFreePesNumber(cloudlet.getPesNumber());
             ((VGpuSimple) lastSelectedGpuVm.getVGpu()).removeExpectedFreeCoresNumber(
             		cloudlet.getGpuTask().getNumberOfCores());
             
@@ -619,7 +621,7 @@ GpuDatacenterBroker {
     }
     
     @Override
-    public boolean isRetryFailedVms () {
+    public boolean isRetryFailedVms() {
         return failedGpuVmsRetryDelay > 0;
     }
     
@@ -743,7 +745,7 @@ GpuDatacenterBroker {
         final GpuCloudlet cloudlet = (GpuCloudlet) evt.getData();
         
         gpucloudletsFinishedList.add(cloudlet);
-        ((GpuVmSimple) cloudlet.getVm()).addExpectedFreePesNumber(cloudlet.getNumberOfPes());
+        ((GpuVmSimple) cloudlet.getVm()).addExpectedFreePesNumber(cloudlet.getPesNumber());
         ((VGpuSimple) cloudlet.getGpuTask().getVGpu()).addExpectedFreeCoresNumber(
         		cloudlet.getGpuTask().getNumberOfCores());
         
@@ -971,12 +973,12 @@ GpuDatacenterBroker {
     }
     
     @Override
-    public double getFailedVmsRetryDelay () {
+    public double getFailedVmsRetryDelay() {
         return failedGpuVmsRetryDelay;
     }
 
     @Override
-    public void setFailedVmsRetryDelay (final double failedVmsRetryDelay) {
+    public void setFailedVmsRetryDelay(final double failedVmsRetryDelay) {
         this.failedGpuVmsRetryDelay = failedVmsRetryDelay;
     }
 
@@ -997,7 +999,7 @@ GpuDatacenterBroker {
     }
     
     @Override
-    public Function<Vm, Double> getVmDestructionDelayFunction () {
+    public Function<Vm, Double> getVmDestructionDelayFunction() {
         return (Function<Vm, Double>) getGpuVmDestructionDelayFunction();
     }
 
@@ -1036,7 +1038,7 @@ GpuDatacenterBroker {
     @Override
     public void startInternal () {
         LOGGER.info("{} is starting...", getName());
-        schedule(getSimulation().getCloudInfoService(), 0, CloudSimTag.DC_LIST_REQUEST);
+        schedule(getSimulation().getCis(), 0, CloudSimTag.DC_LIST_REQUEST);
     }
     
     @Override
@@ -1054,8 +1056,9 @@ GpuDatacenterBroker {
     }
     
     @Override
-    public void setCloudletComparator (final Comparator<Cloudlet> comparator) {
+    public GpuDatacenterBroker setCloudletComparator (final Comparator<Cloudlet> comparator) {
         this.gpucloudletComparator = (Comparator)comparator;
+        return this;
     }
 
     @Override

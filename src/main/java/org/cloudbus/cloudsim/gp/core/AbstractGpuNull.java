@@ -1,11 +1,9 @@
 package org.cloudbus.cloudsim.gp.core;
 
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-
-import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +32,7 @@ final class AbstractGpuNull implements AbstractGpu {
     @Override public AbstractGpu setStartTime(double startTime) { return this; }
     @Override public double getLastBusyTime() { return 0; }
     @Override public boolean isIdle() { return true; }
-    @Override public void setId(long id) {/**/}
+    @Override public ChangeableId setId(long id) { return null; }
     @Override public long getId() {
         return 0;
     }

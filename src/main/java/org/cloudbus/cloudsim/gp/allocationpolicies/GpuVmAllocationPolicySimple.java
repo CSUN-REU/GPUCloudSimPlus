@@ -1,10 +1,9 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-//import org.cloudbus.cloudsim.gp.hosts.GpuHost;
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.allocationpolicies.VmAllocationPolicy;
+import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
+import org.cloudsimplus.hosts.Host;
+import org.cloudsimplus.vms.Vm;
 
 import java.util.*;
 import java.util.function.BiFunction;

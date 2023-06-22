@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.gp.provisioners;
 
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -90,7 +90,7 @@ public class VideocardBwProvisionerSimple implements VideocardBwProvisioner {
     }
     
     @Override 
-    public boolean isSuitableForGpu (final Gpu gpu, final Resource resource) { 
+    public boolean isSuitableForGpu (final Gpu gpu, final Resource resource) {
     	return isSuitableForGpu(gpu, resource.getCapacity()); 
     }
     

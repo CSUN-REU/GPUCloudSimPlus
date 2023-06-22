@@ -6,7 +6,7 @@ import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import java.util.List;
 import java.util.Objects;
 
-import static org.cloudbus.cloudsim.util.TimeUtil.hoursToMinutes;
+import static org.cloudsimplus.util.TimeUtil.hoursToMinutes;
 
 public interface TimeZoned {
     int MIN_TIME_ZONE_OFFSET = -12;

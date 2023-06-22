@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.gp.vms;
 
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.vms.Vm;
+import org.cloudsimplus.vms.Vm;
 
 public interface GpuVm extends Vm {
 	

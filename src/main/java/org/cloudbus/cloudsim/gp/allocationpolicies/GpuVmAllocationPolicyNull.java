@@ -4,21 +4,20 @@ import java.util.*;
 import java.util.function.BiFunction;
 
 import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
-//import org.cloudbus.cloudsim.gp.hosts.GpuHostSuitability;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
 
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.hosts.HostSuitability;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
+import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
-import org.cloudbus.cloudsim.allocationpolicies.VmAllocationPolicy;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.hosts.Host;
+import org.cloudsimplus.hosts.HostSuitability;
+import org.cloudsimplus.vms.Vm;
 
 final class GpuVmAllocationPolicyNull implements GpuVmAllocationPolicy {
 
-	@Override public GpuDatacenter getDatacenter () { return GpuDatacenter.NULL; }
+	@Override public Datacenter getDatacenter () { return Datacenter.NULL; }
 
-	@Override public void setDatacenter (Datacenter datacenter) { /**/ }
+	@Override public GpuVmAllocationPolicy setDatacenter (Datacenter datacenter) { return GpuVmAllocationPolicy.NULL; }
 	@Override public HostSuitability allocateHostForVm (Vm vm) {
 		return HostSuitability.NULL;
 	}
@@ -30,16 +29,14 @@ final class GpuVmAllocationPolicyNull implements GpuVmAllocationPolicy {
 	}
 	@Override public boolean scaleVmVertically (VerticalVmScaling scaling) { return false; }
 	@Override public void deallocateHostForVm (Vm vm) { /**/ }
-	@Override public void setFindHostForVmFunction (
-			BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) { 
-		/**/ 
-	}
+	@Override public GpuVmAllocationPolicy setFindHostForVmFunction (
+			BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) { return GpuVmAllocationPolicy.NULL; }
 	@Override public List<GpuHost> getHostList () { return Collections.emptyList(); }
 	@Override public Map<Vm, Host> getOptimizedAllocationMap (List<? extends Vm> gpuvmList) { 
 		return Collections.emptyMap(); }
 	@Override public Optional<Host> findHostForVm (Vm vm) { return Optional.empty(); }
 	@Override public boolean isVmMigrationSupported () { return false; }
 	@Override public int getHostCountForParallelSearch () { return 0; }
-	@Override public void setHostCountForParallelSearch (int gpuHostCountForParallelSearch) { /**/ }
+	@Override public GpuVmAllocationPolicy setHostCountForParallelSearch (int gpuHostCountForParallelSearch) { return GpuVmAllocationPolicy.NULL; }
 	
 }

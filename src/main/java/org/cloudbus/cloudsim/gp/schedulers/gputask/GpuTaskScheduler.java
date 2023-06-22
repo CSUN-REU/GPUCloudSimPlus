@@ -3,10 +3,10 @@ package org.cloudbus.cloudsim.gp.schedulers.gputask;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
 
 import org.cloudsimplus.listeners.EventListener;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
 
 import java.io.Serializable;
 import java.util.*;

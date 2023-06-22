@@ -1,12 +1,12 @@
 package org.cloudbus.cloudsim.gp.resources;
 
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.ResourceManageable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
 
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.core.ChangeableId;
-import org.cloudbus.cloudsim.core.Simulation;
 import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
 import org.cloudsimplus.listeners.EventListener;
@@ -19,7 +19,7 @@ import org.cloudbus.cloudsim.gp.resources.GpuCore;
 import org.cloudbus.cloudsim.gp.core.AbstractGpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
-public interface Gpu extends ChangeableId, Comparable<Gpu>, AbstractGpu, 
+public interface Gpu extends ChangeableId, Comparable<Gpu>, AbstractGpu,
 GpuResourceStatsComputer<GpuResourceStats> {
 	//, ResourceManageable
     Logger LOGGER = LoggerFactory.getLogger(Gpu.class.getSimpleName());

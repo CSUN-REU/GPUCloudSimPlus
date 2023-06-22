@@ -1,10 +1,12 @@
 package org.cloudbus.cloudsim.gp.brokers;
 
-import org.cloudbus.cloudsim.core.CloudSim;
-
 import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.brokers.VmCreation;
+import org.cloudsimplus.core.CloudSimPlus;
+import org.cloudsimplus.datacenters.Datacenter;
 
 
 public class GpuDatacenterBrokerSimple extends GpuDatacenterBrokerAbstract {
@@ -12,11 +14,11 @@ public class GpuDatacenterBrokerSimple extends GpuDatacenterBrokerAbstract {
 	private int lastSelectedGpuVmIndex;
     private int lastSelectedGpuDcIndex;
 
-    public GpuDatacenterBrokerSimple (final CloudSim simulation) {
+    public GpuDatacenterBrokerSimple (final CloudSimPlus simulation) {
         this(simulation, "");
     }
 
-    public GpuDatacenterBrokerSimple (final CloudSim simulation, final String name) {
+    public GpuDatacenterBrokerSimple (final CloudSimPlus simulation, final String name) {
         super(simulation, name);
         this.lastSelectedGpuVmIndex = -1;
         this.lastSelectedGpuDcIndex = -1;
@@ -55,4 +57,21 @@ public class GpuDatacenterBrokerSimple extends GpuDatacenterBrokerAbstract {
         return getGpuVmFromCreatedList(lastSelectedGpuVmIndex);
     }
 
+    @Override
+    public VmCreation getVmCreation() {
+        // TODO: Implement
+        return null;
+    }
+
+    @Override
+    public DatacenterBroker setLastSelectedDc(Datacenter datacenter) {
+        // TODO: Implement
+        return null;
+    }
+
+    @Override
+    public Datacenter getLastSelectedDc() {
+        // TODO: Implement
+        return null;
+    }
 }

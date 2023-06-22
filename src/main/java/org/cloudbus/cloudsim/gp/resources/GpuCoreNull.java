@@ -2,6 +2,7 @@ package org.cloudbus.cloudsim.gp.resources;
 
 import org.cloudbus.cloudsim.gp.provisioners.CoreProvisioner;
 import org.cloudbus.cloudsim.gp.provisioners.CoreProvisionerSimple;
+import org.cloudsimplus.core.ChangeableId;
 
 final class GpuCoreNull implements GpuCore {
     @Override public long getAvailableResource () {
@@ -64,5 +65,7 @@ final class GpuCoreNull implements GpuCore {
     @Override public boolean isFailed() { return true; }
     @Override public boolean isFree() { return false; }
     @Override public boolean isBusy() { return false; }
-    @Override public void setId(long id) {/**/}
+    @Override public ChangeableId setId(long id) {/**/
+        return null;
+    }
 }

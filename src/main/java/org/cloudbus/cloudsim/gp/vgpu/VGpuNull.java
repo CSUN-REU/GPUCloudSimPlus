@@ -7,20 +7,22 @@ import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.schedulers.gputask.GpuTaskScheduler;
 
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.VGpuGpuEventInfo;
 import org.gpucloudsimplus.listeners.VGpuVideocardEventInfo;
 import org.cloudsimplus.listeners.EventListener;
-
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
 
 import java.util.*;
 
 public class VGpuNull implements VGpu {
 	
-	@Override public void setId (long id) {/**/}
+	@Override public ChangeableId setId (long id) {/**/
+        return null;
+    }
     @Override public long getId () {
         return -1;
     }

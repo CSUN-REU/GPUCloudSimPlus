@@ -5,17 +5,16 @@ import java.util.function.Predicate;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
-
-import org.cloudbus.cloudsim.resources.Ram;
-import org.cloudbus.cloudsim.util.TimeUtil;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.Bandwidth;
-import org.cloudbus.cloudsim.util.BytesConversion;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.resources.Bandwidth;
+import org.cloudsimplus.resources.Ram;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.schedulers.MipsShare;
+import org.cloudsimplus.util.BytesConversion;
+import org.cloudsimplus.util.TimeUtil;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
 
 import org.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
@@ -173,9 +172,10 @@ public class GpuSimple implements Gpu {
     }
 	
 	@Override 
-	public final void setId (long id) {
+	public final ChangeableId setId (long id) {
 		this.id = id;
-	}
+        return null;
+    }
 	@Override 
 	public long getId () {
         return id;

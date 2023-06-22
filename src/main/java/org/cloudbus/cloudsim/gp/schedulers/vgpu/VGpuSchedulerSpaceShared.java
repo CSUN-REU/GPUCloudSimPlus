@@ -3,7 +3,7 @@ package org.cloudbus.cloudsim.gp.schedulers.vgpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
 import org.cloudbus.cloudsim.gp.resources.GpuCore;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
+import org.cloudsimplus.schedulers.MipsShare;
 
 import java.util.*;
 

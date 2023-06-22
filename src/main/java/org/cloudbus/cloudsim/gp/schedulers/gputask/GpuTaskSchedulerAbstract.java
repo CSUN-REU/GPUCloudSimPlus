@@ -6,13 +6,12 @@ import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.resources.Ram;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.schedulers.MipsShare;
+import org.cloudsimplus.util.Conversion;
+import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
-
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModel;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.util.Conversion;
-import org.cloudbus.cloudsim.resources.Ram;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -420,7 +419,7 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
                     available > 0 ?
                     String.format("just %d was available", available):
                     "no amount is available.";
-            final String msg2 = vgpuResource.getClass() == Ram.class ? 
+            final String msg2 = vgpuResource.getClass() == Ram.class ?
             		". Using Virtual Memory," : ",";
             LOGGER.warn(
                 "{}: {}: {} requested {} {} of {} but {}{} which delays Cloudlet processing.",
@@ -446,7 +445,7 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
     				vgpu.getSimulation().clock()));
         }
     }
-    
+
 	@Override
     public GpuTaskScheduler addOnGpuTaskResourceAllocationFail (
     		final EventListener<GpuTaskResourceAllocationFailEventInfo> listener) {

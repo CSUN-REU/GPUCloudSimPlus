@@ -1,25 +1,5 @@
 package org.cloudbus.cloudsim.gp.datacenters;
 
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.util.MathUtil;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.core.CloudSimTag;
-import org.cloudbus.cloudsim.network.IcmpPacket;
-import org.cloudbus.cloudsim.core.CloudSimEntity;
-import org.cloudbus.cloudsim.core.events.SimEvent;
-import org.cloudbus.cloudsim.resources.SanStorage;
-import org.cloudbus.cloudsim.hosts.HostSuitability;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.core.events.PredicateType;
-import org.cloudbus.cloudsim.core.CustomerEntityAbstract;
-import org.cloudbus.cloudsim.resources.DatacenterStorage;
-import org.cloudbus.cloudsim.power.models.PowerModelDatacenter;
-import org.cloudbus.cloudsim.util.InvalidEventDataTypeException;
-import org.cloudbus.cloudsim.datacenters.DatacenterCharacteristics;
-import org.cloudbus.cloudsim.power.models.PowerModelDatacenterSimple;
-import org.cloudbus.cloudsim.datacenters.DatacenterCharacteristicsSimple;
-
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
 import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
@@ -30,20 +10,45 @@ import org.cloudbus.cloudsim.gp.vgpu.VGpuSimple;
 import org.cloudbus.cloudsim.gp.allocationpolicies.GpuVmAllocationPolicy;
 import org.cloudbus.cloudsim.gp.allocationpolicies.GpuVmAllocationPolicySimple;
 
+import org.cloudsimplus.core.CloudSimEntity;
+import org.cloudsimplus.core.CloudSimTag;
+import org.cloudsimplus.core.CustomerEntityAbstract;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.core.events.PredicateType;
+import org.cloudsimplus.core.events.SimEvent;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.datacenters.DatacenterCharacteristics;
+import org.cloudsimplus.datacenters.DatacenterCharacteristicsSimple;
+import org.cloudsimplus.datacenters.DatacenterSimple;
+import org.cloudsimplus.datacenters.TimeZoned;
+import org.cloudsimplus.hosts.Host;
+import org.cloudsimplus.hosts.HostSuitability;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.HostEventInfo;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.faultinjection.HostFaultInjection;
 import org.cloudsimplus.listeners.DatacenterVmMigrationEventInfo;
+import org.cloudsimplus.network.IcmpPacket;
+import org.cloudsimplus.power.PowerAware;
+import org.cloudsimplus.power.models.PowerModelDatacenter;
+import org.cloudsimplus.power.models.PowerModelDatacenterSimple;
+import org.cloudsimplus.resources.DatacenterStorage;
+import org.cloudsimplus.resources.SanStorage;
+import org.cloudsimplus.util.InvalidEventDataTypeException;
+import org.cloudsimplus.util.MathUtil;
+import org.cloudsimplus.vms.Vm;
 
+import javax.management.ReflectionException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
-import static org.cloudbus.cloudsim.util.BytesConversion.bitesToBytes;
+import static org.cloudsimplus.util.BytesConversion.bitsToBytes;
 
-public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter {
+public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacenter {
 
     private double lastUnderOrOverloadedDetection = -Double.MAX_VALUE;
     private double bandwidthPercentForMigration;
@@ -70,7 +75,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     private PowerModelDatacenter powerModel = PowerModelDatacenter.NULL;
     private long activeHostsNumber;
 
-    public GpuDatacenterSimple (final Simulation simulation, 
+    public GpuDatacenterSimple (final Simulation simulation,
     		final List<? extends GpuHost> hostList) {
         this(simulation, hostList, new GpuVmAllocationPolicySimple(), new DatacenterStorage());
     }
@@ -93,7 +98,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     
     public GpuDatacenterSimple (final Simulation simulation, final List<? extends GpuHost> hostList,
     		final GpuVmAllocationPolicy gpuVmAllocationPolicy, final DatacenterStorage storage) {
-        super(simulation);
+        super(simulation, hostList, gpuVmAllocationPolicy, storage);
         setGpuHostList(hostList);
         setLastProcessTime(0.0);
         setSchedulingInterval(0);
@@ -102,7 +107,19 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
 
         this.onGpuHostAvailableListeners = new ArrayList<>();
         this.onGpuVmMigrationFinishListeners = new ArrayList<>();
-        this.characteristics = new DatacenterCharacteristicsSimple(this);
+
+        DatacenterCharacteristicsSimple datacenterCharacteristicsSimple = null;
+
+        try {
+            Constructor<DatacenterCharacteristicsSimple> constructor = DatacenterCharacteristicsSimple.class
+                    .getDeclaredConstructor(Datacenter.class);
+            constructor.setAccessible(true);
+            datacenterCharacteristicsSimple = constructor.newInstance(this);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+
+        this.characteristics = datacenterCharacteristicsSimple;
         this.bandwidthPercentForMigration = DEF_BW_PERCENT_FOR_MIGRATION;
         this.migrationsEnabled = true;
         this.gpuhostSearchRetryDelay = -1;
@@ -116,7 +133,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     		final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
         requireNonNull(gpuVmAllocationPolicy);
         if(gpuVmAllocationPolicy.getDatacenter() != null && 
-        		gpuVmAllocationPolicy.getDatacenter() != Datacenter.NULL && 
+        		gpuVmAllocationPolicy.getDatacenter() != Datacenter.NULL &&
         		!this.equals(gpuVmAllocationPolicy.getDatacenter())){
             throw new IllegalStateException("The given GpuVmAllocationPolicy is already used by "
             		+ "another Datacenter.");
@@ -137,11 +154,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         for (final GpuHost host : gpuhostList)
             lastGpuHostId = setupGpuHost (host, lastGpuHostId);
     }
-    
-    protected double getLastProcessTime() {
-        return lastProcessTime;
-    }
-    
+
     private long getLastGpuHostId () {
         return gpuhostList.isEmpty() ? -1 : gpuhostList.get(gpuhostList.size()-1).getId();
     }
@@ -167,7 +180,12 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         LOGGER.trace("{}: {}: Unknown event {} received.", getSimulation().clockStr(), 
         		this, evt.getTag());
     }
-    
+
+    @Override
+    public boolean schedule(CloudSimTag tag) {
+        return super.schedule(tag);
+    }
+
     private boolean processGpuHostEvents(final SimEvent evt) {
         if (evt.getTag() == CloudSimTag.HOST_ADD) {
             processGpuHostAdditionRequest(evt);
@@ -211,7 +229,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         /*If the Host was found in this Datacenter, cancel the message sent to others
         * Datacenters to try to find the Host for removal.*/
         getSimulation().cancelAll(
-            getSimulation().getCloudInfoService(),
+            getSimulation().getCis(),
             evt -> MathUtil.same(evt.getTime(), srcEvt.getTime()) &&
                    evt.getTag() == CloudSimTag.HOST_REMOVE &&
                    (long)evt.getData() == host.getId());
@@ -376,11 +394,6 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         return isMigrationsEnabled() && elapsedSecs >= gpuhostSearchRetryDelay;
     }
 
-    
-    protected final void setLastProcessTime(final double lastProcessTime) {
-        this.lastProcessTime = lastProcessTime;
-    }
-    
     protected double updateGpuHostsProcessing () {
         double nextSimulationDelay = Double.MAX_VALUE;
         for (final Host host : getHostList()) {
@@ -635,11 +648,6 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
 
         sendNow(cloudlet.getBroker(), CloudSimTag.CLOUDLET_SUBMIT_ACK, cloudlet);
     }
-    
-    @Override
-    public double getHostSearchRetryDelay() {
-        return gpuhostSearchRetryDelay;
-    }
 
     @Override
     public Datacenter setHostSearchRetryDelay(final double delay) {
@@ -650,28 +658,8 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         }
 
         this.gpuhostSearchRetryDelay = delay;
+        super.setHostSearchRetryDelay(delay);
         return this;
-    }
-    
-    @Override
-    public PowerModelDatacenter getPowerModel() {
-        return powerModel;
-    }
-
-    @Override
-    public final void setPowerModel(final PowerModelDatacenter powerModel) {
-        requireNonNull(powerModel,
-            "powerModel cannot be null. You could provide a " +
-            PowerModelDatacenter.class.getSimpleName() + ".NULL instead");
-
-        if (powerModel.getDatacenter() != null && 
-        		powerModel.getDatacenter() != Datacenter.NULL && 
-        		!this.equals(powerModel.getDatacenter())){
-            throw new IllegalStateException("The given PowerModel is already assigned to another "
-            		+ "Datacenter. Each Datacenter must have its own PowerModel instance.");
-        }
-
-        this.powerModel = powerModel;
     }
     
     @Override
@@ -679,7 +667,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         return migrationsEnabled && gpuVmAllocationPolicy.isVmMigrationSupported();
     }
 
-    @Override
+    /*@Override
     public final Datacenter enableMigrations() {
         if(!gpuVmAllocationPolicy.isVmMigrationSupported()){
             LOGGER.warn(
@@ -691,24 +679,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
 
         this.migrationsEnabled = true;
         return this;
-    }
-
-    @Override
-    public final Datacenter disableMigrations() {
-        this.migrationsEnabled = false;
-        return this;
-    }
-    
-    @Override
-    public DatacenterStorage getDatacenterStorage() {
-        return this.datacenterStorage;
-    }
-
-    @Override
-    public final void setDatacenterStorage(final DatacenterStorage datacenterStorage) {
-        datacenterStorage.setDatacenter(this);
-        this.datacenterStorage = datacenterStorage;
-    }
+    }*/
     
     @Override
     public void requestVmMigration(final Vm sourceVm) {
@@ -748,11 +719,10 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     }
     
     private double timeToMigrateGpuVm (final GpuVm vm, final GpuHost targetHost) {
-        return vm.getRam().getCapacity() / bitesToBytes(targetHost.getBw().getCapacity() * 
+        return vm.getRam().getCapacity() / bitsToBytes(targetHost.getBw().getCapacity() *
         		getBandwidthPercentForMigration());
     }
 
-    
     @Override
     public void shutdown() {
         super.shutdown();
@@ -766,7 +736,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
                 .filter(not(Host::isActive))
                 .map(host -> (GpuHostSimple)host)
                 .forEach(host -> host.setActive(host.isActivateOnDatacenterStartup()));
-        sendNow(getSimulation().getCloudInfoService(), CloudSimTag.DC_REGISTRATION_REQUEST, this);
+        sendNow(getSimulation().getCis(), CloudSimTag.DC_REGISTRATION_REQUEST, this);
     }
 
     @Override
@@ -775,34 +745,7 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     }
 
     @Override
-    public DatacenterCharacteristics getCharacteristics() {
-        return characteristics;
-    }
-
-    @Override
-    public GpuVmAllocationPolicy getVmAllocationPolicy() {
-        return gpuVmAllocationPolicy;
-    }
-    
-    @Override
-    public double getSchedulingInterval() {
-        return schedulingInterval;
-    }
-
-    @Override
-    public final Datacenter setSchedulingInterval(final double schedulingInterval) {
-        this.schedulingInterval = Math.max(schedulingInterval, 0);
-        return this;
-    }
-    
-    @Override
-    public double getTimeZone() {
-        return timeZone;
-    }
-
-    @Override
-    public final Datacenter setTimeZone(final double timeZone) {
-        this.timeZone = validateTimeZone(timeZone);
+    public Datacenter setCharacteristics(DatacenterCharacteristics datacenterCharacteristics) {
         return this;
     }
     
@@ -815,11 +758,6 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         return Host.NULL;
     }
 
-    @Override
-    public long getActiveHostsNumber(){
-        return activeHostsNumber;
-    }
-    
     public void updateActiveGpuHostsNumber(final GpuHost host){
         activeHostsNumber += host.isActive() ? 1 : -1;
     }
@@ -861,11 +799,6 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
     }
 
     @Override
-    public String toString() {
-        return String.format("Datacenter %d", getId());
-    }
-
-    @Override
     public boolean equals(final Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
@@ -874,33 +807,6 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         final GpuDatacenterSimple that = (GpuDatacenterSimple) object;
 
         return !characteristics.equals(that.characteristics);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + characteristics.hashCode();
-        return result;
-    }
-    
-    @Override
-    public double getBandwidthPercentForMigration() {
-        return bandwidthPercentForMigration;
-    }
-
-    @Override
-    public void setBandwidthPercentForMigration(final double bandwidthPercentForMigration) {
-        if(bandwidthPercentForMigration <= 0){
-            throw new IllegalArgumentException("The bandwidth migration percentage must be greater "
-            		+ "than 0.");
-        }
-
-        if(bandwidthPercentForMigration > 1){
-            throw new IllegalArgumentException("The bandwidth migration percentage must be lower "
-            		+ "or equal to 1.");
-        }
-
-        this.bandwidthPercentForMigration = bandwidthPercentForMigration;
     }
     
     @Override
@@ -915,4 +821,13 @@ public class GpuDatacenterSimple extends CloudSimEntity implements GpuDatacenter
         return this;
     }
 
+    @Override
+    public double validateTimeZone(double timeZone) {
+        return super.validateTimeZone(timeZone);
+    }
+
+    @Override
+    public double distance(TimeZoned other) {
+        return super.distance(other);
+    }
 }

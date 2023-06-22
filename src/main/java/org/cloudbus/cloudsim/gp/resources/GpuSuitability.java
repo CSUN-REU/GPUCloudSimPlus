@@ -1,8 +1,5 @@
 package org.cloudbus.cloudsim.gp.resources;
 
-import org.cloudbus.cloudsim.resources.Pe;
-import org.cloudbus.cloudsim.vms.Vm;
-
 import java.util.Objects;
 
 public final class GpuSuitability {

@@ -10,6 +10,7 @@ import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.resources.GpuSuitability;
 import org.cloudbus.cloudsim.gp.videocards.Videocard;
+import org.cloudsimplus.autoscaling.VerticalVmScaling;
 
 public final class VGpuAllocationPolicyNull implements VGpuAllocationPolicy {
 
@@ -22,6 +23,12 @@ public final class VGpuAllocationPolicyNull implements VGpuAllocationPolicy {
 	@Override public <T extends VGpu> List<T> allocateGpuForVGpu (Collection<T> vgpuCollection) {
 		return Collections.emptyList();
 	}
+
+	@Override
+	public boolean scaleVmVertically(VerticalVmScaling scaling) {
+		return false;
+	}
+
 	//@Override public boolean scaleVmVertically (VerticalVmScaling scaling) { return false; }
 	@Override public void deallocateGpuForVGpu (VGpu vgpu) { /**/ }
 	@Override public void setFindGpuForVGpuFunction (

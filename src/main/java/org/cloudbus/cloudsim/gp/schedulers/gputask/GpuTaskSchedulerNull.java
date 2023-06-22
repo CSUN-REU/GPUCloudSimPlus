@@ -6,8 +6,8 @@ import java.util.Collections;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
 
 public class GpuTaskSchedulerNull implements GpuTaskScheduler {
@@ -43,7 +43,7 @@ public class GpuTaskSchedulerNull implements GpuTaskScheduler {
 	@Override public double getRequestedGpuPercent (double time) { return 0.0; }
 	@Override public double getAllocatedGpuPercent (double time) { return 0.0; }
 	@Override public boolean hasFinishedGpuTasks () { return false; }
-	@Override public double updateProcessing (double currentTime, MipsShare mipsShare) { 
+	@Override public double updateProcessing (double currentTime, MipsShare mipsShare) {
 		return 0.0;
 	}
 	@Override public VGpu getVGpu () { return VGpu.NULL; }

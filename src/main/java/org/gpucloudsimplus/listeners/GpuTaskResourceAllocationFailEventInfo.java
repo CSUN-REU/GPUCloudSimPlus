@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.listeners;
 
 import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.resources.ResourceManageable;
 
 public interface GpuTaskResourceAllocationFailEventInfo extends GpuTaskEventInfo {
 

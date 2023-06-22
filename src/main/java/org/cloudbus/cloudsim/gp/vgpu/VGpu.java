@@ -2,8 +2,6 @@ package org.cloudbus.cloudsim.gp.vgpu;
 
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.vms.GpuVmNull;
-import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
 import org.cloudbus.cloudsim.gp.core.AbstractGpu;
 import org.cloudbus.cloudsim.gp.resources.VGpuCore;
 import org.cloudbus.cloudsim.gp.videocards.Videocard;
@@ -11,14 +9,11 @@ import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.core.GpuResourceStatsComputer;
 import org.cloudbus.cloudsim.gp.schedulers.gputask.GpuTaskScheduler;
 
-import org.cloudbus.cloudsim.resources.Ram;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.Bandwidth;
-import org.cloudbus.cloudsim.resources.Processor;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.VGpuGpuEventInfo;
 import org.gpucloudsimplus.listeners.VGpuVideocardEventInfo;
 
@@ -52,7 +47,7 @@ GpuResourceStatsComputer<VGpuResourceStats> {
 	
 	long getId ();
 	
-	void setId (long id);
+	ChangeableId setId (long id);
 	
 	void setType (String type);
 	
@@ -117,7 +112,7 @@ GpuResourceStatsComputer<VGpuResourceStats> {
 
     boolean removeOnCreationFailureListener(EventListener<VGpuVideocardEventInfo> listener);
 
-    @Override 
+    @Override
     Resource getBw ();
 
     @Override

@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.gp.schedulers.vgpu;
 
-import org.cloudbus.cloudsim.schedulers.MipsShare;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
+import org.cloudsimplus.schedulers.MipsShare;
 
 public class VGpuSchedulerNull implements VGpuScheduler {
 	

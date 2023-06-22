@@ -1,21 +1,19 @@
 package org.cloudbus.cloudsim.gp.allocationpolicies;
 
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.resources.Processor;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.hosts.HostSuitability;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.allocationpolicies.VmAllocationPolicy;
-import org.cloudbus.cloudsim.allocationpolicies.VmAllocationPolicyAbstract;
-
+import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
-//import org.cloudbus.cloudsim.gp.hosts.GpuHostSuitability;
 import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.hosts.Host;
+import org.cloudsimplus.hosts.HostSuitability;
+import org.cloudsimplus.schedulers.MipsShare;
+import org.cloudsimplus.vms.Vm;
 
+import javax.annotation.processing.Processor;
 import java.util.*;
 import java.util.function.BiFunction;
 
@@ -27,7 +25,7 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 	private BiFunction<GpuVmAllocationPolicy, GpuVm, Optional<GpuHost>> 
 				findGpuHostForGpuVmFunction;
 
-    private GpuDatacenter gpudatacenter;
+    private Datacenter datacenter;
 
     private int gpuHostCountForParallelSearch;
     
@@ -36,26 +34,32 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 	}
 	
 	public GpuVmAllocationPolicyAbstract (
-			final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> 
+			final BiFunction<VmAllocationPolicy, Vm, Optional<Host>>
 					findGpuHostForGpuVmFunction) {
-        setDatacenter(GpuDatacenter.NULL);
+        setDatacenter(Datacenter.NULL);
         setFindHostForVmFunction(findGpuHostForGpuVmFunction);
         this.gpuHostCountForParallelSearch = DEF_GPUHOST_COUNT_PARALLEL_SEARCH;
     }
 
     @Override
     public final <T extends Host> List<T> getHostList () {
-        return gpudatacenter.getHostList();
+        return datacenter.getHostList();
     }
 
     @Override
     public GpuDatacenter getDatacenter () {
-        return gpudatacenter;
+        return datacenter == Datacenter.NULL ? null : (GpuDatacenter) datacenter;
     }
 
     @Override
-    public void setDatacenter(final Datacenter datacenter) {
-        this.gpudatacenter = requireNonNull((GpuDatacenter)datacenter);
+    public GpuVmAllocationPolicy setDatacenter(final Datacenter datacenter) {
+        // Hacky method to allow CloudSim Plus to use our fake datacenters, while preserving GpuDatacenter normally
+        if (datacenter == null || (!(datacenter instanceof GpuDatacenter) && datacenter != Datacenter.NULL)) {
+            throw new IllegalArgumentException("Datacenter must be instance of GpuDatacenter, or Datacenter.NULL.");
+        }
+
+        this.datacenter = requireNonNull(datacenter);
+        return this;
     }
     
     @Override
@@ -87,7 +91,7 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 
         final boolean isVmUnderloaded = scaling.isVmUnderloaded();
         //Avoids trying to downscale the number of vPEs to zero
-        if(isVmUnderloaded && scaling.getVm().getNumberOfPes() == pesNumberForScaling) {
+        if(isVmUnderloaded && scaling.getVm().getPesNumber() == pesNumberForScaling) {
             scaling.logDownscaleToZeroNotAllowed();
             return false;
         }
@@ -170,7 +174,7 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
         }
 
         LOGGER.warn("{}: {}: No suitable Gpuhost found for {} in {}", vm.getSimulation().clockStr(), 
-        		getClass().getSimpleName(), vm, gpudatacenter);
+        		getClass().getSimpleName(), vm, datacenter);
         return new HostSuitability("No suitable Gpuhost found");
     }
 
@@ -228,9 +232,10 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
     }
 
     @Override
-    public final void setFindHostForVmFunction (
+    public final GpuVmAllocationPolicy setFindHostForVmFunction (
     		final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) {
         this.findGpuHostForGpuVmFunction = (BiFunction)findGpuHostForGpuVmFunction;
+        return this;
     }
 
     @Override
@@ -263,8 +268,9 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
     }
 
     @Override
-    public void setHostCountForParallelSearch (final int hostCountForParallelSearch) {
+    public GpuVmAllocationPolicy setHostCountForParallelSearch (final int hostCountForParallelSearch) {
         this.gpuHostCountForParallelSearch = hostCountForParallelSearch;
+        return this;
     }
 
     @Override

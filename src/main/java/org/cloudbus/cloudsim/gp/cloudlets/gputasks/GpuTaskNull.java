@@ -1,17 +1,16 @@
 package org.cloudbus.cloudsim.gp.cloudlets.gputasks;
 
-import org.cloudbus.cloudsim.utilizationmodels.UtilizationModel;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.gpucloudsimplus.listeners.GpuTaskVGpuEventInfo;
 import org.cloudsimplus.listeners.EventListener;
 
 import java.util.List;
 import java.util.Collections;
 
-import org.cloudbus.cloudsim.core.Simulation;
-
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 
 final class GpuTaskNull implements GpuTask {
 	

@@ -1,6 +1,6 @@
 package org.cloudbus.cloudsim.gp.vgpu;
 
-import org.cloudbus.cloudsim.vms.VmStateHistoryEntry;
+import org.cloudsimplus.vms.VmStateHistoryEntry;
 
 public class VGpuStateHistoryEntry extends VmStateHistoryEntry {
 	

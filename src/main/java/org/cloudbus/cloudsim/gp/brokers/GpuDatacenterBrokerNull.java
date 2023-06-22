@@ -1,14 +1,17 @@
 package org.cloudbus.cloudsim.gp.brokers;
 
-import org.cloudbus.cloudsim.core.SimEntityNullBase;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.core.SimEntity;
-import org.cloudbus.cloudsim.vms.Vm;
+import org.cloudbus.cloudsim.gp.datacenters.GpuDatacenter;
 
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.brokers.VmCreation;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.SimEntity;
+import org.cloudsimplus.core.SimEntityNullBase;
+import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.listeners.DatacenterBrokerEventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.EventInfo;
+import org.cloudsimplus.vms.Vm;
 
 import java.util.Comparator;
 import java.util.List;
@@ -52,21 +55,33 @@ final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNul
     		EventListener<DatacenterBrokerEventInfo> listener) { return this; }
     @Override public GpuDatacenterBroker removeOnVmsCreatedListener (
     		EventListener<? extends EventInfo> listener) { return this; }
-    @Override public Function<Vm, Double> getVmDestructionDelayFunction () { return vm -> 0.0; }
     @Override public GpuDatacenterBroker setVmDestructionDelayFunction (
     		Function<Vm, Double> function) { return this; }
     @Override public GpuDatacenterBroker setVmDestructionDelay (double delay) { return this; }
     @Override public List<Cloudlet> getCloudletSubmittedList () { return Collections.emptyList(); }
     @Override public <T extends Vm> List<T> getVmFailedList () { return Collections.emptyList(); }
-    @Override public boolean isRetryFailedVms () { return false; }
-    @Override public double getFailedVmsRetryDelay () { return 0; }
-    @Override public void setFailedVmsRetryDelay (double failedVmsRetryDelay) {/**/}
+
+    @Override
+    public VmCreation getVmCreation() {
+        return VmCreation.ofZero();
+    }
+
+    @Override
+    public DatacenterBroker setLastSelectedDc(Datacenter datacenter) {
+        return GpuDatacenterBroker.NULL;
+    }
+
+    @Override
+    public Datacenter getLastSelectedDc() {
+        return GpuDatacenter.NULL;
+    }
+
     @Override public boolean isShutdownWhenIdle () { return false; }
     @Override public GpuDatacenterBroker setShutdownWhenIdle (boolean shutdownWhenIdle) { 
     	return this; 
     }
     @Override public GpuDatacenterBroker setVmComparator (Comparator<Vm> comparator) { return this; }
-    @Override public void setCloudletComparator (Comparator<Cloudlet> comparator) {/**/}
+    @Override public DatacenterBroker setCloudletComparator (Comparator<Cloudlet> comparator) { return GpuDatacenterBroker.NULL; }
     @Override public GpuDatacenterBroker submitCloudlet (Cloudlet cloudlet) { return this; }
     @Override public GpuDatacenterBroker submitCloudletList (
     		List<? extends Cloudlet> list) { return this; }
@@ -81,4 +96,24 @@ final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNul
     @Override public GpuDatacenterBroker submitVmList (
     		List<? extends Vm> list, double submissionDelay) { return this; }
     @Override public double getStartTime() { return -1; }
+
+    @Override
+    public boolean isRetryFailedVms() {
+        return false;
+    }
+
+    @Override
+    public double getFailedVmsRetryDelay() {
+        return 0;
+    }
+
+    @Override
+    public void setFailedVmsRetryDelay(double failedVmsRetryDelay) {
+        /**/
+    }
+
+    @Override
+    public Function<Vm, Double> getVmDestructionDelayFunction() {
+        return null;
+    }
 }

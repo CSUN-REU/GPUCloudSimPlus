@@ -1,15 +1,12 @@
 package org.cloudbus.cloudsim.gp.videocards;
 
-import org.cloudbus.cloudsim.core.Simulation;
-//import org.cloudbus.cloudsim.gp.schedulers.vgpu.VGpuScheduler;
 import org.cloudbus.cloudsim.gp.allocationpolicies.VGpuAllocationPolicy;
-import org.gpucloudsimplus.listeners.VideocardVGpuMigrationEventInfo;
+import org.cloudsimplus.core.Simulation;
 import org.cloudbus.cloudsim.gp.provisioners.VideocardBwProvisioner;
 import org.gpucloudsimplus.listeners.GpuEventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
-import org.cloudbus.cloudsim.vms.Vm;
 import org.cloudbus.cloudsim.gp.hosts.GpuHost;
 
 import java.util.*;

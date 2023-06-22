@@ -2,8 +2,6 @@ package org.cloudbus.cloudsim.gp.vgpu;
 
 import org.cloudbus.cloudsim.gp.vms.GpuVm;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
-import org.cloudbus.cloudsim.gp.vms.GpuVmNull;
-import org.cloudbus.cloudsim.gp.vms.GpuVmSimple;
 import org.cloudbus.cloudsim.gp.resources.VGpuCore;
 import org.cloudbus.cloudsim.gp.videocards.Videocard;
 import org.cloudbus.cloudsim.gp.cloudlets.GpuCloudlet;
@@ -11,17 +9,16 @@ import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTask;
 import org.cloudbus.cloudsim.gp.schedulers.gputask.GpuTaskScheduler;
 import org.cloudbus.cloudsim.gp.schedulers.gputask.GpuTaskSchedulerTimeShared;
 
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.resources.Bandwidth;
+import org.cloudsimplus.resources.Pe;
+import org.cloudsimplus.resources.Ram;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.listeners.VGpuVideocardEventInfo;
 import org.gpucloudsimplus.listeners.VGpuGpuEventInfo;
 import org.cloudsimplus.listeners.EventListener;
-
-import org.cloudbus.cloudsim.resources.Pe;
-import org.cloudbus.cloudsim.resources.Ram;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.resources.Bandwidth;
-//import org.cloudbus.cloudsim.resources.Processor;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 
 import java.util.*;
 
@@ -555,9 +552,9 @@ public class VGpuSimple implements VGpu {
         return Collections.unmodifiableList(resources);
     }
     
-    //@Override
+    @Override
     public ResourceManageable getResource (Class<? extends ResourceManageable> resourceClass) {
-        if(Pe.class.isAssignableFrom(resourceClass) || 
+        if(Pe.class.isAssignableFrom(resourceClass) ||
         		VGpuCore.class.isAssignableFrom(resourceClass)) {
             return vGpuCore;
         }
@@ -912,8 +909,9 @@ public class VGpuSimple implements VGpu {
     }
     
     @Override
-    public void setId (final long id) {
+    public ChangeableId setId (final long id) {
         this.id = id;
+        return null;
     }
     
     @Override

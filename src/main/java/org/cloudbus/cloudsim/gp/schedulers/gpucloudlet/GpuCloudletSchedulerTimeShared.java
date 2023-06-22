@@ -1,7 +1,7 @@
 package org.cloudbus.cloudsim.gp.schedulers.gpucloudlet;
 
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.cloudlets.CloudletExecution;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.cloudlets.CloudletExecution;
 
 import java.io.Serial;
 

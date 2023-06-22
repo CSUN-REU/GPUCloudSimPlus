@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.gp.provisioners;
 
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.resources.Resource;
 import org.cloudbus.cloudsim.gp.resources.Gpu;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
 
 import java.util.function.Function;
 

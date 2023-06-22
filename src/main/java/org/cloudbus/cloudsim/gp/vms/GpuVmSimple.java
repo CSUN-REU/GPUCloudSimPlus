@@ -1,11 +1,10 @@
 package org.cloudbus.cloudsim.gp.vms;
 
-import org.cloudbus.cloudsim.vms.Vm;
-import org.cloudbus.cloudsim.vms.VmSimple;
-//import org.cloudbus.cloudsim.core.CustomerEntityAbstract;
 
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 import org.cloudbus.cloudsim.gp.schedulers.gpucloudlet.GpuCloudletScheduler;
+import org.cloudsimplus.vms.Vm;
+import org.cloudsimplus.vms.VmSimple;
 
 public class GpuVmSimple extends VmSimple implements GpuVm {
 	
@@ -31,7 +30,7 @@ public class GpuVmSimple extends VmSimple implements GpuVm {
 	public GpuVmSimple (final double mipsCapacity, final long numberOfPes, 
 			final GpuCloudletScheduler cloudletScheduler, final VGpu vgpu, String type) {
         super (mipsCapacity, numberOfPes, cloudletScheduler);
-        setCloudletScheduler (cloudletScheduler);
+        setCloudletScheduler(cloudletScheduler);
         setVGpu(vgpu);
         setType (type);
 	

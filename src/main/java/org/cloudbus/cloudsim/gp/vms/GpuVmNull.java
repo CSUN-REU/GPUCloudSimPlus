@@ -2,23 +2,27 @@ package org.cloudbus.cloudsim.gp.vms;
 
 import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
-import org.cloudbus.cloudsim.brokers.DatacenterBroker;
-import org.cloudbus.cloudsim.cloudlets.Cloudlet;
-import org.cloudbus.cloudsim.core.CustomerEntity;
-import org.cloudbus.cloudsim.core.Simulation;
-import org.cloudbus.cloudsim.datacenters.Datacenter;
-import org.cloudbus.cloudsim.hosts.Host;
-import org.cloudbus.cloudsim.resources.Processor;
-import org.cloudbus.cloudsim.resources.Resource;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
-import org.cloudbus.cloudsim.schedulers.MipsShare;
-import org.cloudbus.cloudsim.schedulers.cloudlet.CloudletScheduler;
-import org.cloudbus.cloudsim.vms.*;
 import org.cloudsimplus.autoscaling.HorizontalVmScaling;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
+import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.CustomerEntity;
+import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.datacenters.Datacenter;
+import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.listeners.VmDatacenterEventInfo;
 import org.cloudsimplus.listeners.VmHostEventInfo;
+import org.cloudsimplus.resources.Processor;
+import org.cloudsimplus.resources.Resource;
+import org.cloudsimplus.resources.ResourceManageable;
+import org.cloudsimplus.schedulers.MipsShare;
+import org.cloudsimplus.schedulers.cloudlet.CloudletScheduler;
+import org.cloudsimplus.vms.Vm;
+import org.cloudsimplus.vms.VmGroup;
+import org.cloudsimplus.vms.VmResourceStats;
+import org.cloudsimplus.vms.VmStateHistoryEntry;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +40,7 @@ public class GpuVmNull implements GpuVm {
 	@Override
 	public VGpu getVGpu () {return VGpu.NULL;}
 	
-	@Override public void setId(long id) {/**/}
+	@Override public ChangeableId setId(long id) { return null; }
     @Override public long getId() {
         return -1;
     }
@@ -68,9 +72,6 @@ public class GpuVmNull implements GpuVm {
         return Host.NULL;
     }
     @Override public double getMips() {
-        return 0;
-    }
-    @Override public long getNumberOfPes() {
         return 0;
     }
     @Override public Vm addOnHostAllocationListener(EventListener<VmHostEventInfo> listener) {
@@ -106,6 +107,12 @@ public class GpuVmNull implements GpuVm {
     @Override public Resource getStorage() {
         return Resource.NULL;
     }
+
+    @Override
+    public long getPesNumber() {
+        return 0;
+    }
+
     @Override public List<VmStateHistoryEntry> getStateHistory() {
         return Collections.emptyList();
     }
@@ -129,7 +136,7 @@ public class GpuVmNull implements GpuVm {
     @Override public DatacenterBroker getBroker() {
         return DatacenterBroker.NULL;
     }
-    @Override public void setBroker(DatacenterBroker broker) {/**/}
+    @Override public CustomerEntity setBroker(DatacenterBroker broker) { return null; }
     @Override public double getStartTime() { return 0; }
     @Override public Vm setStartTime(double startTime) { return this; }
     @Override public double getStopTime() { return 0; }
@@ -157,7 +164,7 @@ public class GpuVmNull implements GpuVm {
         return this;
     }
     @Override public Vm setHost(Host host) { return this; }
-    @Override public void setInMigration(boolean migrating) {/**/}
+    @Override public Vm setInMigration(boolean migrating) { return null;}
     @Override public Vm setRam(long ramCapacity) {
         return this;
     }
@@ -181,10 +188,10 @@ public class GpuVmNull implements GpuVm {
     @Override public Simulation getSimulation() {
         return Simulation.NULL;
     }
-    @Override public void setLastTriedDatacenter(Datacenter lastTriedDatacenter) {/**/}
+    @Override public CustomerEntity setLastTriedDatacenter(Datacenter lastTriedDatacenter) { return null; }
     @Override public Datacenter getLastTriedDatacenter() { return Datacenter.NULL; }
     @Override public double getArrivedTime() { return 0; }
-    @Override public CustomerEntity setArrivedTime(double time) { return this; }
+    @Override public void setArrivedTime(double time) {/**/}
     @Override public double getCreationTime() { return 0; }
     @Override public String toString() { return "Vm.NULL"; }
     @Override public HorizontalVmScaling getHorizontalScaling() { return HorizontalVmScaling.NULL; }

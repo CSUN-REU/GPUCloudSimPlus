@@ -1,8 +1,8 @@
 package org.cloudbus.cloudsim.gp.resources;
 
-import org.cloudbus.cloudsim.core.ChangeableId;
-import org.cloudbus.cloudsim.resources.ResourceManageable;
 import org.cloudbus.cloudsim.gp.provisioners.CoreProvisioner;
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.resources.ResourceManageable;
 
 public interface GpuCore extends ChangeableId, ResourceManageable {
     
