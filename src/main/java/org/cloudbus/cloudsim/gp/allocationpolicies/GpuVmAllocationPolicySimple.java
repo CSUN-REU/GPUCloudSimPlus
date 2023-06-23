@@ -11,24 +11,24 @@ import java.util.function.BiFunction;
 
 import static java.util.Comparator.comparing;
 
-public class GpuVmAllocationPolicySimple extends GpuVmAllocationPolicyAbstract{
-	
-	public GpuVmAllocationPolicySimple () {
+public class GpuVmAllocationPolicySimple extends GpuVmAllocationPolicyAbstract {
+
+    public GpuVmAllocationPolicySimple() {
         super();
     }
 
-    public GpuVmAllocationPolicySimple (
-    		final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) {
+    public GpuVmAllocationPolicySimple(
+            final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) {
         super(findGpuHostForGpuVmFunction);
     }
 
     @Override
-    protected Optional<Host> defaultFindGpuHostForGpuVm (final GpuVm vm) {
+    protected Optional<Host> defaultFindGpuHostForGpuVm(final GpuVm vm) {
         final Comparator<Host> comparator = comparing(Host::isActive).thenComparingLong(
-        		Host::getFreePesNumber);
+                Host::getFreePesNumber);
 
-        final var hostStream = isParallelHostSearchEnabled() ? 
-        		getHostList().stream().parallel() : getHostList().stream();
+        final var hostStream = isParallelHostSearchEnabled() ?
+                getHostList().stream().parallel() : getHostList().stream();
         return hostStream.filter(host -> host.isSuitableForVm(vm)).max(comparator);
     }
 }

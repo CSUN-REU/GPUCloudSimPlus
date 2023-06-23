@@ -19,216 +19,216 @@ import java.util.List;
 import java.util.Set;
 
 public interface Gpu extends ChangeableId, Comparable<Gpu>, AbstractGpu,
-GpuResourceStatsComputer<GpuResourceStats> {
-	//, ResourceManageable
+        GpuResourceStatsComputer<GpuResourceStats> {
+    //, ResourceManageable
     Logger LOGGER = LoggerFactory.getLogger(Gpu.class.getSimpleName());
-	
+
     double DEF_IDLE_SHUTDOWN_DEADLINE = -1;
 
-	Gpu NULL = new GpuNull ();
-    
-	List<GpuCore> getGpuCoreList ();
-	
-	GpuResourceProvisioner getGpuGddramProvisioner ();
-	
-	Gpu setGpuGddramProvisioner (GpuResourceProvisioner gpuGddramProvisioner);
-	
-	GpuResourceProvisioner getGpuBwProvisioner ();
-	
-	Gpu setGpuBwProvisioner (GpuResourceProvisioner gpuBwProvisioner);
-	
-	Videocard getVideocard ();
-	
-    void setVideocard (Videocard videocard);
+    Gpu NULL = new GpuNull();
 
-    boolean isSuitableForVGpu (VGpu vgpu);
+    List<GpuCore> getGpuCoreList();
 
-    GpuSuitability getSuitabilityFor (VGpu vgpu);
+    GpuResourceProvisioner getGpuGddramProvisioner();
+
+    Gpu setGpuGddramProvisioner(GpuResourceProvisioner gpuGddramProvisioner);
+
+    GpuResourceProvisioner getGpuBwProvisioner();
+
+    Gpu setGpuBwProvisioner(GpuResourceProvisioner gpuBwProvisioner);
+
+    Videocard getVideocard();
+
+    void setVideocard(Videocard videocard);
+
+    boolean isSuitableForVGpu(VGpu vgpu);
+
+    GpuSuitability getSuitabilityFor(VGpu vgpu);
 
     boolean isActive();
-    
-    boolean hasEverStarted ();
-    
-    Gpu setActive (boolean activate);
 
-    <T extends VGpu> Set<T> getVGpusMigratingIn ();
+    boolean hasEverStarted();
 
-    boolean hasMigratingVGpus ();
-    
-    boolean addMigratingInVGpu (VGpu vgpu);
+    Gpu setActive(boolean activate);
 
-    Set<VGpu> getVGpusMigratingOut ();
+    <T extends VGpu> Set<T> getVGpusMigratingIn();
 
-    boolean addVGpuMigratingOut (VGpu vgpu);
+    boolean hasMigratingVGpus();
 
-    boolean removeVGpuMigratingOut (VGpu vgpu);
+    boolean addMigratingInVGpu(VGpu vgpu);
 
-    void reallocateMigratingInVGpus ();
+    Set<VGpu> getVGpusMigratingOut();
+
+    boolean addVGpuMigratingOut(VGpu vgpu);
+
+    boolean removeVGpuMigratingOut(VGpu vgpu);
+
+    void reallocateMigratingInVGpus();
 
     @Override
-    double getTotalMipsCapacity ();
+    double getTotalMipsCapacity();
 
-    double getTotalAvailableMips ();
+    double getTotalAvailableMips();
 
-    double getTotalAllocatedMips ();
+    double getTotalAllocatedMips();
 
-    double getTotalAllocatedMipsForVGpu (VGpu vgpu);
+    double getTotalAllocatedMipsForVGpu(VGpu vgpu);
 
-    void removeMigratingInVGpu (VGpu vgpu);
+    void removeMigratingInVGpu(VGpu vgpu);
 
-    List<GpuCore> getWorkingCoreList ();
+    List<GpuCore> getWorkingCoreList();
 
-    List<GpuCore> getBusyCoreList ();
+    List<GpuCore> getBusyCoreList();
 
-    List<GpuCore> getFreeCoreList ();
+    List<GpuCore> getFreeCoreList();
 
-    int getFreeCoresNumber ();
+    int getFreeCoresNumber();
 
-    int getWorkingCoresNumber ();
+    int getWorkingCoresNumber();
 
-    int getBusyCoresNumber ();
+    int getBusyCoresNumber();
 
-    double getBusyCoresPercent ();
+    double getBusyCoresPercent();
 
-    double getBusyCoresPercent (boolean hundredScale);
+    double getBusyCoresPercent(boolean hundredScale);
 
-    int getFailedCoresNumber ();
+    int getFailedCoresNumber();
 
     //long getAvailableStorage();
 
-    <T extends VGpu> List<T> getVGpuList ();
+    <T extends VGpu> List<T> getVGpuList();
 
-    <T extends VGpu> List<T> getVGpuCreatedList ();
+    <T extends VGpu> List<T> getVGpuCreatedList();
 
-    VGpuScheduler getVGpuScheduler ();
+    VGpuScheduler getVGpuScheduler();
 
-    Gpu setVGpuScheduler (VGpuScheduler vgpuScheduler);
+    Gpu setVGpuScheduler(VGpuScheduler vgpuScheduler);
 
-    double getFirstStartTime ();
+    double getFirstStartTime();
 
-    double getShutdownTime ();
+    double getShutdownTime();
 
-    void setShutdownTime (double shutdownTime);
+    void setShutdownTime(double shutdownTime);
 
-    double getUpTime ();
+    double getUpTime();
 
-    double getUpTimeHours ();
+    double getUpTimeHours();
 
     double getTotalUpTime();
-    
-    double getTotalUpTimeHours ();
 
-    double getIdleShutdownDeadline ();
+    double getTotalUpTimeHours();
 
-    Gpu setIdleShutdownDeadline (double deadline);
+    double getIdleShutdownDeadline();
 
-    boolean isFailed ();
+    Gpu setIdleShutdownDeadline(double deadline);
 
-    boolean setFailed (boolean failed);
+    boolean isFailed();
 
-    double updateProcessing (double currentTime);
+    boolean setFailed(boolean failed);
 
-    GpuSuitability createVGpu (VGpu vgpu);
+    double updateProcessing(double currentTime);
 
-    void destroyVGpu (VGpu vgpu);
+    GpuSuitability createVGpu(VGpu vgpu);
 
-    GpuSuitability createTemporaryVGpu (VGpu vgpu);
+    void destroyVGpu(VGpu vgpu);
 
-    void destroyTemporaryVGpu (VGpu vgpu);
+    GpuSuitability createTemporaryVGpu(VGpu vgpu);
 
-    void destroyAllVGpus ();
+    void destroyTemporaryVGpu(VGpu vgpu);
+
+    void destroyAllVGpus();
 
     Gpu addOnStartupListener(EventListener<GpuEventInfo> listener);
 
-    boolean removeOnStartupListener (EventListener<GpuEventInfo> listener);
+    boolean removeOnStartupListener(EventListener<GpuEventInfo> listener);
 
-    Gpu addOnShutdownListener (EventListener<GpuEventInfo> listener);
+    Gpu addOnShutdownListener(EventListener<GpuEventInfo> listener);
 
-    boolean removeOnShutdownListener (EventListener<GpuEventInfo> listener);
+    boolean removeOnShutdownListener(EventListener<GpuEventInfo> listener);
 
-    Gpu addOnUpdateProcessingListener (EventListener<GpuUpdatesVgpusProcessingEventInfo> listener);
+    Gpu addOnUpdateProcessingListener(EventListener<GpuUpdatesVgpusProcessingEventInfo> listener);
 
-    boolean removeOnUpdateProcessingListener (EventListener<GpuUpdatesVgpusProcessingEventInfo> listener);
+    boolean removeOnUpdateProcessingListener(EventListener<GpuUpdatesVgpusProcessingEventInfo> listener);
 
     //Gpu setSimulation(Simulation simulation);
 
-    GpuResourceProvisioner getProvisioner (Class<? extends ResourceManageable> resourceClass);
+    GpuResourceProvisioner getProvisioner(Class<? extends ResourceManageable> resourceClass);
 
-    double getGpuCorePercentUtilization ();
+    double getGpuCorePercentUtilization();
 
-    double getGpuCorePercentRequested ();
+    double getGpuCorePercentRequested();
 
     //void enableUtilizationStats ();
 
-    double getGpuCoreMipsUtilization ();
+    double getGpuCoreMipsUtilization();
 
-    long getBwUtilization ();
+    long getBwUtilization();
 
-    long getGddramUtilization ();
+    long getGddramUtilization();
 
     //PowerModelHost getPowerModel ();
 
     //void setPowerModel (PowerModelHost powerModel);
 
-    void enableStateHistory ();
+    void enableStateHistory();
 
-    void disableStateHistory ();
+    void disableStateHistory();
 
-    boolean isStateHistoryEnabled ();
+    boolean isStateHistoryEnabled();
 
-    List<GpuStateHistoryEntry> getStateHistory ();
+    List<GpuStateHistoryEntry> getStateHistory();
 
-    List<VGpu> getFinishedVGpus ();
+    List<VGpu> getFinishedVGpus();
 
-    List<VGpu> getMigratableVGpus ();
+    List<VGpu> getMigratableVGpus();
 
-    boolean isLazySuitabilityEvaluation ();
+    boolean isLazySuitabilityEvaluation();
 
-    void processActivation (boolean activate);
-    
-    Gpu setLazySuitabilityEvaluation (boolean lazySuitabilityEvaluation);
-    
-    Gpu setSimulation (Simulation simulation);
-    
+    void processActivation(boolean activate);
+
+    Gpu setLazySuitabilityEvaluation(boolean lazySuitabilityEvaluation);
+
+    Gpu setSimulation(Simulation simulation);
+
     //Simulation getSimulation ();
-    
+
     //double getStartTime ();
-    
+
     //Gpu setStartTime (final double startTime);
-    
+
     //double getLastBusyTime ();
-    
+
     //Resource getBw ();
-    
+
     //Resource getGddram ();
-    
-    double getGpuPercentUtilization ();
-    
-    double getGpuPercentRequested ();
-    
+
+    double getGpuPercentUtilization();
+
+    double getGpuPercentRequested();
+
     //GpuResourceStats getGpuUtilizationStats ();
-    
-    double getGpuMipsUtilization ();
-    
-    default double getRelativeGpuUtilization (final VGpu vgpu) {
+
+    double getGpuMipsUtilization();
+
+    default double getRelativeGpuUtilization(final VGpu vgpu) {
         return getExpectedRelativeGpuUtilization(vgpu, vgpu.getGpuPercentUtilization());
     }
 
-    default double getExpectedRelativeGpuUtilization (final VGpu vgpu, 
-    		final double vgpuGpuUtilizationPercent) {
+    default double getExpectedRelativeGpuUtilization(final VGpu vgpu,
+                                                     final double vgpuGpuUtilizationPercent) {
         return vgpuGpuUtilizationPercent * getRelativeMipsCapacityPercent(vgpu);
     }
-    
-    default double getRelativeMipsCapacityPercent (final VGpu vgpu) {
+
+    default double getRelativeMipsCapacityPercent(final VGpu vgpu) {
         return vgpu.getTotalMipsCapacity() / getTotalMipsCapacity();
     }
 
-    default double getRelativeGddramUtilization (final VGpu vgpu) {
-        return vgpu.getGddram().getAllocatedResource() / (double)getGddram().getCapacity();
+    default double getRelativeGddramUtilization(final VGpu vgpu) {
+        return vgpu.getGddram().getAllocatedResource() / (double) getGddram().getCapacity();
     }
 
-    default double getRelativeBwUtilization(final VGpu vgpu){
-        return vgpu.getBw().getAllocatedResource() / (double)getBw().getCapacity();
+    default double getRelativeBwUtilization(final VGpu vgpu) {
+        return vgpu.getBw().getAllocatedResource() / (double) getBw().getCapacity();
     }
-    
+
 }

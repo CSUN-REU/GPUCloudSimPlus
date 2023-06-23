@@ -6,15 +6,15 @@ import org.cloudsimplus.cloudlets.CloudletExecution;
 import java.io.Serial;
 
 public class GpuCloudletSchedulerSpaceShared extends GpuCloudletSchedulerAbstract {
-	
-	@Serial
+
+    @Serial
     private static final long serialVersionUID = 4699085761507163349L;
 
     @Override
     public double cloudletResume(Cloudlet cloudlet) {
         return findCloudletInList(cloudlet, getCloudletPausedList())
-            .map(this::movePausedCloudletToExecListOrWaitingList)
-            .orElse(0.0);
+                .map(this::movePausedCloudletToExecListOrWaitingList)
+                .orElse(0.0);
     }
 
     private double movePausedCloudletToExecListOrWaitingList(final CloudletExecution cle) {

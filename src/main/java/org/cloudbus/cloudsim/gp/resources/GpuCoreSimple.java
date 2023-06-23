@@ -9,21 +9,21 @@ import java.util.Objects;
 
 public class GpuCoreSimple extends ResourceManageableAbstract implements GpuCore {
 
-	private static double defaultMips = 1000;
+    private static double defaultMips = 1000;
     private long id;
     private Status status;
     private CoreProvisioner coreProvisioner;
 
-    public GpuCoreSimple () {
+    public GpuCoreSimple() {
         this(GpuCoreSimple.defaultMips);
     }
 
-    public GpuCoreSimple (final double mipsCapacity) {
+    public GpuCoreSimple(final double mipsCapacity) {
         this(mipsCapacity, new CoreProvisionerSimple());
     }
 
     public GpuCoreSimple(final double mipsCapacity, final CoreProvisioner coreProvisioner) {
-        super((long)mipsCapacity, "Unit");
+        super((long) mipsCapacity, "Unit");
         setId(-1);
         setCoreProvisioner(coreProvisioner);
 
@@ -31,45 +31,45 @@ public class GpuCoreSimple extends ResourceManageableAbstract implements GpuCore
         setStatus(Status.FREE);
     }
 
-    public GpuCoreSimple (final int id, final double mipsCapacity, 
-    		final CoreProvisioner coreProvisioner) {
+    public GpuCoreSimple(final int id, final double mipsCapacity,
+                         final CoreProvisioner coreProvisioner) {
         this(mipsCapacity, coreProvisioner);
         this.setId(id);
     }
 
-    public static double getDefaultMips () {
+    public static double getDefaultMips() {
         return defaultMips;
     }
 
-    public static void setDefaultMips (final double defaultMips) {
-    	GpuCoreSimple.defaultMips = defaultMips;
+    public static void setDefaultMips(final double defaultMips) {
+        GpuCoreSimple.defaultMips = defaultMips;
     }
 
     @Override
-    public final ChangeableId setId (final long id) {
+    public final ChangeableId setId(final long id) {
         this.id = id;
         return null;
     }
 
     @Override
-    public long getId () {
+    public long getId() {
         return id;
     }
 
     @Override
-    public Status getStatus () {
+    public Status getStatus() {
         return status;
     }
 
     @Override
-    public final boolean setStatus (final Status status) {
+    public final boolean setStatus(final Status status) {
         this.status = status;
         return true;
     }
 
     @Override
-    public boolean setCapacity (final double mipsCapacity) {
-        return setCapacity((long)mipsCapacity);
+    public boolean setCapacity(final double mipsCapacity) {
+        return setCapacity((long) mipsCapacity);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class GpuCoreSimple extends ResourceManageableAbstract implements GpuCore
     }
 
     @Override
-    public CoreProvisioner getCoreProvisioner () {
+    public CoreProvisioner getCoreProvisioner() {
         return coreProvisioner;
     }
 

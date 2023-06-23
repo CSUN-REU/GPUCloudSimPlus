@@ -7,7 +7,7 @@ import java.io.Serial;
 import java.util.List;
 
 public class GpuTaskSchedulerTimeShared extends GpuTaskSchedulerAbstract {
-	@Serial
+    @Serial
     private static final long serialVersionUID = 2115862129708036038L;
 
     @Override
@@ -16,8 +16,8 @@ public class GpuTaskSchedulerTimeShared extends GpuTaskSchedulerAbstract {
         return super.getGpuTaskWaitingList();
     }
 
-    private double movePausedGpuTaskToExecListAndGetExpectedFinishTime (
-    		final GpuTaskExecution gpuTask) {
+    private double movePausedGpuTaskToExecListAndGetExpectedFinishTime(
+            final GpuTaskExecution gpuTask) {
         getGpuTaskPausedList().remove(gpuTask);
         addGpuTaskToExecList(gpuTask);
         return gpuTaskEstimatedFinishTime(gpuTask, getVGpu().getSimulation().clock());

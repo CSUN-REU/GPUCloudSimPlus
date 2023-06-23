@@ -19,46 +19,123 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNullBase {
-	
-	@Override public int compareTo (SimEntity entity) { return 0; }
-    @Override public boolean bindCloudletToVm (Cloudlet cloudlet, Vm vm) {
+
+    @Override
+    public int compareTo(SimEntity entity) {
+        return 0;
+    }
+
+    @Override
+    public boolean bindCloudletToVm(Cloudlet cloudlet, Vm vm) {
         return false;
     }
-    @Override public <T extends Cloudlet> List<T> getCloudletWaitingList () {
+
+    @Override
+    public <T extends Cloudlet> List<T> getCloudletWaitingList() {
         return Collections.emptyList();
     }
-    @Override public <T extends Cloudlet> List<T> getCloudletFinishedList () {
+
+    @Override
+    public <T extends Cloudlet> List<T> getCloudletFinishedList() {
         return Collections.emptyList();
     }
-    @Override public Vm getWaitingVm (int index) {
+
+    @Override
+    public Vm getWaitingVm(int index) {
         return Vm.NULL;
     }
-    @Override public <T extends Vm> List<T> getVmWaitingList () {
+
+    @Override
+    public <T extends Vm> List<T> getVmWaitingList() {
         return Collections.emptyList();
     }
-    @Override public <T extends Vm> List<T> getVmExecList () {
+
+    @Override
+    public <T extends Vm> List<T> getVmExecList() {
         return Collections.emptyList();
     }
-    @Override public int getVmsNumber () { return 0; }
-    @Override public GpuDatacenterBroker requestIdleVmDestruction (Vm vm) { return this; }
-    @Override public void requestShutdownWhenIdle () {/**/}
-    @Override public List<Cloudlet> destroyVm (Vm vm) { return Collections.emptyList(); }
-    @Override public <T extends Vm> List<T> getVmCreatedList () { return Collections.emptyList(); }
-    @Override public GpuDatacenterBroker setDatacenterMapper (
-    		BiFunction<Datacenter, Vm, Datacenter> datacenterMapper) { return this; }
-    @Override public GpuDatacenterBroker setVmMapper (Function<Cloudlet, Vm> vmMapper) { return this; }
-    @Override public GpuDatacenterBroker setSelectClosestDatacenter (boolean select) { return this; }
-    @Override public boolean isSelectClosestDatacenter () { return false; }
-    @Override public List<Cloudlet> getCloudletCreatedList () { return Collections.emptyList(); }
-    @Override public GpuDatacenterBroker addOnVmsCreatedListener (
-    		EventListener<DatacenterBrokerEventInfo> listener) { return this; }
-    @Override public GpuDatacenterBroker removeOnVmsCreatedListener (
-    		EventListener<? extends EventInfo> listener) { return this; }
-    @Override public GpuDatacenterBroker setVmDestructionDelayFunction (
-    		Function<Vm, Double> function) { return this; }
-    @Override public GpuDatacenterBroker setVmDestructionDelay (double delay) { return this; }
-    @Override public List<Cloudlet> getCloudletSubmittedList () { return Collections.emptyList(); }
-    @Override public <T extends Vm> List<T> getVmFailedList () { return Collections.emptyList(); }
+
+    @Override
+    public int getVmsNumber() {
+        return 0;
+    }
+
+    @Override
+    public GpuDatacenterBroker requestIdleVmDestruction(Vm vm) {
+        return this;
+    }
+
+    @Override
+    public void requestShutdownWhenIdle() {/**/}
+
+    @Override
+    public List<Cloudlet> destroyVm(Vm vm) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public <T extends Vm> List<T> getVmCreatedList() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public GpuDatacenterBroker setDatacenterMapper(
+            BiFunction<Datacenter, Vm, Datacenter> datacenterMapper) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker setVmMapper(Function<Cloudlet, Vm> vmMapper) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker setSelectClosestDatacenter(boolean select) {
+        return this;
+    }
+
+    @Override
+    public boolean isSelectClosestDatacenter() {
+        return false;
+    }
+
+    @Override
+    public List<Cloudlet> getCloudletCreatedList() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public GpuDatacenterBroker addOnVmsCreatedListener(
+            EventListener<DatacenterBrokerEventInfo> listener) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker removeOnVmsCreatedListener(
+            EventListener<? extends EventInfo> listener) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker setVmDestructionDelayFunction(
+            Function<Vm, Double> function) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker setVmDestructionDelay(double delay) {
+        return this;
+    }
+
+    @Override
+    public List<Cloudlet> getCloudletSubmittedList() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public <T extends Vm> List<T> getVmFailedList() {
+        return Collections.emptyList();
+    }
 
     @Override
     public VmCreation getVmCreation() {
@@ -75,26 +152,75 @@ final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNul
         return GpuDatacenter.NULL;
     }
 
-    @Override public boolean isShutdownWhenIdle () { return false; }
-    @Override public GpuDatacenterBroker setShutdownWhenIdle (boolean shutdownWhenIdle) { 
-    	return this; 
+    @Override
+    public boolean isShutdownWhenIdle() {
+        return false;
     }
-    @Override public GpuDatacenterBroker setVmComparator (Comparator<Vm> comparator) { return this; }
-    @Override public DatacenterBroker setCloudletComparator (Comparator<Cloudlet> comparator) { return GpuDatacenterBroker.NULL; }
-    @Override public GpuDatacenterBroker submitCloudlet (Cloudlet cloudlet) { return this; }
-    @Override public GpuDatacenterBroker submitCloudletList (
-    		List<? extends Cloudlet> list) { return this; }
-    @Override public GpuDatacenterBroker submitCloudletList (
-    		List<? extends Cloudlet> list, double submissionDelay) { return this; }
-    @Override public GpuDatacenterBroker submitCloudletList (
-    		List<? extends Cloudlet> list, Vm vm) { return this; }
-    @Override public GpuDatacenterBroker submitCloudletList (
-    		List<? extends Cloudlet> list, Vm vm, double submissionDelay) { return this; }
-    @Override public GpuDatacenterBroker submitVm (Vm vm) { return this; }
-    @Override public GpuDatacenterBroker submitVmList (List<? extends Vm> list) { return this; }
-    @Override public GpuDatacenterBroker submitVmList (
-    		List<? extends Vm> list, double submissionDelay) { return this; }
-    @Override public double getStartTime() { return -1; }
+
+    @Override
+    public GpuDatacenterBroker setShutdownWhenIdle(boolean shutdownWhenIdle) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker setVmComparator(Comparator<Vm> comparator) {
+        return this;
+    }
+
+    @Override
+    public DatacenterBroker setCloudletComparator(Comparator<Cloudlet> comparator) {
+        return GpuDatacenterBroker.NULL;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitCloudlet(Cloudlet cloudlet) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitCloudletList(
+            List<? extends Cloudlet> list) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitCloudletList(
+            List<? extends Cloudlet> list, double submissionDelay) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitCloudletList(
+            List<? extends Cloudlet> list, Vm vm) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitCloudletList(
+            List<? extends Cloudlet> list, Vm vm, double submissionDelay) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitVm(Vm vm) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitVmList(List<? extends Vm> list) {
+        return this;
+    }
+
+    @Override
+    public GpuDatacenterBroker submitVmList(
+            List<? extends Vm> list, double submissionDelay) {
+        return this;
+    }
+
+    @Override
+    public double getStartTime() {
+        return -1;
+    }
 
     @Override
     public boolean isRetryFailedVms() {

@@ -4,9 +4,9 @@ import org.cloudsimplus.schedulers.cloudlet.CloudletSchedulerAbstract;
 
 
 public abstract class GpuCloudletSchedulerAbstract extends CloudletSchedulerAbstract
-implements GpuCloudletScheduler {
-	
-	/*@Serial
+        implements GpuCloudletScheduler {
+
+    /*@Serial
     private static final long serialVersionUID = -2314361120790372742L;
 
     private final List<CloudletExecution> cloudletPausedList;
@@ -27,9 +27,9 @@ implements GpuCloudletScheduler {
     private GpuVm gpuVm;
 
     private final List<EventListener<CloudletResourceAllocationFailEventInfo>> resourceAllocationFailListeners;
-	*/
-    protected GpuCloudletSchedulerAbstract () {
-    	super ();
+    */
+    protected GpuCloudletSchedulerAbstract() {
+        super();
         /*setPreviousTime(0.0);
         gpuVm = GpuVm.NULL;
         cloudletSubmittedList = new ArrayList<>();

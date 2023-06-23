@@ -3,14 +3,15 @@ package org.cloudbus.cloudsim.gp.allocationpolicies;
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 // extends VmAllocationPolicy
 public interface GpuVmAllocationPolicy extends VmAllocationPolicy {
-	
+
     Logger LOGGER = LoggerFactory.getLogger(GpuVmAllocationPolicy.class.getSimpleName());
 
     int DEF_GPUHOST_COUNT_PARALLEL_SEARCH = 20_000;
 
-    GpuVmAllocationPolicy NULL = new GpuVmAllocationPolicyNull ();
+    GpuVmAllocationPolicy NULL = new GpuVmAllocationPolicyNull();
     
     /*GpuDatacenter getGpuDatacenter ();
 

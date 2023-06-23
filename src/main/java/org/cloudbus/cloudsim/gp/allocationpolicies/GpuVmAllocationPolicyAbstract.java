@@ -23,33 +23,33 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPolicy {
-	
-	private BiFunction<GpuVmAllocationPolicy, GpuVm, Optional<GpuHost>> 
-				findGpuHostForGpuVmFunction;
+
+    private BiFunction<GpuVmAllocationPolicy, GpuVm, Optional<GpuHost>>
+            findGpuHostForGpuVmFunction;
 
     private Datacenter datacenter;
 
     private int gpuHostCountForParallelSearch;
-    
-	public GpuVmAllocationPolicyAbstract () {
-		this(null);
-	}
-	
-	public GpuVmAllocationPolicyAbstract (
-			final BiFunction<VmAllocationPolicy, Vm, Optional<Host>>
-					findGpuHostForGpuVmFunction) {
+
+    public GpuVmAllocationPolicyAbstract() {
+        this(null);
+    }
+
+    public GpuVmAllocationPolicyAbstract(
+            final BiFunction<VmAllocationPolicy, Vm, Optional<Host>>
+                    findGpuHostForGpuVmFunction) {
         setDatacenter(Datacenter.NULL);
         setFindHostForVmFunction(findGpuHostForGpuVmFunction);
         this.gpuHostCountForParallelSearch = DEF_GPUHOST_COUNT_PARALLEL_SEARCH;
     }
 
     @Override
-    public final <T extends Host> List<T> getHostList () {
+    public final <T extends Host> List<T> getHostList() {
         return datacenter.getHostList();
     }
 
     @Override
-    public GpuDatacenter getDatacenter () {
+    public GpuDatacenter getDatacenter() {
         return datacenter == Datacenter.NULL ? null : (GpuDatacenter) datacenter;
     }
 
@@ -63,9 +63,9 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
         this.datacenter = requireNonNull(datacenter);
         return this;
     }
-    
+
     @Override
-    public boolean scaleVmVertically (final VerticalVmScaling scaling) {
+    public boolean scaleVmVertically(final VerticalVmScaling scaling) {
         if (scaling.isVmUnderloaded()) {
             return downScaleVmVertically(scaling);
         }
@@ -76,7 +76,7 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 
         return false;
     }
-    
+
     private boolean upScaleVmVertically(final VerticalVmScaling scaling) {
         return isRequestingCpuScaling(scaling) ? scaleVmPesUpOrDown(scaling) : upScaleVmNonCpuResource(scaling);
     }
@@ -93,7 +93,7 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 
         final boolean isVmUnderloaded = scaling.isVmUnderloaded();
         //Avoids trying to downscale the number of vPEs to zero
-        if(isVmUnderloaded && scaling.getVm().getPesNumber() == pesNumberForScaling) {
+        if (isVmUnderloaded && scaling.getVm().getPesNumber() == pesNumberForScaling) {
             scaling.logDownscaleToZeroNotAllowed();
             return false;
         }
@@ -115,19 +115,19 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
 
     private boolean isNotHostPesSuitableToUpScaleVm(final VerticalVmScaling scaling) {
         final Vm vm = scaling.getVm();
-        final long pesCountForScaling = (long)scaling.getResourceAmountToScale();
+        final long pesCountForScaling = (long) scaling.getResourceAmountToScale();
         final MipsShare additionalVmMips = new MipsShare(pesCountForScaling, vm.getMips());
         return !vm.getHost().getVmScheduler().isSuitableForVm(vm, additionalVmMips);
     }
-    
+
     private boolean isRequestingCpuScaling(final VerticalVmScaling scaling) {
         return Processor.class.equals(scaling.getResourceClass());
     }
-    
+
     private boolean upScaleVmNonCpuResource(final VerticalVmScaling scaling) {
         return scaling.allocateResourceForVm();
     }
-    
+
     private boolean downScaleVmNonCpuResource(final VerticalVmScaling scaling) {
         final var resourceManageableClass = scaling.getResourceClass();
         final var vmResource = scaling.getVm().getResource(resourceManageableClass);
@@ -136,33 +136,33 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
         final double newTotalVmResource = vmResource.getCapacity() - amountToDeallocate;
         if (resourceProvisioner.allocateResourceForVm(scaling.getVm(), newTotalVmResource)) {
             LOGGER.info(
-                "{}: {}: {} {} deallocated from {}: new capacity is {}. Current resource usage is {}%",
-                scaling.getVm().getSimulation().clockStr(),
-                scaling.getClass().getSimpleName(),
-                (long) amountToDeallocate, resourceManageableClass.getSimpleName(),
-                scaling.getVm(), vmResource.getCapacity(),
-                vmResource.getPercentUtilization() * 100);
+                    "{}: {}: {} {} deallocated from {}: new capacity is {}. Current resource usage is {}%",
+                    scaling.getVm().getSimulation().clockStr(),
+                    scaling.getClass().getSimpleName(),
+                    (long) amountToDeallocate, resourceManageableClass.getSimpleName(),
+                    scaling.getVm(), vmResource.getCapacity(),
+                    vmResource.getPercentUtilization() * 100);
             return true;
         }
 
         LOGGER.error(
-            "{}: {}: {} requested to reduce {} capacity by {} but an unexpected error occurred and the resource was not resized",
-            scaling.getVm().getSimulation().clockStr(),
-            scaling.getClass().getSimpleName(),
-            scaling.getVm(),
-            resourceManageableClass.getSimpleName(), (long) amountToDeallocate);
+                "{}: {}: {} requested to reduce {} capacity by {} but an unexpected error occurred and the resource was not resized",
+                scaling.getVm().getSimulation().clockStr(),
+                scaling.getClass().getSimpleName(),
+                scaling.getVm(),
+                resourceManageableClass.getSimpleName(), (long) amountToDeallocate);
         return false;
 
     }
 
     @Override
-    public HostSuitability allocateHostForVm (final Vm vm) {
+    public HostSuitability allocateHostForVm(final Vm vm) {
         if (getHostList().isEmpty()) {
             LOGGER.error(
-                "{}: {}: {} could not be allocated because there isn't any GpuHost for "
-                + "GpuDatacenter {}",
-                vm.getSimulation().clockStr(), getClass().getSimpleName(), vm, 
-                getDatacenter().getId());
+                    "{}: {}: {} could not be allocated because there isn't any GpuHost for "
+                            + "GpuDatacenter {}",
+                    vm.getSimulation().clockStr(), getClass().getSimpleName(), vm,
+                    getDatacenter().getId());
             return new HostSuitability("GpuDatacenter has no Gpuhost.");
         }
 
@@ -175,25 +175,25 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
             return allocateHostForVm(vm, optionalGpuHost.get());
         }
 
-        LOGGER.warn("{}: {}: No suitable Gpuhost found for {} in {}", vm.getSimulation().clockStr(), 
-        		getClass().getSimpleName(), vm, datacenter);
+        LOGGER.warn("{}: {}: No suitable Gpuhost found for {} in {}", vm.getSimulation().clockStr(),
+                getClass().getSimpleName(), vm, datacenter);
         return new HostSuitability("No suitable Gpuhost found");
     }
 
     @Override
-    public <T extends Vm> List<T> allocateHostForVm (final Collection<T> gpuvmCollection) {
+    public <T extends Vm> List<T> allocateHostForVm(final Collection<T> gpuvmCollection) {
         requireNonNull(gpuvmCollection, "The list of GpuVMs to allocate a Gpuhost to cannot be null");
         return gpuvmCollection.stream().filter(gpuvm -> !allocateHostForVm(
-        		gpuvm).fully()).collect(toList());
+                gpuvm).fully()).collect(toList());
     }
 
     @Override
-    public HostSuitability allocateHostForVm (final Vm vm, final Host host) {
+    public HostSuitability allocateHostForVm(final Vm vm, final Host host) {
         /*if(vm instanceof VmGroup vmGroup){
             return createVmsFromGroup(vmGroup, host);
         }*/
 
-        return createVm((GpuVm)vm, (GpuHost)host);
+        return createVm((GpuVm) vm, (GpuHost) host);
     }
 
     /*private HostSuitability createGpuVmsFromGroup (final VmGroup vmGroup, final Host host) {
@@ -213,47 +213,47 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
         return hostSuitabilityForVmGroup;
     }*/
 
-    private HostSuitability createVm (final GpuVm vm, final GpuHost host) {
+    private HostSuitability createVm(final GpuVm vm, final GpuHost host) {
         final var suitability = host.createVm(vm);
         if (suitability.fully()) {
             LOGGER.info(
-                "{}: {}: {} has been allocated to {}",
-                vm.getSimulation().clockStr(), getClass().getSimpleName(), vm, host);
+                    "{}: {}: {} has been allocated to {}",
+                    vm.getSimulation().clockStr(), getClass().getSimpleName(), vm, host);
         } else {
             LOGGER.error(
-                "{}: {} Creation of {} on {} failed due to {}.",
-                vm.getSimulation().clockStr(), getClass().getSimpleName(), vm, host, suitability);
+                    "{}: {} Creation of {} on {} failed due to {}.",
+                    vm.getSimulation().clockStr(), getClass().getSimpleName(), vm, host, suitability);
         }
 
         return suitability;
     }
 
     @Override
-    public void deallocateHostForVm (final Vm vm) {
+    public void deallocateHostForVm(final Vm vm) {
         vm.getHost().destroyVm(vm);
     }
 
     @Override
-    public final GpuVmAllocationPolicy setFindHostForVmFunction (
-    		final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) {
-        this.findGpuHostForGpuVmFunction = (BiFunction)findGpuHostForGpuVmFunction;
+    public final GpuVmAllocationPolicy setFindHostForVmFunction(
+            final BiFunction<VmAllocationPolicy, Vm, Optional<Host>> findGpuHostForGpuVmFunction) {
+        this.findGpuHostForGpuVmFunction = (BiFunction) findGpuHostForGpuVmFunction;
         return this;
     }
 
     @Override
-    public final Optional<Host> findHostForVm (final Vm vm) {
-        final var optionalHost = findGpuHostForGpuVmFunction == null ? 
-        		defaultFindGpuHostForGpuVm ((GpuVm)vm) : 
-        			findGpuHostForGpuVmFunction.apply (this, (GpuVm)vm);
+    public final Optional<Host> findHostForVm(final Vm vm) {
+        final var optionalHost = findGpuHostForGpuVmFunction == null ?
+                defaultFindGpuHostForGpuVm((GpuVm) vm) :
+                findGpuHostForGpuVmFunction.apply(this, (GpuVm) vm);
         //optionalHost = Optional.of((GpuHost)optionalHost.get().setActive(true));
         return optionalHost.map(gpuHost -> gpuHost.setActive(true));
         //return optionalHost;
     }
 
-    protected abstract Optional<Host> defaultFindGpuHostForGpuVm (GpuVm vm);
+    protected abstract Optional<Host> defaultFindGpuHostForGpuVm(GpuVm vm);
 
     @Override
-    public Map<Vm, Host> getOptimizedAllocationMap (final List<? extends Vm> gpuvmList) {
+    public Map<Vm, Host> getOptimizedAllocationMap(final List<? extends Vm> gpuvmList) {
         /*
          * This method implementation doesn't perform any
          * VM placement optimization and, in fact, has no effect.
@@ -265,18 +265,18 @@ public abstract class GpuVmAllocationPolicyAbstract implements GpuVmAllocationPo
     }
 
     @Override
-    public int getHostCountForParallelSearch () {
+    public int getHostCountForParallelSearch() {
         return gpuHostCountForParallelSearch;
     }
 
     @Override
-    public GpuVmAllocationPolicy setHostCountForParallelSearch (final int hostCountForParallelSearch) {
+    public GpuVmAllocationPolicy setHostCountForParallelSearch(final int hostCountForParallelSearch) {
         this.gpuHostCountForParallelSearch = hostCountForParallelSearch;
         return this;
     }
 
     @Override
-    public boolean isVmMigrationSupported () {
+    public boolean isVmMigrationSupported() {
         return false;
     }
 }

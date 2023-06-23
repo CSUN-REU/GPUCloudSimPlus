@@ -6,17 +6,17 @@ import org.cloudbus.cloudsim.gp.cloudlets.gputasks.GpuTaskExecution;
 import java.io.Serial;
 
 public class GpuTaskSchedulerSpaceShared extends GpuTaskSchedulerAbstract {
-	@Serial
+    @Serial
     private static final long serialVersionUID = 4699085761507163349L;
 
     @Override
-    public double gpuTaskResume (GpuTask gpuTask) {
+    public double gpuTaskResume(GpuTask gpuTask) {
         return findGpuTaskInList(gpuTask, getGpuTaskPausedList())
-            .map(this::movePausedGpuTaskToExecListOrWaitingList)
-            .orElse(0.0);
+                .map(this::movePausedGpuTaskToExecListOrWaitingList)
+                .orElse(0.0);
     }
 
-    private double movePausedGpuTaskToExecListOrWaitingList (final GpuTaskExecution gte) {
+    private double movePausedGpuTaskToExecListOrWaitingList(final GpuTaskExecution gte) {
         getGpuTaskPausedList().remove(gte);
 
         if (isThereEnoughFreeCoresForGpuTask(gte)) {

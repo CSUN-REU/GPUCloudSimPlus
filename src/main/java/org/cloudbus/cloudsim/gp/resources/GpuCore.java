@@ -5,7 +5,7 @@ import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.resources.ResourceManageable;
 
 public interface GpuCore extends ChangeableId, ResourceManageable {
-    
+
     enum Status {
         FREE,
         BUSY,
@@ -15,12 +15,12 @@ public interface GpuCore extends ChangeableId, ResourceManageable {
     GpuCore NULL = new GpuCoreNull();
 
     @Override
-    long getCapacity ();
+    long getCapacity();
 
     @Override
-    boolean setCapacity (long mipsCapacity);
+    boolean setCapacity(long mipsCapacity);
 
-    boolean setCapacity (double mipsCapacity);
+    boolean setCapacity(double mipsCapacity);
 
     GpuCore setCoreProvisioner(CoreProvisioner coreProvisioner);
 

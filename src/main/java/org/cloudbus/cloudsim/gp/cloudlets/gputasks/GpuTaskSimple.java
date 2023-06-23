@@ -23,7 +23,7 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 public class GpuTaskSimple implements GpuTask {
-	
+
     private long taskId;
     private GpuCloudlet gpuCloudlet;
     private long blockLength;
@@ -50,10 +50,10 @@ public class GpuTaskSimple implements GpuTask {
     private double submissionDelay;
     private double lifeTime;
     private double arrivalTime;
-    
-    public GpuTaskSimple (final long id, final long blockLength, final long numberOfPes) {
-    	
-    	this.requiredFiles = new LinkedList<>();
+
+    public GpuTaskSimple(final long id, final long blockLength, final long numberOfPes) {
+
+        this.requiredFiles = new LinkedList<>();
         //this.setTaskId(id);
         this.setNumberOfCores(numberOfPes);
         this.setBlockLength(blockLength);
@@ -71,26 +71,26 @@ public class GpuTaskSimple implements GpuTask {
         onFinishListeners = new HashSet<>();
         onUpdateProcessingListeners = new HashSet<>();
     }
-    
-    public GpuTaskSimple (final long length, final int pesNumber, 
-    		final UtilizationModel utilizationModel) {
+
+    public GpuTaskSimple(final long length, final int pesNumber,
+                         final UtilizationModel utilizationModel) {
         this(-1, length, pesNumber);
         setUtilizationModel(utilizationModel);
     }
-    
-    public GpuTaskSimple (final long length, final int pesNumber) {
+
+    public GpuTaskSimple(final long length, final int pesNumber) {
         this(-1, length, pesNumber);
     }
-    
-    public GpuTaskSimple (final long length, final long pesNumber) {
+
+    public GpuTaskSimple(final long length, final long pesNumber) {
         this(-1, length, pesNumber);
     }
-    
+
     @Override
     public String toString() {
         return String.format("GpuCloudlet %d , GpuTask %d ", gpuCloudlet.getId(), getTaskId());
     }
-    
+
     @Override
     public final GpuTask reset() {
         //this.netServiceLevel = 0;
@@ -108,28 +108,28 @@ public class GpuTaskSimple implements GpuTask {
         //this.setLastTriedDatacenter(Datacenter.NULL);//setLastTriedPGpu
         return this;
     }
-    
+
     @Override
-    public Simulation getSimulation () {
-    	return gpuCloudlet.getSimulation();
+    public Simulation getSimulation() {
+        return gpuCloudlet.getSimulation();
     }
-    
+
     @Override
-    public final GpuTask setBlockLength (final long length) {
-    	if (length == 0) {
+    public final GpuTask setBlockLength(final long length) {
+        if (length == 0) {
             throw new IllegalArgumentException("GpuTask blockLength cannot be zero.");
         }
         this.blockLength = length;
         return this;
     }
-    
+
     @Override
-    public long getBlockLength () {
+    public long getBlockLength() {
         return blockLength;
     }
-    
+
     @Override
-    public final GpuTask setNumberOfCores (final long numberOfCores) {
+    public final GpuTask setNumberOfCores(final long numberOfCores) {
         if (numberOfCores <= 0) {
             throw new IllegalArgumentException("GpuTask number of Cores has to be greater than zero.");
         }
@@ -138,35 +138,35 @@ public class GpuTaskSimple implements GpuTask {
     }
 
     @Override
-    public long getNumberOfCores () {
+    public long getNumberOfCores() {
         return numberOfCores;
     }
-    
+
     @Override
-    public GpuTask setPriority (final int priority) {
-    	this.priority = priority;
+    public GpuTask setPriority(final int priority) {
+        this.priority = priority;
         return this;
     }
 
     @Override
-    public int getPriority () {
+    public int getPriority() {
         return priority;
     }
-    
+
     @Override
-    public double getWaitingTime () {
-    	return arrivalTime == -1 ? -1 : execStartTime - arrivalTime;
+    public double getWaitingTime() {
+        return arrivalTime == -1 ? -1 : execStartTime - arrivalTime;
     }
-    
+
     @Override
-    public boolean addFinishedLengthSoFar (final long partialFinishedMI) {
-    	if (partialFinishedMI < 0.0 || arrivalTime == -1) {
+    public boolean addFinishedLengthSoFar(final long partialFinishedMI) {
+        if (partialFinishedMI < 0.0 || arrivalTime == -1) {
             return false;
         }
 
         final long maxLengthToAdd = getBlockLength() < 0 ?
-                                    partialFinishedMI :
-                                    Math.min(partialFinishedMI, absLength()-getFinishedLengthSoFar());
+                partialFinishedMI :
+                Math.min(partialFinishedMI, absLength() - getFinishedLengthSoFar());
         finishedLengthSoFar += maxLengthToAdd;
         //returnToGpuCloudletIfFinished ();//returnToBrokerIfFinished
         return true;
@@ -180,78 +180,78 @@ public class GpuTaskSimple implements GpuTask {
             vm.getCloudletScheduler().addCloudletToReturnedList(this);
         }
     }*/
-    
+
     @Override
-    public long getFinishedLengthSoFar () {
-    	if(getBlockLength() > 0) 
+    public long getFinishedLengthSoFar() {
+        if (getBlockLength() > 0)
             return Math.min(finishedLengthSoFar, absLength());
-    	
-    	return finishedLengthSoFar;
+
+        return finishedLengthSoFar;
     }
 
     @Override
-    public boolean isFinished () {
+    public boolean isFinished() {
         return (getLifeTime() > 0 && getActualGpuTime() >= getLifeTime()) ||
-               (getBlockLength() > 0 && getFinishedLengthSoFar() >= getBlockLength());
+                (getBlockLength() > 0 && getFinishedLengthSoFar() >= getBlockLength());
     }
 
     @Override
-    public final GpuTask setFileSize (final long fileSize) {
+    public final GpuTask setFileSize(final long fileSize) {
         if (fileSize <= 0) {
             throw new IllegalArgumentException("GpuTask file size has to be greater than zero.");
         }
         this.fileSize = fileSize;
         return this;
     }
-    
+
     @Override
-    public long getFileSize () {
+    public long getFileSize() {
         return fileSize;
     }
 
     @Override
-    public final GpuTask setOutputSize (final long outputSize) {
+    public final GpuTask setOutputSize(final long outputSize) {
         if (outputSize <= 0) {
             throw new IllegalArgumentException("GpuTask output size has to be greater than zero.");
         }
         this.outputSize = outputSize;
         return this;
     }
-    
+
     @Override
-    public long getOutputSize () {
+    public long getOutputSize() {
         return outputSize;
     }
-    
-    protected final void setArrivalTime (final double arrivalTime) {
-        if(arrivalTime < 0)
+
+    protected final void setArrivalTime(final double arrivalTime) {
+        if (arrivalTime < 0)
             this.arrivalTime = -1;
         else this.arrivalTime = arrivalTime;
     }
-    
+
     @Override
-    public double getArrivalTime () {
+    public double getArrivalTime() {
         return arrivalTime;
     }
 
     @Override
-    public void setExecStartTime (final double clockTime) {
-        final boolean isStartingInVgpu = this.execStartTime <= 0 && clockTime > 0 && 
-        		vgpu != VGpu.NULL && vgpu != null;
+    public void setExecStartTime(final double clockTime) {
+        final boolean isStartingInVgpu = this.execStartTime <= 0 && clockTime > 0 &&
+                vgpu != VGpu.NULL && vgpu != null;
         this.execStartTime = clockTime;
-        if(isStartingInVgpu){
+        if (isStartingInVgpu) {
             onStartListeners.forEach(listener -> listener.update(
-            		GpuTaskVGpuEventInfo.of(listener, clockTime, this)));
+                    GpuTaskVGpuEventInfo.of(listener, clockTime, this)));
         }
     }
-    
+
     @Override
-    public double getExecStartTime () {
+    public double getExecStartTime() {
         return execStartTime;
     }
-    
+
     @Override
-    public boolean setStatus (final Status newStatus) {
+    public boolean setStatus(final Status newStatus) {
         if (this.status == newStatus) {
             return false;
         }
@@ -265,130 +265,130 @@ public class GpuTaskSimple implements GpuTask {
     }
 
     @Override
-    public Status getStatus () {
+    public Status getStatus() {
         return status;
     }
 
     @Override
-    public long getGpuTaskTotalLength () {
+    public long getGpuTaskTotalLength() {
         return getBlockLength() * getNumberOfCores();
     }
-    
-    @Override
-    public double getActualGpuTime () {
-    	final double time = getFinishTime() == NOT_ASSIGNED ? getSimulation().clock() : 
-    		finishTime;
-        return time - execStartTime;
-    }
-    
-    protected final void setFinishTime (final double finishTime) {
-        this.finishTime = finishTime;
-    }
-    
-    @Override
-    public double getFinishTime () {
-    	return finishTime;
-    }
-    
-    @Override
-    public void setTaskId (final long taskId) {
-    	this.taskId = taskId;
-    }
-    
-    @Override
-    public long getTaskId () {
-    	return taskId;
-    }
-    
-    @Override
-    public GpuCloudlet getGpuCloudlet () {
-    	return gpuCloudlet;
-    }
-    
-    @Override
-	public void setGpuCloudlet (GpuCloudlet gpuCloudlet) {
-		this.gpuCloudlet = gpuCloudlet;
-		
-		if (gpuCloudlet.getGpuTask() == null)
-			gpuCloudlet.setGpuTask(this);
-	}
 
     @Override
-    public GpuTask setUtilizationModel (UtilizationModel utilizationModel) {
-    	setUtilizationModelBw(utilizationModel);
+    public double getActualGpuTime() {
+        final double time = getFinishTime() == NOT_ASSIGNED ? getSimulation().clock() :
+                finishTime;
+        return time - execStartTime;
+    }
+
+    protected final void setFinishTime(final double finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    @Override
+    public double getFinishTime() {
+        return finishTime;
+    }
+
+    @Override
+    public void setTaskId(final long taskId) {
+        this.taskId = taskId;
+    }
+
+    @Override
+    public long getTaskId() {
+        return taskId;
+    }
+
+    @Override
+    public GpuCloudlet getGpuCloudlet() {
+        return gpuCloudlet;
+    }
+
+    @Override
+    public void setGpuCloudlet(GpuCloudlet gpuCloudlet) {
+        this.gpuCloudlet = gpuCloudlet;
+
+        if (gpuCloudlet.getGpuTask() == null)
+            gpuCloudlet.setGpuTask(this);
+    }
+
+    @Override
+    public GpuTask setUtilizationModel(UtilizationModel utilizationModel) {
+        setUtilizationModelBw(utilizationModel);
         setUtilizationModelGddram(utilizationModel);
         setUtilizationModelGpu(utilizationModel);
         return this;
     }
 
     @Override
-    public GpuTask setUtilizationModelBw (UtilizationModel utilizationModelBw) {
-    	this.utilizationModelBw = requireNonNull(utilizationModelBw);
+    public GpuTask setUtilizationModelBw(UtilizationModel utilizationModelBw) {
+        this.utilizationModelBw = requireNonNull(utilizationModelBw);
         return this;
     }
-    
+
     @Override
     public UtilizationModel getUtilizationModelBw() {
         return utilizationModelBw;
     }
-    
+
     @Override
     public double getUtilizationOfBw() {
         return getUtilizationOfBw(getSimulation().clock());
     }
-    
+
     @Override
     public double getUtilizationOfBw(final double time) {
         return getUtilizationModelBw().getUtilization(time);
     }
 
     @Override
-    public GpuTask setUtilizationModelGpu (UtilizationModel utilizationModelGpu) {
-    	this.utilizationModelGpu = requireNonNull(utilizationModelGpu);
+    public GpuTask setUtilizationModelGpu(UtilizationModel utilizationModelGpu) {
+        this.utilizationModelGpu = requireNonNull(utilizationModelGpu);
         return this;
     }
-    
+
     @Override
     public UtilizationModel getUtilizationModelGpu() {
         return utilizationModelGpu;
     }
-    
+
     @Override
-    public UtilizationModel getUtilizationModel (
-    		final Class<? extends ResourceManageable> resourceClass) {
-    	
-        if(resourceClass.isAssignableFrom(Ram.class)){
+    public UtilizationModel getUtilizationModel(
+            final Class<? extends ResourceManageable> resourceClass) {
+
+        if (resourceClass.isAssignableFrom(Ram.class)) {
             return utilizationModelGddram;
         }
 
-        if(resourceClass.isAssignableFrom(Bandwidth.class)){
+        if (resourceClass.isAssignableFrom(Bandwidth.class)) {
             return utilizationModelBw;
         }
 
-        if(resourceClass.isAssignableFrom(VGpuCore.class) || 
-        		resourceClass.isAssignableFrom(GpuCore.class)){
+        if (resourceClass.isAssignableFrom(VGpuCore.class) ||
+                resourceClass.isAssignableFrom(GpuCore.class)) {
             return utilizationModelGpu;
         }
 
         throw new UnsupportedOperationException("This class doesn't support " + resourceClass.getSimpleName() + " resources");
     }
-    
+
     @Override
     public double getUtilizationOfGpu() {
         return getUtilizationOfGpu(getSimulation().clock());
     }
-    
+
     @Override
     public double getUtilizationOfGpu(final double time) {
         return getUtilizationModelGpu().getUtilization(time);
     }
 
     @Override
-    public GpuTask setUtilizationModelGddram (UtilizationModel utilizationModelGddram) {
-    	this.utilizationModelGddram = requireNonNull(utilizationModelGddram);
+    public GpuTask setUtilizationModelGddram(UtilizationModel utilizationModelGddram) {
+        this.utilizationModelGddram = requireNonNull(utilizationModelGddram);
         return this;
     }
-    
+
     @Override
     public UtilizationModel getUtilizationModelGddram() {
         return utilizationModelGddram;
@@ -403,34 +403,34 @@ public class GpuTaskSimple implements GpuTask {
     public double getUtilizationOfGddram(final double time) {
         return getUtilizationModelGddram().getUtilization(time);
     }
-    
-    protected long absLength () {
+
+    protected long absLength() {
         return Math.abs(getBlockLength());
     }
 
-	@Override
-	public boolean addRequiredFile (String fileName) {
-		if (getRequiredFiles().stream().anyMatch(reqFile -> reqFile.equals(fileName))) {
+    @Override
+    public boolean addRequiredFile(String fileName) {
+        if (getRequiredFiles().stream().anyMatch(reqFile -> reqFile.equals(fileName))) {
             return false;
         }
 
         requiredFiles.add(fileName);
         return true;
-	}
+    }
 
-	@Override
-	public boolean addRequiredFiles (List<String> fileNames) {
-		boolean atLeastOneFileAdded = false;
+    @Override
+    public boolean addRequiredFiles(List<String> fileNames) {
+        boolean atLeastOneFileAdded = false;
         for (final String fileName : fileNames) {
             atLeastOneFileAdded |= addRequiredFile(fileName);
         }
 
         return atLeastOneFileAdded;
-	}
+    }
 
-	@Override
-	public boolean deleteRequiredFile (String filename) {
-		for (int i = 0; i < getRequiredFiles().size(); i++) {
+    @Override
+    public boolean deleteRequiredFile(String filename) {
+        for (int i = 0; i < getRequiredFiles().size(); i++) {
             final String currentFile = requiredFiles.get(i);
 
             if (currentFile.equals(filename)) {
@@ -440,121 +440,121 @@ public class GpuTaskSimple implements GpuTask {
         }
 
         return false;
-	}
+    }
 
-	@Override
-	public boolean hasRequiresFiles () {
+    @Override
+    public boolean hasRequiresFiles() {
         return !getRequiredFiles().isEmpty();
-	}
+    }
 
-	@Override
-	public List<String> getRequiredFiles () {
-		return requiredFiles;
-	}
+    @Override
+    public List<String> getRequiredFiles() {
+        return requiredFiles;
+    }
 
-	@Override
-	public double registerArrivalInVideocard () {
-		setArrivalTime(getSimulation().clock());
+    @Override
+    public double registerArrivalInVideocard() {
+        setArrivalTime(getSimulation().clock());
         return arrivalTime;
-	}
+    }
 
 	/*@Override
 	public boolean isBoundToVGpu () {
 	}*/
 
-	@Override
-	public GpuTask setSizes (long size) {
-		setFileSize(size);
+    @Override
+    public GpuTask setSizes(long size) {
+        setFileSize(size);
         setOutputSize(size);
         return this;
-	}
+    }
 
-	@Override
-	public GpuTask addOnStartListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		this.onStartListeners.add(requireNonNull(listener));
+    @Override
+    public GpuTask addOnStartListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        this.onStartListeners.add(requireNonNull(listener));
         return this;
-	}
+    }
 
-	@Override
-	public boolean removeOnStartListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		return onStartListeners.remove(listener);
-	}
+    @Override
+    public boolean removeOnStartListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        return onStartListeners.remove(listener);
+    }
 
-	@Override
-	public GpuTask addOnUpdateProcessingListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		this.onUpdateProcessingListeners.add(requireNonNull(listener));
+    @Override
+    public GpuTask addOnUpdateProcessingListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        this.onUpdateProcessingListeners.add(requireNonNull(listener));
         return this;
-	}
+    }
 
-	@Override
-	public boolean removeOnUpdateProcessingListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		return this.onUpdateProcessingListeners.remove(listener);
-	}
+    @Override
+    public boolean removeOnUpdateProcessingListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        return this.onUpdateProcessingListeners.remove(listener);
+    }
 
-	@Override
-	public GpuTask addOnFinishListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		if(listener.equals(EventListener.NULL))
+    @Override
+    public GpuTask addOnFinishListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        if (listener.equals(EventListener.NULL))
             return this;
-		this.onFinishListeners.add(requireNonNull(listener));
+        this.onFinishListeners.add(requireNonNull(listener));
         return this;
-	}
+    }
 
-	@Override
-	public boolean removeOnFinishListener (EventListener<GpuTaskVGpuEventInfo> listener) {
-		return onFinishListeners.remove(listener);
-	}
+    @Override
+    public boolean removeOnFinishListener(EventListener<GpuTaskVGpuEventInfo> listener) {
+        return onFinishListeners.remove(listener);
+    }
 
-	@Override
-	public void notifyOnUpdateProcessingListeners (double time) {
-		onUpdateProcessingListeners.forEach(
-				listener -> listener.update(GpuTaskVGpuEventInfo.of(listener, time, this)));		
-	}
+    @Override
+    public void notifyOnUpdateProcessingListeners(double time) {
+        onUpdateProcessingListeners.forEach(
+                listener -> listener.update(GpuTaskVGpuEventInfo.of(listener, time, this)));
+    }
 
-	@Override
-	public GpuTask setLifeTime (double lifeTime) {
-		if (lifeTime == 0) 
-			throw new IllegalArgumentException("GpuTask lifeTime cannot be zero.");
+    @Override
+    public GpuTask setLifeTime(double lifeTime) {
+        if (lifeTime == 0)
+            throw new IllegalArgumentException("GpuTask lifeTime cannot be zero.");
 
-		this.lifeTime = lifeTime;
-		return this;
-	}
-
-	@Override
-	public double getLifeTime () {
-		return this.lifeTime;
-	}
-
-	@Override
-	public VGpu getVGpu () {
-		return vgpu;
-	}
-
-	@Override
-	public GpuTask setVGpu (VGpu vgpu) {
-		this.vgpu = vgpu;
+        this.lifeTime = lifeTime;
         return this;
-	}
+    }
+
+    @Override
+    public double getLifeTime() {
+        return this.lifeTime;
+    }
+
+    @Override
+    public VGpu getVGpu() {
+        return vgpu;
+    }
+
+    @Override
+    public GpuTask setVGpu(VGpu vgpu) {
+        this.vgpu = vgpu;
+        return this;
+    }
 	
 	/*public boolean isDelayed() {
         return submissionDelay > 0;
     }*/
-	
-    @Override 
-    public int compareTo (GpuTask other) {
-    	if(this.equals(Objects.requireNonNull(other))) 
+
+    @Override
+    public int compareTo(GpuTask other) {
+        if (this.equals(Objects.requireNonNull(other)))
             return 0;
 
         return Double.compare(getBlockLength(), other.getBlockLength()) +
-            Long.compare(this.getTaskId(), other.getTaskId());
-            //this.getBroker().compareTo(other.getBroker());
+                Long.compare(this.getTaskId(), other.getTaskId());
+        //this.getBroker().compareTo(other.getBroker());
     }
-    
+
     @Override
-    public double getSubmissionDelay () {
+    public double getSubmissionDelay() {
         return this.submissionDelay;
     }
-    
-    public final void setSubmissionDelay (final double submissionDelay) {
+
+    public final void setSubmissionDelay(final double submissionDelay) {
         if (submissionDelay < 0)
             return;
         this.submissionDelay = submissionDelay;
@@ -563,12 +563,12 @@ public class GpuTaskSimple implements GpuTask {
     void notifyOnFinishListeners() {
         if (isFinished()) {
             onFinishListeners.forEach(listener -> listener.update(
-            		GpuTaskVGpuEventInfo.of(listener, this)));
+                    GpuTaskVGpuEventInfo.of(listener, this)));
             onFinishListeners.clear();
         }
     }
-    
-	//@Override public void setLastTriedDatacenter(Datacenter lastTriedDatacenter) {/**/}
+
+    //@Override public void setLastTriedDatacenter(Datacenter lastTriedDatacenter) {/**/}
     //@Override public Datacenter getLastTriedDatacenter() { return Datacenter.NULL; }
     //@Override public double getArrivedTime() { return 0; }
     //@Override public CustomerEntity setArrivedTime(double time) { return this; }

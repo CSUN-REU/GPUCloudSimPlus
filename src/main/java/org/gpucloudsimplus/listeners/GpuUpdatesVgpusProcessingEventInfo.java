@@ -4,21 +4,35 @@ import org.cloudbus.cloudsim.gp.resources.Gpu;
 import org.cloudsimplus.listeners.EventListener;
 
 
-public interface GpuUpdatesVgpusProcessingEventInfo extends GpuEventInfo  {
-    
-    double getNextGpuTaskCompletionTime ();
+public interface GpuUpdatesVgpusProcessingEventInfo extends GpuEventInfo {
 
-    static GpuUpdatesVgpusProcessingEventInfo of (
-    		final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener, 
-    		final Gpu gpu, 
-    		final double nextCloudletCompletionTime) {
+    double getNextGpuTaskCompletionTime();
+
+    static GpuUpdatesVgpusProcessingEventInfo of(
+            final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener,
+            final Gpu gpu,
+            final double nextCloudletCompletionTime) {
         final double time = gpu.getSimulation().clock();
-        return new GpuUpdatesVgpusProcessingEventInfo () {
-            @Override public double getNextGpuTaskCompletionTime () { return nextCloudletCompletionTime; }
-            @Override public Gpu getGpu () { return gpu; }
-            @Override public double getTime() { return time; }
-            @Override public EventListener<GpuUpdatesVgpusProcessingEventInfo> getListener () { 
-            	return listener; }
+        return new GpuUpdatesVgpusProcessingEventInfo() {
+            @Override
+            public double getNextGpuTaskCompletionTime() {
+                return nextCloudletCompletionTime;
+            }
+
+            @Override
+            public Gpu getGpu() {
+                return gpu;
+            }
+
+            @Override
+            public double getTime() {
+                return time;
+            }
+
+            @Override
+            public EventListener<GpuUpdatesVgpusProcessingEventInfo> getListener() {
+                return listener;
+            }
         };
     }
 }

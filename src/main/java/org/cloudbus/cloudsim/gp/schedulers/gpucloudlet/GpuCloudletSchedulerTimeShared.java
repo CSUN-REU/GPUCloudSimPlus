@@ -7,7 +7,7 @@ import java.io.Serial;
 import java.util.List;
 
 public class GpuCloudletSchedulerTimeShared extends GpuCloudletSchedulerAbstract {
-	@Serial
+    @Serial
     private static final long serialVersionUID = 2115862129708036038L;
 
     @Override

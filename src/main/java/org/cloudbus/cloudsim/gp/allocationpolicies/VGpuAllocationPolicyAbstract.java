@@ -18,34 +18,34 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPolicy {
 
-	private BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction;
+    private BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction;
     private Videocard videocard;
     private int gpuCountForParallelSearch;
 
-    
-    public VGpuAllocationPolicyAbstract () {
+
+    public VGpuAllocationPolicyAbstract() {
         this(null);
     }
-    
-    public VGpuAllocationPolicyAbstract (
-    		final BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction) {
+
+    public VGpuAllocationPolicyAbstract(
+            final BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction) {
         setVideocard(Videocard.NULL);
         setFindGpuForVGpuFunction(findGpuForVGpuFunction);
         this.gpuCountForParallelSearch = DEF_GPU_COUNT_PARALLEL_SEARCH;
     }
-    
+
     @Override
-    public final <T extends Gpu> List<T> getGpuList () {
+    public final <T extends Gpu> List<T> getGpuList() {
         return videocard.getGpuList();
     }
 
     @Override
-    public Videocard getVideocard () {
+    public Videocard getVideocard() {
         return videocard;
     }
-    
+
     @Override
-    public void setVideocard (final Videocard videocard) {
+    public void setVideocard(final Videocard videocard) {
         this.videocard = requireNonNull(videocard);
     }
     
@@ -71,7 +71,7 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
     }*/
 
     /*private boolean scaleVmPesUpOrDown(final VerticalVmScaling scaling) {*/
-        
+
 
     /*private boolean isNotHostPesSuitableToUpScaleVm(final VerticalVmScaling scaling) {*/
 
@@ -85,14 +85,14 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
 
     /*private boolean downScaleVmNonCpuResource(final VerticalVmScaling scaling) {*/
 
-    
+
     @Override
-    public GpuSuitability allocateGpuForVGpu (final VGpu vgpu) {
+    public GpuSuitability allocateGpuForVGpu(final VGpu vgpu) {
         if (getGpuList().isEmpty()) {
             LOGGER.error(
-                "{}: {}: {} could not be allocated because there isn't any Gpu for Videocard {}",
-                vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu,
-                getVideocard().getHost().getId());
+                    "{}: {}: {} could not be allocated because there isn't any Gpu for Videocard {}",
+                    vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu,
+                    getVideocard().getHost().getId());
             return new GpuSuitability("Videocard has no host.");
         }
 
@@ -105,20 +105,20 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
             return allocateGpuForVGpu(vgpu, optionalGpu.get());
         }
 
-        LOGGER.warn("{}: {}: No suitable gpu found for {} in {}", vgpu.getSimulation().clockStr(), 
-        		getClass().getSimpleName(), vgpu, videocard);
+        LOGGER.warn("{}: {}: No suitable gpu found for {} in {}", vgpu.getSimulation().clockStr(),
+                getClass().getSimpleName(), vgpu, videocard);
         return new GpuSuitability("No suitable gpu found");
     }
 
     @Override
-    public <T extends VGpu> List<T> allocateGpuForVGpu (final Collection<T> vgpuCollection) {
+    public <T extends VGpu> List<T> allocateGpuForVGpu(final Collection<T> vgpuCollection) {
         requireNonNull(vgpuCollection, "The list of VGPUs to allocate a gpu to cannot be null");
         return vgpuCollection.stream().filter(
-        		vgpu -> !allocateGpuForVGpu(vgpu).fully()).collect(toList());
+                vgpu -> !allocateGpuForVGpu(vgpu).fully()).collect(toList());
     }
 
     @Override
-    public GpuSuitability allocateGpuForVGpu (final VGpu vgpu, final Gpu gpu) {
+    public GpuSuitability allocateGpuForVGpu(final VGpu vgpu, final Gpu gpu) {
         /*if(vm instanceof VmGroup vmGroup){
             return createVmsFromGroup(vmGroup, host);
         }*/
@@ -143,44 +143,44 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
         return hostSuitabilityForVmGroup;
     }*/
 
-    private GpuSuitability createVGpu (final VGpu vgpu, final Gpu gpu) {
+    private GpuSuitability createVGpu(final VGpu vgpu, final Gpu gpu) {
         final GpuSuitability suitability = gpu.createVGpu(vgpu);
         if (suitability.fully()) {
             LOGGER.info(
-                "{}: {}: {} has been allocated to {}",
-                vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu, gpu);
+                    "{}: {}: {} has been allocated to {}",
+                    vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu, gpu);
         } else {
             LOGGER.error(
-                "{}: {} Creation of {} on {} failed due to {}.",
-                vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu, gpu, suitability);
+                    "{}: {} Creation of {} on {} failed due to {}.",
+                    vgpu.getSimulation().clockStr(), getClass().getSimpleName(), vgpu, gpu, suitability);
         }
 
         return suitability;
     }
 
     @Override
-    public void deallocateGpuForVGpu (final VGpu vgpu) {
+    public void deallocateGpuForVGpu(final VGpu vgpu) {
         vgpu.getGpu().destroyVGpu(vgpu);
     }
 
     @Override
-    public final void setFindGpuForVGpuFunction (
-    		final BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction) {
+    public final void setFindGpuForVGpuFunction(
+            final BiFunction<VGpuAllocationPolicy, VGpu, Optional<Gpu>> findGpuForVGpuFunction) {
         this.findGpuForVGpuFunction = findGpuForVGpuFunction;
     }
 
     @Override
-    public final Optional<Gpu> findGpuForVGpu (final VGpu vgpu) {
-        final Optional<Gpu> optionalHost = findGpuForVGpuFunction == null ? 
-        		defaultFindGpuForVGpu(vgpu) : findGpuForVGpuFunction.apply(this, vgpu);
+    public final Optional<Gpu> findGpuForVGpu(final VGpu vgpu) {
+        final Optional<Gpu> optionalHost = findGpuForVGpuFunction == null ?
+                defaultFindGpuForVGpu(vgpu) : findGpuForVGpuFunction.apply(this, vgpu);
         return optionalHost.map(host -> host.setActive(true));
     }
 
-    protected abstract Optional<Gpu> defaultFindGpuForVGpu (VGpu vgpu);
+    protected abstract Optional<Gpu> defaultFindGpuForVGpu(VGpu vgpu);
 
     @Override
-    public Map<VGpu, Gpu> getOptimizedAllocationMap (final List<? extends VGpu> vgpuList) {
-    	//
+    public Map<VGpu, Gpu> getOptimizedAllocationMap(final List<? extends VGpu> vgpuList) {
+        //
         return Collections.emptyMap();
     }
 
@@ -190,7 +190,7 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
     }
 
     @Override
-    public void setGpuCountForParallelSearch (final int gpuCountForParallelSearch) {
+    public void setGpuCountForParallelSearch(final int gpuCountForParallelSearch) {
         this.gpuCountForParallelSearch = gpuCountForParallelSearch;
     }
 

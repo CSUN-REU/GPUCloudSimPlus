@@ -10,14 +10,14 @@ import static org.cloudsimplus.util.TimeUtil.hoursToMinutes;
 
 public interface TimeZoned {
     int MIN_TIME_ZONE_OFFSET = -12;
-    int MAX_TIME_ZONE_OFFSET =  14;
+    int MAX_TIME_ZONE_OFFSET = 14;
 
     double getTimeZone();
 
     TimeZoned setTimeZone(double timeZone);
 
     default double validateTimeZone(final double timeZone) {
-        if(timeZone < MIN_TIME_ZONE_OFFSET || timeZone > MAX_TIME_ZONE_OFFSET){
+        if (timeZone < MIN_TIME_ZONE_OFFSET || timeZone > MAX_TIME_ZONE_OFFSET) {
             final var msg = "Timezone offset must be between [%d and %d].";
             throw new IllegalArgumentException(String.format(msg, MIN_TIME_ZONE_OFFSET, MAX_TIME_ZONE_OFFSET));
         }
@@ -25,24 +25,24 @@ public interface TimeZoned {
         return timeZone;
     }
 
-    static GpuDatacenter closestDatacenter(final GpuVm vm, final List<GpuDatacenter> datacenters){
-        if(Objects.requireNonNull(datacenters).isEmpty()){
+    static GpuDatacenter closestDatacenter(final GpuVm vm, final List<GpuDatacenter> datacenters) {
+        if (Objects.requireNonNull(datacenters).isEmpty()) {
             throw new IllegalArgumentException("The list of Datacenters is empty.");
         }
 
-        if(datacenters.size() == 1){
+        if (datacenters.size() == 1) {
             return datacenters.get(0);
         }
 
-        final var iterator = vm.getTimeZone() <= 0 ? datacenters.listIterator() : 
-        	new ReverseListIterator<>(datacenters);
+        final var iterator = vm.getTimeZone() <= 0 ? datacenters.listIterator() :
+                new ReverseListIterator<>(datacenters);
 
         var currentDc = GpuDatacenter.NULL;
         var previousDc = currentDc;
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             currentDc = iterator.next();
-            
-            if(vm.distance(currentDc) > vm.distance(previousDc)){
+
+            if (vm.distance(currentDc) > vm.distance(previousDc)) {
                 return previousDc;
             }
 
@@ -56,12 +56,12 @@ public interface TimeZoned {
         return Math.abs(other.getTimeZone() - this.getTimeZone());
     }
 
-    static String format(final double timeZone){
+    static String format(final double timeZone) {
         final double decimals = timeZone - (int) timeZone;
         final String formatted = decimals == 0 ?
-                                    String.format("GMT%+.0f", timeZone) :
-                                    String.format("GMT%+d:%2.0f", (int)timeZone, 
-                                    		hoursToMinutes(decimals));
+                String.format("GMT%+.0f", timeZone) :
+                String.format("GMT%+d:%2.0f", (int) timeZone,
+                        hoursToMinutes(decimals));
         return String.format("%-8s", formatted);
     }
 

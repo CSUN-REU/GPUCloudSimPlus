@@ -8,33 +8,33 @@ import java.util.function.Function;
 
 
 public abstract class GpuResourceProvisionerAbstract implements GpuResourceProvisioner {
-	
-	private ResourceManageable pGpuResource;
-	private Function<VGpu, ResourceManageable> vGpuResourceFunction;
-	
-	protected GpuResourceProvisionerAbstract() {
+
+    private ResourceManageable pGpuResource;
+    private Function<VGpu, ResourceManageable> vGpuResourceFunction;
+
+    protected GpuResourceProvisionerAbstract() {
         this(ResourceManageable.NULL, vgpu -> ResourceManageable.NULL);
     }
 
-    public GpuResourceProvisionerAbstract(final ResourceManageable pGpuResource, 
-    		final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
+    public GpuResourceProvisionerAbstract(final ResourceManageable pGpuResource,
+                                          final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
         setResources(pGpuResource, vGpuResourceFunction);
     }
-    
-    
-	@Override
+
+
+    @Override
     public long getAllocatedResourceForVGpu(final VGpu vGpu) {
         return vGpuResourceFunction.apply(vGpu).getAllocatedResource();
     }
-	
-	@Override
+
+    @Override
     public ResourceManageable getPGpuResource() {
         return pGpuResource;
     }
 
     @Override
-    public final void setResources(final ResourceManageable pGpuResource, 
-    		final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
+    public final void setResources(final ResourceManageable pGpuResource,
+                                   final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
         this.pGpuResource = Objects.requireNonNull(pGpuResource);
         this.vGpuResourceFunction = Objects.requireNonNull(vGpuResourceFunction);
     }
@@ -53,7 +53,7 @@ public abstract class GpuResourceProvisionerAbstract implements GpuResourceProvi
     public long getAvailableResource() {
         return pGpuResource.getAvailableResource();
     }
-    
+
     protected Function<VGpu, ResourceManageable> getVGpuResourceFunction() {
         return vGpuResourceFunction;
     }

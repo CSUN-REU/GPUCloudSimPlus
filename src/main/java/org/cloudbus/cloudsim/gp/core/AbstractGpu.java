@@ -7,29 +7,29 @@ import org.cloudsimplus.resources.Resourceful;
 
 //  <T extends Resource>
 public interface AbstractGpu extends ChangeableId, Resourceful {
-    
+
     AbstractGpu NULL = new AbstractGpuNull();
 
-    Resource getBw ();
+    Resource getBw();
 
-    Resource getGddram ();
+    Resource getGddram();
 
     //T getStorage ();
 
-    long getNumberOfCores ();
+    long getNumberOfCores();
 
-    double getMips ();
+    double getMips();
 
-    double getTotalMipsCapacity ();
+    double getTotalMipsCapacity();
 
     Simulation getSimulation();
 
-    double getStartTime ();
+    double getStartTime();
 
-    AbstractGpu setStartTime (double startTime);
+    AbstractGpu setStartTime(double startTime);
 
-    default boolean isIdleEnough (final double time) {
-        if(time < 0) {
+    default boolean isIdleEnough(final double time) {
+        if (time < 0) {
             return false;
         }
 
@@ -46,8 +46,8 @@ public interface AbstractGpu extends ChangeableId, Resourceful {
         return getIdleInterval() > 0;
     }
 
-    static void validateCapacity (final double capacity) {
-        if(capacity <= 0){
+    static void validateCapacity(final double capacity) {
+        if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be greater than zero");
         }
     }

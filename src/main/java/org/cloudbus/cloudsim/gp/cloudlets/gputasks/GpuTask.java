@@ -12,8 +12,8 @@ import org.gpucloudsimplus.listeners.GpuTaskVGpuEventInfo;
 import java.util.List;
 
 public interface GpuTask extends Comparable<GpuTask> {
-	
-	enum Status {
+
+    enum Status {
         INSTANTIATED,
         READY,
         QUEUED,
@@ -26,131 +26,131 @@ public interface GpuTask extends Comparable<GpuTask> {
         RESUMED,
         FAILED_RESOURCE_UNAVAILABLE
     }
-	
-	GpuTask NULL = new GpuTaskNull();
-	
-	int NOT_ASSIGNED = -1;
-	
-	Cloudlet getGpuCloudlet ();
-	
-	Simulation getSimulation ();
-	
-	void setGpuCloudlet (GpuCloudlet GpuCloudlet);
-	
-	boolean addRequiredFile (String fileName);
 
-    boolean addRequiredFiles (List<String> fileNames);
+    GpuTask NULL = new GpuTaskNull();
 
-    boolean deleteRequiredFile (String filename);
+    int NOT_ASSIGNED = -1;
 
-    boolean hasRequiresFiles ();
+    Cloudlet getGpuCloudlet();
 
-    List<String> getRequiredFiles ();
+    Simulation getSimulation();
 
-    double getArrivalTime ();
-    
-    double getActualGpuTime ();
+    void setGpuCloudlet(GpuCloudlet GpuCloudlet);
 
-    long getFileSize ();
+    boolean addRequiredFile(String fileName);
 
-    long getOutputSize ();
+    boolean addRequiredFiles(List<String> fileNames);
 
-    Status getStatus ();
+    boolean deleteRequiredFile(String filename);
+
+    boolean hasRequiresFiles();
+
+    List<String> getRequiredFiles();
+
+    double getArrivalTime();
+
+    double getActualGpuTime();
+
+    long getFileSize();
+
+    long getOutputSize();
+
+    Status getStatus();
 
     //@Override
     //double getSubmissionDelay ();
 
     //boolean isReturnedToBroker ();
 
-    double registerArrivalInVideocard ();
-    
-    double getExecStartTime ();
+    double registerArrivalInVideocard();
 
-    double getFinishTime ();
+    double getExecStartTime();
 
-    long getTaskId ();
+    double getFinishTime();
 
-    void setTaskId (long taskId);
-    
-    int getPriority ();
-    
-    GpuTask setPriority (int priority);
+    long getTaskId();
+
+    void setTaskId(long taskId);
+
+    int getPriority();
+
+    GpuTask setPriority(int priority);
 
     //int getNetServiceLevel ();
 
-    long getNumberOfCores ();
+    long getNumberOfCores();
 
-    UtilizationModel getUtilizationModelBw ();
-    
-    UtilizationModel getUtilizationModelGpu ();
+    UtilizationModel getUtilizationModelBw();
 
-    UtilizationModel getUtilizationModelGddram ();
+    UtilizationModel getUtilizationModelGpu();
 
-    UtilizationModel getUtilizationModel (Class<? extends ResourceManageable> resourceClass);
-    
-    double getUtilizationOfGpu ();
+    UtilizationModel getUtilizationModelGddram();
 
-    double getUtilizationOfGpu (double time);
+    UtilizationModel getUtilizationModel(Class<? extends ResourceManageable> resourceClass);
 
-    double getUtilizationOfGddram ();
-    
-    double getUtilizationOfGddram (double time);
+    double getUtilizationOfGpu();
 
-    double getUtilizationOfBw ();
+    double getUtilizationOfGpu(double time);
 
-    double getUtilizationOfBw (double time);
-    
+    double getUtilizationOfGddram();
+
+    double getUtilizationOfGddram(double time);
+
+    double getUtilizationOfBw();
+
+    double getUtilizationOfBw(double time);
+
     //boolean isBoundToVGpu ();
 
-    double getWaitingTime ();
+    double getWaitingTime();
 
-    boolean isFinished ();
+    boolean isFinished();
 
-    GpuTask setFileSize (long fileSize);
+    GpuTask setFileSize(long fileSize);
 
-    GpuTask setOutputSize (long outputSize);
-    
-    GpuTask setSizes (long size);
+    GpuTask setOutputSize(long outputSize);
 
-    boolean setStatus (Status newStatus);
-    
+    GpuTask setSizes(long size);
+
+    boolean setStatus(Status newStatus);
+
     //void setNetServiceLevel (int netServiceLevel);
 
-    GpuTask setNumberOfCores (long numberOfCores);
-    
-    GpuTask setUtilizationModel (UtilizationModel utilizationModel);
+    GpuTask setNumberOfCores(long numberOfCores);
 
-    GpuTask setUtilizationModelBw (UtilizationModel utilizationModelBw);
+    GpuTask setUtilizationModel(UtilizationModel utilizationModel);
 
-    GpuTask setUtilizationModelGpu (UtilizationModel utilizationModelGpu);
+    GpuTask setUtilizationModelBw(UtilizationModel utilizationModelBw);
 
-    GpuTask setUtilizationModelGddram (UtilizationModel utilizationModelGddram);
+    GpuTask setUtilizationModelGpu(UtilizationModel utilizationModelGpu);
 
-    long getBlockLength ();
-    
-    GpuTask setBlockLength (long length);
+    GpuTask setUtilizationModelGddram(UtilizationModel utilizationModelGddram);
 
-    long getGpuTaskTotalLength ();
-    
-    long getFinishedLengthSoFar ();
+    long getBlockLength();
 
-    boolean addFinishedLengthSoFar (long partialFinishedMI);
+    GpuTask setBlockLength(long length);
 
-    void setExecStartTime (double clockTime);
-    
-    GpuTask addOnStartListener (EventListener<GpuTaskVGpuEventInfo> listener);
+    long getGpuTaskTotalLength();
 
-    boolean removeOnStartListener (EventListener<GpuTaskVGpuEventInfo> listener);
+    long getFinishedLengthSoFar();
 
-    GpuTask addOnUpdateProcessingListener (EventListener<GpuTaskVGpuEventInfo> listener);
+    boolean addFinishedLengthSoFar(long partialFinishedMI);
 
-    boolean removeOnUpdateProcessingListener (EventListener<GpuTaskVGpuEventInfo> listener);
-    
-    GpuTask addOnFinishListener (EventListener<GpuTaskVGpuEventInfo> listener);
+    void setExecStartTime(double clockTime);
 
-    boolean removeOnFinishListener (EventListener<GpuTaskVGpuEventInfo> listener);
+    GpuTask addOnStartListener(EventListener<GpuTaskVGpuEventInfo> listener);
 
-    void notifyOnUpdateProcessingListeners (double time);
+    boolean removeOnStartListener(EventListener<GpuTaskVGpuEventInfo> listener);
+
+    GpuTask addOnUpdateProcessingListener(EventListener<GpuTaskVGpuEventInfo> listener);
+
+    boolean removeOnUpdateProcessingListener(EventListener<GpuTaskVGpuEventInfo> listener);
+
+    GpuTask addOnFinishListener(EventListener<GpuTaskVGpuEventInfo> listener);
+
+    boolean removeOnFinishListener(EventListener<GpuTaskVGpuEventInfo> listener);
+
+    void notifyOnUpdateProcessingListeners(double time);
 
     //@Override
     //DatacenterBroker getBroker ();
@@ -158,15 +158,15 @@ public interface GpuTask extends Comparable<GpuTask> {
     //@Override
     //void setBroker (DatacenterBroker broker);
 
-    GpuTask reset ();
+    GpuTask reset();
 
-    GpuTask setLifeTime (double lifeTime);
+    GpuTask setLifeTime(double lifeTime);
 
-	double getLifeTime ();
-	
-	VGpu getVGpu ();
-	
-	GpuTask setVGpu(VGpu vgpu);
-	
-	double getSubmissionDelay ();
+    double getLifeTime();
+
+    VGpu getVGpu();
+
+    GpuTask setVGpu(VGpu vgpu);
+
+    double getSubmissionDelay();
 }

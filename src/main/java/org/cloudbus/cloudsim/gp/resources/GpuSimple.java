@@ -37,19 +37,19 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 public class GpuSimple implements Gpu {
-	
-	private static long defaultGddramCapacity = (long) BytesConversion.gigaToMega(10);
+
+    private static long defaultGddramCapacity = (long) BytesConversion.gigaToMega(10);
     private static long defaultBwCapacity = 1000;
-    
-	private long id;
-	private String type;
-	private final Ram ram;
+
+    private long id;
+    private String type;
+    private final Ram ram;
     private final Bandwidth bw;
-	private List<GpuCore> gpuCoreList;
-	private GpuResourceProvisioner gpuGddramProvisioner;
-	private GpuResourceProvisioner gpuBwProvisioner;
-	protected GpuResourceStats gpuUtilizationStats;
-	 
+    private List<GpuCore> gpuCoreList;
+    private GpuResourceProvisioner gpuGddramProvisioner;
+    private GpuResourceProvisioner gpuBwProvisioner;
+    protected GpuResourceStats gpuUtilizationStats;
+
     private final List<GpuStateHistoryEntry> stateHistory;
 
     private boolean activateOnVideocardStartup;
@@ -62,13 +62,13 @@ public class GpuSimple implements Gpu {
     private double totalUpTime;
     private double lastBusyTime;
     private double idleShutdownDeadline;
-    
+
     private VGpuScheduler vgpuScheduler;
     private final List<VGpu> vgpuList = new ArrayList<>();
 
     private final Set<VGpu> vgpusMigratingIn;
     private final Set<VGpu> vgpusMigratingOut;
-    
+
     private Videocard videocard;
 
     private final Set<EventListener<GpuUpdatesVgpusProcessingEventInfo>> onUpdateProcessingListeners;
@@ -79,54 +79,54 @@ public class GpuSimple implements Gpu {
 
     private List<GpuResourceProvisioner> provisioners;
     private final List<VGpu> vgpuCreatedList;
-    
+
     private int freeCoresNumber;
     private int busyCoresNumber;
     private int workingCoresNumber;
     private int failedCoresNumber;
     private boolean lazySuitabilityEvaluation;
-	
-	private Simulation simulation;
+
+    private Simulation simulation;
 
     public GpuSimple(final List<GpuCore> coreList) {
         this(coreList, true);
     }
-    
+
     public GpuSimple(final List<GpuCore> coreList, final boolean activate) {
         this(defaultGddramCapacity, defaultBwCapacity, coreList, activate);
     }
-    
-    public GpuSimple (final GpuResourceProvisioner gpuGddramProvisioner,
-            final GpuResourceProvisioner gpubwProvisioner,
-            final List<GpuCore> coreList) {
-    	
-    	this("", gpuGddramProvisioner.getCapacity(), gpubwProvisioner.getCapacity(), coreList, 
-    			true);
-    	setGpuGddramProvisioner(gpuGddramProvisioner);
-    	setGpuBwProvisioner(gpubwProvisioner);
-	}
-    
-    public GpuSimple (final long ram, final long bw, final List<GpuCore> coreList) {
+
+    public GpuSimple(final GpuResourceProvisioner gpuGddramProvisioner,
+                     final GpuResourceProvisioner gpubwProvisioner,
+                     final List<GpuCore> coreList) {
+
+        this("", gpuGddramProvisioner.getCapacity(), gpubwProvisioner.getCapacity(), coreList,
+                true);
+        setGpuGddramProvisioner(gpuGddramProvisioner);
+        setGpuBwProvisioner(gpubwProvisioner);
+    }
+
+    public GpuSimple(final long ram, final long bw, final List<GpuCore> coreList) {
         this(ram, bw, coreList, true);
     }
 
-    public GpuSimple (final long ram, final long bw, final List<GpuCore> coreList, 
-    		final boolean activate) {
-    	this("", ram, bw, coreList, activate);
-	}
-    
-	public GpuSimple (String type, final long ram, final long bw,
-			final List<GpuCore> coreList, final boolean activate) {
-		//this.setId(id);
-		this.setType(type);
+    public GpuSimple(final long ram, final long bw, final List<GpuCore> coreList,
+                     final boolean activate) {
+        this("", ram, bw, coreList, activate);
+    }
+
+    public GpuSimple(String type, final long ram, final long bw,
+                     final List<GpuCore> coreList, final boolean activate) {
+        //this.setId(id);
+        this.setType(type);
         this.setSimulation(Simulation.NULL);
 
-		this.idleShutdownDeadline = DEF_IDLE_SHUTDOWN_DEADLINE;
+        this.idleShutdownDeadline = DEF_IDLE_SHUTDOWN_DEADLINE;
         this.lazySuitabilityEvaluation = true;
 
         this.ram = new Ram(ram);
         this.bw = new Bandwidth(bw);
-        
+
         this.setGpuGddramProvisioner(new GpuResourceProvisionerSimple());
         this.setGpuBwProvisioner(new GpuResourceProvisionerSimple());
 
@@ -149,124 +149,125 @@ public class GpuSimple implements Gpu {
         //this.powerModel = PowerModelGpu.NULL;
         this.stateHistory = new LinkedList<>();
         this.activateOnVideocardStartup = activate;
-        
-		//this.setGpuGddramProvisioner(new GpuResourceProvisionerSimple());
+
+        //this.setGpuGddramProvisioner(new GpuResourceProvisionerSimple());
         this.setGpuBwProvisioner(new GpuResourceProvisionerSimple());
         this.setGpuCoreList(coreList);
-	}
-	
-	public static long getDefaultGddramCapacity () {
+    }
+
+    public static long getDefaultGddramCapacity() {
         return defaultGddramCapacity;
     }
 
-    public static void setDefaultGddramCapacity (final long defaultCapacity) {
-    	if(defaultCapacity <= 0)
-    		throw new IllegalArgumentException("Capacity must be greater than zero");
-    	
-    	defaultGddramCapacity = defaultCapacity;
+    public static void setDefaultGddramCapacity(final long defaultCapacity) {
+        if (defaultCapacity <= 0)
+            throw new IllegalArgumentException("Capacity must be greater than zero");
+
+        defaultGddramCapacity = defaultCapacity;
     }
 
-    public static long getDefaultBwCapacity () {
+    public static long getDefaultBwCapacity() {
         return defaultBwCapacity;
     }
 
-    public static void setDefaultBwCapacity (final long defaultCapacity) {
-    	if(defaultCapacity <= 0)
-    		throw new IllegalArgumentException("Capacity must be greater than zero");
+    public static void setDefaultBwCapacity(final long defaultCapacity) {
+        if (defaultCapacity <= 0)
+            throw new IllegalArgumentException("Capacity must be greater than zero");
         defaultBwCapacity = defaultCapacity;
     }
-	
-	@Override 
-	public final ChangeableId setId (long id) {
-		this.id = id;
+
+    @Override
+    public final ChangeableId setId(long id) {
+        this.id = id;
         return null;
     }
-	@Override 
-	public long getId () {
+
+    @Override
+    public long getId() {
         return id;
     }
-	
-	public void setType (String type) {
-		this.type = type;
-	}
-	
-	public String getType () {
-		return type;
-	}
-	
-	public void setGpuCoreList (final List<GpuCore> gpuCoreList) {
-		if(requireNonNull(gpuCoreList).isEmpty()){
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setGpuCoreList(final List<GpuCore> gpuCoreList) {
+        if (requireNonNull(gpuCoreList).isEmpty()) {
             throw new IllegalArgumentException("The CORE list for a Gpu cannot be empty");
         }
-	    checkSimulationIsRunningAndAttemptedToChangeGpu("List of Core");
+        checkSimulationIsRunningAndAttemptedToChangeGpu("List of Core");
 
-		this.gpuCoreList = gpuCoreList;
-		
-		long coreId = Math.max(gpuCoreList.get(gpuCoreList.size()-1).getId(), -1);
-	    for(final GpuCore core: gpuCoreList){
-	        if(core.getId() < 0) {
-	            core.setId(++coreId);
-	        }
-	        core.setStatus(GpuCore.Status.FREE);
-	    }
+        this.gpuCoreList = gpuCoreList;
 
-	    failedCoresNumber = 0;
-	    busyCoresNumber = 0;
-	    freeCoresNumber = gpuCoreList.size();
-	    workingCoresNumber = freeCoresNumber;
-	}
+        long coreId = Math.max(gpuCoreList.get(gpuCoreList.size() - 1).getId(), -1);
+        for (final GpuCore core : gpuCoreList) {
+            if (core.getId() < 0) {
+                core.setId(++coreId);
+            }
+            core.setStatus(GpuCore.Status.FREE);
+        }
 
-	@Override 
-	public List<GpuCore> getGpuCoreList () {
-		return gpuCoreList;
+        failedCoresNumber = 0;
+        busyCoresNumber = 0;
+        freeCoresNumber = gpuCoreList.size();
+        workingCoresNumber = freeCoresNumber;
     }
-	
-	
-	@Override 
-	public Gpu setGpuGddramProvisioner (GpuResourceProvisioner gpuGddramProvisioner) {
+
+    @Override
+    public List<GpuCore> getGpuCoreList() {
+        return gpuCoreList;
+    }
+
+
+    @Override
+    public Gpu setGpuGddramProvisioner(GpuResourceProvisioner gpuGddramProvisioner) {
         checkSimulationIsRunningAndAttemptedToChangeGpu("GDDRAM");
-		this.gpuGddramProvisioner = requireNonNull(gpuGddramProvisioner);
-        this.gpuGddramProvisioner.setResources(ram, vgpu -> ((VGpuSimple)vgpu).getGddram());
+        this.gpuGddramProvisioner = requireNonNull(gpuGddramProvisioner);
+        this.gpuGddramProvisioner.setResources(ram, vgpu -> ((VGpuSimple) vgpu).getGddram());
         return this;
-	}
-	
-	@Override 
-	public GpuResourceProvisioner getGpuGddramProvisioner () {
+    }
+
+    @Override
+    public GpuResourceProvisioner getGpuGddramProvisioner() {
         return gpuGddramProvisioner;
     }
-        
-    @Override 
-    public Gpu setGpuBwProvisioner (GpuResourceProvisioner gpuBwProvisioner) {
+
+    @Override
+    public Gpu setGpuBwProvisioner(GpuResourceProvisioner gpuBwProvisioner) {
         checkSimulationIsRunningAndAttemptedToChangeGpu("BW");
-    	this.gpuBwProvisioner = requireNonNull(gpuBwProvisioner);
-        this.gpuBwProvisioner.setResources(bw, vgpu -> ((VGpuSimple)vgpu).getBw());
+        this.gpuBwProvisioner = requireNonNull(gpuBwProvisioner);
+        this.gpuBwProvisioner.setResources(bw, vgpu -> ((VGpuSimple) vgpu).getBw());
         //must add set resource in gpurespro //has to
-    	return this;
+        return this;
     }
-    
-    @Override 
-    public GpuResourceProvisioner getGpuBwProvisioner () {
+
+    @Override
+    public GpuResourceProvisioner getGpuBwProvisioner() {
         return gpuBwProvisioner;
     }
-    
+
     @SuppressWarnings("ForLoopReplaceableByForEach")
     @Override
-    public double updateProcessing (final double currentTime) {
-        if(vgpuList.isEmpty() && isIdleEnough(idleShutdownDeadline))
+    public double updateProcessing(final double currentTime) {
+        if (vgpuList.isEmpty() && isIdleEnough(idleShutdownDeadline))
             setActive(false);
-        
+
 
         double nextSimulationDelay = Double.MAX_VALUE;
 
         for (int i = 0; i < vgpuList.size(); i++) {
-            nextSimulationDelay = updateVGpuProcessing(vgpuList.get(i), currentTime, 
-            		nextSimulationDelay);
+            nextSimulationDelay = updateVGpuProcessing(vgpuList.get(i), currentTime,
+                    nextSimulationDelay);
         }
 
         notifyOnUpdateProcessingListeners(currentTime);
         //cpuUtilizationStats.add(currentTime);
         addStateHistory(currentTime);
-        if (!vgpuList.isEmpty()) 
+        if (!vgpuList.isEmpty())
             lastBusyTime = currentTime;
 
         return nextSimulationDelay;
@@ -284,22 +285,22 @@ public class GpuSimple implements Gpu {
         return getSimulation().clock() - getLastBusyTime();
     }*/
 
-    protected double updateVGpuProcessing (final VGpu vgpu, final double currentTime, 
-    		final double nextSimulationDelay) {
-        final double delay = vgpu.updateGpuTaskProcessing(currentTime, 
-        		vgpuScheduler.getAllocatedMips(vgpu));
+    protected double updateVGpuProcessing(final VGpu vgpu, final double currentTime,
+                                          final double nextSimulationDelay) {
+        final double delay = vgpu.updateGpuTaskProcessing(currentTime,
+                vgpuScheduler.getAllocatedMips(vgpu));
         return delay > 0 ? Math.min(delay, nextSimulationDelay) : nextSimulationDelay;
     }
 
     private void notifyOnUpdateProcessingListeners(final double nextSimulationTime) {
         onUpdateProcessingListeners.forEach(l -> l.update(GpuUpdatesVgpusProcessingEventInfo.of(l,
-        		this, nextSimulationTime)));
+                this, nextSimulationTime)));
     }
 
     @Override
-    public GpuSuitability createVGpu (final VGpu vgpu) {
+    public GpuSuitability createVGpu(final VGpu vgpu) {
         final GpuSuitability suitability = createVGpuInternal(vgpu);
-        if(suitability.fully()) {
+        if (suitability.fully()) {
             addVGpuToCreatedList(vgpu);
             vgpu.setGpu(this);
             vgpu.setCreated(true);
@@ -310,66 +311,66 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public GpuSuitability createTemporaryVGpu (final VGpu vgpu) {
+    public GpuSuitability createTemporaryVGpu(final VGpu vgpu) {
         return createVGpuInternal(vgpu);
     }
 
-    private GpuSuitability createVGpuInternal (final VGpu vgpu) {
+    private GpuSuitability createVGpuInternal(final VGpu vgpu) {
         /*if(vm instanceof VmGroup){
             return new HostSuitability("Just internal VMs inside a VmGroup can be created, not the VmGroup itself.");
         }*/
 
         final GpuSuitability suitability = allocateResourcesForVGpu(vgpu, false);
-        if(suitability.fully()){
+        if (suitability.fully()) {
             vgpuList.add(vgpu);
         }
 
         return suitability;
     }
-    
-    private GpuSuitability allocateResourcesForVGpu (final VGpu vgpu, 
-    		final boolean inMigration) {
+
+    private GpuSuitability allocateResourcesForVGpu(final VGpu vgpu,
+                                                    final boolean inMigration) {
         final GpuSuitability suitability = isSuitableForVGpu(vgpu, inMigration, true);
-        if(!suitability.fully()) {
+        if (!suitability.fully()) {
             return suitability;
         }
 
-        if(inMigration) {
+        if (inMigration) {
             vgpusMigratingIn.add(vgpu);
         }
         vgpu.setInMigration(inMigration);
-        allocateResourcesForVGpu (vgpu);
+        allocateResourcesForVGpu(vgpu);
 
         return suitability;
     }
 
-    private void allocateResourcesForVGpu (final VGpu vgpu) {
+    private void allocateResourcesForVGpu(final VGpu vgpu) {
         gpuGddramProvisioner.allocateResourceForVGpu(vgpu, vgpu.getCurrentRequestedGddram());
         gpuBwProvisioner.allocateResourceForVGpu(vgpu, vgpu.getCurrentRequestedBw());
         //disk.getStorage().allocateResource(vm.getStorage());
         vgpuScheduler.allocateCoresForVGpu(vgpu, vgpu.getCurrentRequestedMips());
     }
-    
-    private void logAllocationError (final boolean showFailureLog, final VGpu vgpu,
-            final boolean inMigration, final String resourceUnit, final Resource gpuResource, 
-            final Resource vgpuRequestedResource) {
-    	
-    	if(!showFailureLog){
-        	return;
-    	}
 
-    	final String migration = inMigration ? "VGpu Migration" : "VGpu Creation";
-    	final String msg = gpuResource.getAvailableResource() > 0 ?
-    					"just "+gpuResource.getAvailableResource()+" " + resourceUnit :
-    					"no amount";
-    	LOGGER.error(
-    			"{}: {}: [{}] Allocation of {} to {} failed due to lack of {}. Required {} but there is {} available.",
-    			getSimulation().clockStr(), getClass().getSimpleName(), migration, vgpu, this,
+    private void logAllocationError(final boolean showFailureLog, final VGpu vgpu,
+                                    final boolean inMigration, final String resourceUnit, final Resource gpuResource,
+                                    final Resource vgpuRequestedResource) {
+
+        if (!showFailureLog) {
+            return;
+        }
+
+        final String migration = inMigration ? "VGpu Migration" : "VGpu Creation";
+        final String msg = gpuResource.getAvailableResource() > 0 ?
+                "just " + gpuResource.getAvailableResource() + " " + resourceUnit :
+                "no amount";
+        LOGGER.error(
+                "{}: {}: [{}] Allocation of {} to {} failed due to lack of {}. Required {} but there is {} available.",
+                getSimulation().clockStr(), getClass().getSimpleName(), migration, vgpu, this,
                 gpuResource.getClass().getSimpleName(), vgpuRequestedResource.getCapacity(), msg);
-	}
-    
+    }
+
     @Override
-    public void reallocateMigratingInVGpus () {
+    public void reallocateMigratingInVGpus() {
         for (final VGpu vgpu : getVGpusMigratingIn()) {
             if (!vgpuList.contains(vgpu)) {
                 vgpuList.add(vgpu);
@@ -380,12 +381,12 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public boolean isSuitableForVGpu (final VGpu vgpu) {
+    public boolean isSuitableForVGpu(final VGpu vgpu) {
         return getSuitabilityFor(vgpu).fully();
     }
-    
-    private GpuSuitability isSuitableForVGpu (final VGpu vgpu, final boolean inMigration, 
-    		final boolean showFailureLog) {
+
+    private GpuSuitability isSuitableForVGpu(final VGpu vgpu, final boolean inMigration,
+                                             final boolean showFailureLog) {
         final GpuSuitability suitability = new GpuSuitability();
 
         /*suitability.setForStorage(disk.isAmountAvailable(vm.getStorage()));
@@ -397,16 +398,16 @@ public class GpuSimple implements Gpu {
 
         suitability.setForGddram(gpuGddramProvisioner.isSuitableForVGpu(vgpu, vgpu.getGddram()));
         if (!suitability.forGddram()) {
-            logAllocationError(showFailureLog, vgpu, inMigration, "MB", this.getGddram(), 
-            		vgpu.getGddram());
-            if(lazySuitabilityEvaluation)
+            logAllocationError(showFailureLog, vgpu, inMigration, "MB", this.getGddram(),
+                    vgpu.getGddram());
+            if (lazySuitabilityEvaluation)
                 return suitability;
         }
 
         suitability.setForBw(gpuBwProvisioner.isSuitableForVGpu(vgpu, vgpu.getBw()));
         if (!suitability.forBw()) {
             logAllocationError(showFailureLog, vgpu, inMigration, "Mbps", this.getBw(), vgpu.getBw());
-            if(lazySuitabilityEvaluation)
+            if (lazySuitabilityEvaluation)
                 return suitability;
         }
 
@@ -414,23 +415,23 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public GpuSuitability getSuitabilityFor (final VGpu vgpu) {
+    public GpuSuitability getSuitabilityFor(final VGpu vgpu) {
         return isSuitableForVGpu(vgpu, false, false);
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return this.active;
     }
 
     @Override
-    public boolean hasEverStarted () {
+    public boolean hasEverStarted() {
         return this.firstStartTime > -1;
     }
 
     @Override
-    public final Gpu setActive (final boolean activate) {
-        if(!activate) 
+    public final Gpu setActive(final boolean activate) {
+        if (!activate)
             activateOnVideocardStartup = false;
 
         //final double delay = activate ? powerModel.getStartupDelay() : 
@@ -441,13 +442,13 @@ public class GpuSimple implements Gpu {
             return this;
         }*/
 
-        if(isFailed() && activate){
+        if (isFailed() && activate) {
             throw new IllegalStateException("The Gpu is failed and cannot be activated.");
         }
 
         /*If the simulation is not running and there is a startup delay,
-        * when the datacenter is started up, it will request such a Host activation. */
-        if(!getSimulation().isRunning()){
+         * when the datacenter is started up, it will request such a Host activation. */
+        if (!getSimulation().isRunning()) {
             return this;
         }
 
@@ -463,15 +464,14 @@ public class GpuSimple implements Gpu {
 
         return this;
     }
-    
+
     @Override
-    public void processActivation (final boolean activate) {
+    public void processActivation(final boolean activate) {
         final boolean wasActive = this.active;
-        if(activate) {
+        if (activate) {
             setStartTime(getSimulation().clock());
             //powerModel.addStartupTotals();
-        } 
-        else {
+        } else {
             setShutdownTime(getSimulation().clock());
             //powerModel.addShutDownTotals();
         }
@@ -481,39 +481,38 @@ public class GpuSimple implements Gpu {
         //activationChangeInProgress = false;
         notifyStartupOrShutdown(activate, wasActive);
     }
-    
-    private void notifyStartupOrShutdown (final boolean activate, final boolean wasActive) {
-        if(getSimulation() == null || !getSimulation().isRunning() ) 
+
+    private void notifyStartupOrShutdown(final boolean activate, final boolean wasActive) {
+        if (getSimulation() == null || !getSimulation().isRunning())
             return;
-   
-        if(activate && !wasActive){
+
+        if (activate && !wasActive) {
             LOGGER.info("{}: {} is powered on.", getSimulation().clockStr(), this);
             updateOnStartupListeners();
-        }
-        else if(!activate && wasActive){
+        } else if (!activate && wasActive) {
             final String reason = isIdleEnough(idleShutdownDeadline) ? " after becoming idle" : "";
             LOGGER.info("{}: {} is powered off{}.", getSimulation().clockStr(), this, reason);
             updateOnShutdownListeners();
         }
     }
 
-    private void updateOnShutdownListeners () {
+    private void updateOnShutdownListeners() {
         for (int i = 0; i < onShutdownListeners.size(); i++) {
             final EventListener<GpuEventInfo> listener = onShutdownListeners.get(i);
             listener.update(GpuEventInfo.of(listener, this, getSimulation().clock()));
         }
     }
 
-    private void updateOnStartupListeners () {
+    private void updateOnStartupListeners() {
         for (int i = 0; i < onStartupListeners.size(); i++) {
             final EventListener<GpuEventInfo> listener = onStartupListeners.get(i);
             listener.update(GpuEventInfo.of(listener, this, getSimulation().clock()));
         }
     }
-    
+
     @Override
-    public void destroyVGpu (final VGpu vgpu) {
-        if(!vgpu.isCreated()){
+    public void destroyVGpu(final VGpu vgpu) {
+        if (!vgpu.isCreated()) {
             return;
         }
 
@@ -523,18 +522,18 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public void destroyTemporaryVGpu (final VGpu vgpu) {
+    public void destroyTemporaryVGpu(final VGpu vgpu) {
         destroyVGpuInternal(vgpu);
     }
 
     //destroy VGpu with destroy all GpuVm that include this VGpu in Broker
-    private void destroyVGpuInternal (final VGpu vgpu) {
+    private void destroyVGpuInternal(final VGpu vgpu) {
         deallocateResourcesOfVGpu(requireNonNull(vgpu));
         vgpuList.remove(vgpu);
         vgpu.getGpuVm().getBroker().getVmExecList().remove(vgpu.getGpuVm());
     }
-    
-    protected void deallocateResourcesOfVGpu (final VGpu vgpu) {
+
+    protected void deallocateResourcesOfVGpu(final VGpu vgpu) {
         vgpu.setCreated(false);
         gpuGddramProvisioner.deallocateResourceForVGpu(vgpu);
         gpuBwProvisioner.deallocateResourceForVGpu(vgpu);
@@ -543,7 +542,7 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public void destroyAllVGpus () {
+    public void destroyAllVGpus() {
         final CoreProvisioner coreProvisioner = getGpuCoreList().get(0).getCoreProvisioner();
         for (final VGpu vgpu : vgpuList) {
             gpuGddramProvisioner.deallocateResourceForVGpu(vgpu);
@@ -555,60 +554,60 @@ public class GpuSimple implements Gpu {
 
         vgpuList.clear();
     }
-    
+
     @Override
-    public Gpu addOnStartupListener (final EventListener<GpuEventInfo> listener) {
-        if(EventListener.NULL.equals(listener))
+    public Gpu addOnStartupListener(final EventListener<GpuEventInfo> listener) {
+        if (EventListener.NULL.equals(listener))
             return this;
-        
+
         onStartupListeners.add(requireNonNull(listener));
         return this;
     }
 
     @Override
-    public boolean removeOnStartupListener (final EventListener<GpuEventInfo> listener) {
+    public boolean removeOnStartupListener(final EventListener<GpuEventInfo> listener) {
         return onStartupListeners.remove(listener);
     }
 
     @Override
-    public Gpu addOnShutdownListener (final EventListener<GpuEventInfo> listener) {
-        if(EventListener.NULL.equals(listener)){
+    public Gpu addOnShutdownListener(final EventListener<GpuEventInfo> listener) {
+        if (EventListener.NULL.equals(listener)) {
             return this;
         }
 
         onShutdownListeners.add(requireNonNull(listener));
         return this;
     }
-    
+
     @Override
-    public boolean removeOnShutdownListener (final EventListener<GpuEventInfo> listener) {
+    public boolean removeOnShutdownListener(final EventListener<GpuEventInfo> listener) {
         return onShutdownListeners.remove(listener);
     }
 
     @Override
-    public long getNumberOfCores () {
+    public long getNumberOfCores() {
         return gpuCoreList.size();
     }
-    
-    protected MipsShare getAllocatedMipsForVGpu (final VGpu vgpu) {
+
+    protected MipsShare getAllocatedMipsForVGpu(final VGpu vgpu) {
         return vgpuScheduler.getAllocatedMips(vgpu);
     }
 
     @Override
-    public double getMips () {
+    public double getMips() {
         return gpuCoreList.stream().mapToDouble(GpuCore::getCapacity).findFirst().orElse(0);
     }
 
     @Override
-    public double getTotalMipsCapacity () {
+    public double getTotalMipsCapacity() {
         return gpuCoreList.stream()
-                     .filter(GpuCore::isWorking)
-                     .mapToDouble(GpuCore::getCapacity)
-                     .sum();
+                .filter(GpuCore::isWorking)
+                .mapToDouble(GpuCore::getCapacity)
+                .sum();
     }
 
     @Override
-    public double getTotalAvailableMips () {
+    public double getTotalAvailableMips() {
         return vgpuScheduler.getTotalAvailableMips();
     }
 
@@ -618,12 +617,12 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getTotalAllocatedMipsForVGpu (final VGpu vgpu) {
+    public double getTotalAllocatedMipsForVGpu(final VGpu vgpu) {
         return vgpuScheduler.getTotalAllocatedMipsForVGpu(vgpu);
     }
 
     @Override
-    public Resource getBw () {
+    public Resource getBw() {
         return gpuBwProvisioner.getPGpuResource();
     }
 
@@ -637,8 +636,8 @@ public class GpuSimple implements Gpu {
         return disk;
     }*/
 
-    private void checkSimulationIsRunningAndAttemptedToChangeGpu (final String resourceName) {
-        if(getSimulation().isRunning()){
+    private void checkSimulationIsRunningAndAttemptedToChangeGpu(final String resourceName) {
+        if (getSimulation().isRunning()) {
             final String msg = "It is not allowed to change a Gpu's %s after the simulation started.";
             throw new IllegalStateException(String.format(msg, resourceName));
         }
@@ -657,23 +656,23 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getStartTime () {
+    public double getStartTime() {
         return startTime;
     }
 
     @Override
-    public double getFirstStartTime (){
+    public double getFirstStartTime() {
         return firstStartTime;
     }
 
     @Override
-    public Gpu setStartTime (final double startTime) {
-        if(startTime < 0){
+    public Gpu setStartTime(final double startTime) {
+        if (startTime < 0) {
             throw new IllegalArgumentException("Gpu start time cannot be negative");
         }
 
         this.startTime = Math.floor(startTime);
-        if(firstStartTime == -1){
+        if (firstStartTime == -1) {
             firstStartTime = this.startTime;
         }
 
@@ -691,7 +690,7 @@ public class GpuSimple implements Gpu {
 
     @Override
     public void setShutdownTime(final double shutdownTime) {
-        if(shutdownTime < 0){
+        if (shutdownTime < 0) {
             throw new IllegalArgumentException("Gpu shutdown time cannot be negative");
         }
 
@@ -700,7 +699,7 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getUpTime () {
+    public double getUpTime() {
         return active ? getSimulation().clock() - startTime : shutdownTime - startTime;
     }
 
@@ -720,16 +719,16 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getIdleShutdownDeadline () {
+    public double getIdleShutdownDeadline() {
         return idleShutdownDeadline;
     }
 
     @Override
-    public Gpu setIdleShutdownDeadline (final double deadline) {
+    public Gpu setIdleShutdownDeadline(final double deadline) {
         this.idleShutdownDeadline = deadline;
         return this;
     }
-    
+
     @Override
     public <T extends VGpu> List<T> getVGpuList() {
         return (List<T>) vgpuList;
@@ -740,11 +739,11 @@ public class GpuSimple implements Gpu {
         return (List<T>) Collections.unmodifiableList(vgpuCreatedList);
     }
 
-    protected void addVGpuToList (final VGpu vgpu){
+    protected void addVGpuToList(final VGpu vgpu) {
         vgpuList.add(requireNonNull(vgpu));
     }
 
-    protected void addVGpuToCreatedList (final VGpu vgpu){
+    protected void addVGpuToCreatedList(final VGpu vgpu) {
         vgpuCreatedList.add(requireNonNull(vgpu));
     }
 
@@ -754,20 +753,20 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public final boolean setFailed (final boolean failed) {
+    public final boolean setFailed(final boolean failed) {
         this.failed = failed;
         final GpuCore.Status newStatus = failed ? GpuCore.Status.FAILED : GpuCore.Status.FREE;
         setCoreStatus(gpuCoreList, newStatus);
 
-        if(failed && this.active){
+        if (failed && this.active) {
             this.active = false;
         }
 
         return true;
     }
 
-    public final void setCoreStatus (final List<GpuCore> coreList, 
-    		final GpuCore.Status newStatus){
+    public final void setCoreStatus(final List<GpuCore> coreList,
+                                    final GpuCore.Status newStatus) {
         /*For performance reasons, stores the number of free and failed PEs
         instead of iterating over the PE list every time to find out.*/
         for (final GpuCore core : coreList) {
@@ -775,33 +774,33 @@ public class GpuSimple implements Gpu {
         }
     }
 
-    private void updateCoreStatus (final GpuCore core, final GpuCore.Status newStatus) {
-        if(core.getStatus() != newStatus) {
+    private void updateCoreStatus(final GpuCore core, final GpuCore.Status newStatus) {
+        if (core.getStatus() != newStatus) {
             updateCoreStatusCount(core.getStatus(), false);
             updateCoreStatusCount(newStatus, true);
             core.setStatus(newStatus);
         }
     }
 
-    private void updateCoreStatusCount (final GpuCore.Status status, 
-    		final boolean isIncrement) {
+    private void updateCoreStatusCount(final GpuCore.Status status,
+                                       final boolean isIncrement) {
         final int inc = isIncrement ? 1 : -1;
         switch (status) {
             case FAILED:
-            	incFailedCoresNumber(inc);
+                incFailedCoresNumber(inc);
             case FREE:
-            	incFreeCoresNumber(inc);
+                incFreeCoresNumber(inc);
             case BUSY:
-            	incBusyCoresNumber(inc);
+                incBusyCoresNumber(inc);
         }
     }
 
-    protected void incFailedCoresNumber (final int inc) {
+    protected void incFailedCoresNumber(final int inc) {
         this.failedCoresNumber += inc;
         workingCoresNumber -= inc;
     }
 
-    protected void incFreeCoresNumber (final int inc) {
+    protected void incFreeCoresNumber(final int inc) {
         this.freeCoresNumber += inc;
     }
 
@@ -811,51 +810,51 @@ public class GpuSimple implements Gpu {
 
     @Override
     public <T extends VGpu> Set<T> getVGpusMigratingIn() {
-        return (Set<T>)vgpusMigratingIn;
+        return (Set<T>) vgpusMigratingIn;
     }
 
     @Override
-    public boolean hasMigratingVGpus () {
+    public boolean hasMigratingVGpus() {
         return !(vgpusMigratingIn.isEmpty() && vgpusMigratingOut.isEmpty());
     }
-    
+
     @Override
-    public boolean addMigratingInVGpu (final VGpu vgpu) {
+    public boolean addMigratingInVGpu(final VGpu vgpu) {
         /* TODO: Instead of keeping a list of VMs which are migrating into a Host,
-        *  which requires searching in such a list every time a VM is requested to be migrated
-        *  to that Host (to check if it isn't migrating to that same host already),
-        *  we can add a migratingHost attribute to Vm, so that the worst time complexity
-        *  will change from O(N) to a constant time O(1). */
+         *  which requires searching in such a list every time a VM is requested to be migrated
+         *  to that Host (to check if it isn't migrating to that same host already),
+         *  we can add a migratingHost attribute to Vm, so that the worst time complexity
+         *  will change from O(N) to a constant time O(1). */
         if (vgpusMigratingIn.contains(vgpu)) {
             return false;
         }
 
-        if(!allocateResourcesForVGpu(vgpu, true).fully()){
+        if (!allocateResourcesForVGpu(vgpu, true).fully()) {
             return false;
         }
 
-        ((VGpuSimple)vgpu).updateMigrationStartListeners(this);
+        ((VGpuSimple) vgpu).updateMigrationStartListeners(this);
 
         updateProcessing(getSimulation().clock());
         vgpu.getGpu().updateProcessing(getSimulation().clock());
 
         return true;
     }
-    
+
     @Override
-    public void removeMigratingInVGpu (final VGpu vgpu) {
+    public void removeMigratingInVGpu(final VGpu vgpu) {
         vgpusMigratingIn.remove(vgpu);
         vgpuList.remove(vgpu);
         vgpu.setInMigration(false);
     }
 
     @Override
-    public Set<VGpu> getVGpusMigratingOut () {
+    public Set<VGpu> getVGpusMigratingOut() {
         return Collections.unmodifiableSet(vgpusMigratingOut);
     }
 
     @Override
-    public boolean addVGpuMigratingOut (final VGpu vgpu) {
+    public boolean addVGpuMigratingOut(final VGpu vgpu) {
         return this.vgpusMigratingOut.add(vgpu);
     }
 
@@ -865,13 +864,13 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public Videocard getVideocard () {
+    public Videocard getVideocard() {
         return videocard;
     }
 
     @Override
-    public final void setVideocard (final Videocard videocard) {
-        if(!Videocard.NULL.equals(this.videocard)) 
+    public final void setVideocard(final Videocard videocard) {
+        if (!Videocard.NULL.equals(this.videocard))
             checkSimulationIsRunningAndAttemptedToChangeGpu("Videocard");
 
         this.videocard = videocard;
@@ -880,21 +879,21 @@ public class GpuSimple implements Gpu {
     @Override
     public String toString() {
         final String vc =
-        		videocard == null || Videocard.NULL.equals(videocard) ? "" :
-                String.format("/videocard in host %d", videocard.getHost().getId());
+                videocard == null || Videocard.NULL.equals(videocard) ? "" :
+                        String.format("/videocard in host %d", videocard.getHost().getId());
         return String.format("gpu %d%s", getId(), vc);
     }
 
     @Override
-    public boolean removeOnUpdateProcessingListener (
-    		final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener) {
+    public boolean removeOnUpdateProcessingListener(
+            final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener) {
         return onUpdateProcessingListeners.remove(listener);
     }
 
     @Override
-    public Gpu addOnUpdateProcessingListener (
-    		final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener) {
-        if(EventListener.NULL.equals(listener)){
+    public Gpu addOnUpdateProcessingListener(
+            final EventListener<GpuUpdatesVgpusProcessingEventInfo> listener) {
+        if (EventListener.NULL.equals(listener)) {
             return this;
         }
 
@@ -908,27 +907,27 @@ public class GpuSimple implements Gpu {
     }*/
 
     @Override
-    public int getFreeCoresNumber () {
+    public int getFreeCoresNumber() {
         return freeCoresNumber;
     }
 
     @Override
-    public int getWorkingCoresNumber () {
+    public int getWorkingCoresNumber() {
         return workingCoresNumber;
     }
 
     @Override
-    public int getBusyCoresNumber () {
+    public int getBusyCoresNumber() {
         return busyCoresNumber;
     }
 
     @Override
     public double getBusyCoresPercent() {
-        return getBusyCoresNumber() / (double)getNumberOfCores();
+        return getBusyCoresNumber() / (double) getNumberOfCores();
     }
 
     @Override
-    public double getBusyCoresPercent (final boolean hundredScale) {
+    public double getBusyCoresPercent(final boolean hundredScale) {
         final double scale = hundredScale ? 100 : 1;
         return getBusyCoresPercent() * scale;
     }
@@ -955,16 +954,16 @@ public class GpuSimple implements Gpu {
     }*/
 
     @Override
-    public int compareTo (final Gpu other) {
-        if(this.equals(requireNonNull(other))) {
+    public int compareTo(final Gpu other) {
+        if (this.equals(requireNonNull(other))) {
             return 0;
         }
 
         return Long.compare(this.id, other.getId());
     }
-    
+
     @Override
-    public boolean equals (final Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         final GpuSimple that = (GpuSimple) obj;
@@ -972,15 +971,15 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         int result = Long.hashCode(id);
         result = 31 * result + getSimulation().hashCode();
         return result;
     }
 
     //@Override
-    public List<ResourceManageable> getResources () {
-        if(getSimulation().isRunning() && resources.isEmpty()){
+    public List<ResourceManageable> getResources() {
+        if (getSimulation().isRunning() && resources.isEmpty()) {
             resources = Arrays.asList(ram, bw);
         }
 
@@ -988,21 +987,21 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public GpuResourceProvisioner getProvisioner (
-    		final Class<? extends ResourceManageable> resourceClass) {
-        if(getSimulation().isRunning() && provisioners.isEmpty()){
+    public GpuResourceProvisioner getProvisioner(
+            final Class<? extends ResourceManageable> resourceClass) {
+        if (getSimulation().isRunning() && provisioners.isEmpty()) {
             provisioners = Arrays.asList(gpuGddramProvisioner, gpuBwProvisioner);
         }
 
         return provisioners
-            .stream()
-            .filter(provisioner -> provisioner.getPGpuResource().isSubClassOf(resourceClass))
-            .findFirst()
-            .orElse(GpuResourceProvisioner.NULL);
+                .stream()
+                .filter(provisioner -> provisioner.getPGpuResource().isSubClassOf(resourceClass))
+                .findFirst()
+                .orElse(GpuResourceProvisioner.NULL);
     }
 
     @Override
-    public List<GpuCore> getWorkingCoreList () {
+    public List<GpuCore> getWorkingCoreList() {
         return getFilteredCoreList(GpuCore::isWorking);
     }
 
@@ -1026,13 +1025,13 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getGpuCorePercentRequested () {
+    public double getGpuCorePercentRequested() {
         return computeCpuUtilizationPercent(getGpuCoreMipsRequested());
     }
 
-    private double computeCpuUtilizationPercent(final double mipsUsage){
+    private double computeCpuUtilizationPercent(final double mipsUsage) {
         final double totalMips = getTotalMipsCapacity();
-        if(totalMips == 0){
+        if (totalMips == 0) {
             return 0;
         }
 
@@ -1041,11 +1040,11 @@ public class GpuSimple implements Gpu {
     }
 
     @Override
-    public double getGpuCoreMipsUtilization () {
+    public double getGpuCoreMipsUtilization() {
         return vgpuList.stream().mapToDouble(VGpu::getTotalGpuMipsUtilization).sum();
     }
 
-    private double getGpuCoreMipsRequested () {
+    private double getGpuCoreMipsRequested() {
         return vgpuList.stream().mapToDouble(VGpu::getTotalGpuMipsRequested).sum();
     }
 
@@ -1071,13 +1070,12 @@ public class GpuSimple implements Gpu {
         }
 
         this.gpuUtilizationStats = new GpuResourceStats(this, Gpu::getGpuPercentUtilization);
-        if(vgpuList.isEmpty()){
+        if (vgpuList.isEmpty()) {
             final String gpu = this.getId() > -1 ? this.toString() : "gpu";
             LOGGER.info("Automatically enabling computation of utilization statistics for "
-            		+ "VGPUs on {} could not be performed because it doesn't have VGPUs yet. "
-            		+ "You need to enable it for each VGPU created.", gpu);
-        }
-        else vgpuList.forEach(GpuResourceStatsComputer::enableUtilizationStats);
+                    + "VGPUs on {} could not be performed because it doesn't have VGPUs yet. "
+                    + "You need to enable it for each VGPU created.", gpu);
+        } else vgpuList.forEach(GpuResourceStatsComputer::enableUtilizationStats);
     }
     
     /*@Override
@@ -1098,7 +1096,7 @@ public class GpuSimple implements Gpu {
         this.powerModel = powerModel;
         powerModel.setHost(this);
     }*/
-    
+
     @Override
     public void enableStateHistory() {
         this.stateHistoryEnabled = true;
@@ -1117,13 +1115,13 @@ public class GpuSimple implements Gpu {
     @Override
     public List<VGpu> getFinishedVGpus() {
         return getVGpuList().stream()
-            .filter(vgpu -> !vgpu.isInMigration())
-            .filter(vgpu -> vgpu.getTotalGpuMipsRequested () == 0)
-            .collect(toList());
+                .filter(vgpu -> !vgpu.isInMigration())
+                .filter(vgpu -> vgpu.getTotalGpuMipsRequested() == 0)
+                .collect(toList());
     }
-    
-    private double addVGpuResourceUseToHistoryIfNotMigratingIn (final VGpu vgpu,
-    		final double currentTime) {
+
+    private double addVGpuResourceUseToHistoryIfNotMigratingIn(final VGpu vgpu,
+                                                               final double currentTime) {
         double totalAllocatedMips = getVGpuScheduler().getTotalAllocatedMipsForVGpu(vgpu);
         if (getVGpusMigratingIn().contains(vgpu)) {
             LOGGER.info("{}: {}: {} is migrating in", getSimulation().clockStr(), this, vgpu);
@@ -1132,24 +1130,24 @@ public class GpuSimple implements Gpu {
 
         final double totalRequestedMips = vgpu.getTotalGpuMipsRequested();
         if (totalAllocatedMips + 0.1 < totalRequestedMips) {
-            final String reason = getVGpusMigratingOut().contains(vgpu) ? 
-            		"migration overhead" : "capacity unavailability";
-            final long notAllocatedMipsByCore = 
-            		(long)((totalRequestedMips - totalAllocatedMips)/vgpu.getNumberOfCores());
+            final String reason = getVGpusMigratingOut().contains(vgpu) ?
+                    "migration overhead" : "capacity unavailability";
+            final long notAllocatedMipsByCore =
+                    (long) ((totalRequestedMips - totalAllocatedMips) / vgpu.getNumberOfCores());
             LOGGER.warn(
-                "{}: {}: {} MIPS not allocated for each one of the {} COREs from {} due to {}.",
-                getSimulation().clockStr(), this, notAllocatedMipsByCore, 
-                vgpu.getNumberOfCores(), vgpu, reason);
+                    "{}: {}: {} MIPS not allocated for each one of the {} COREs from {} due to {}.",
+                    getSimulation().clockStr(), this, notAllocatedMipsByCore,
+                    vgpu.getNumberOfCores(), vgpu, reason);
         }
 
         final var entry = new VGpuStateHistoryEntry(
-                           currentTime, totalAllocatedMips, totalRequestedMips,
-                           vgpu.isInMigration() && !getVGpusMigratingIn().contains(vgpu));
+                currentTime, totalAllocatedMips, totalRequestedMips,
+                vgpu.isInMigration() && !getVGpusMigratingIn().contains(vgpu));
         vgpu.addStateHistoryEntry(entry);
 
         if (vgpu.isInMigration()) {
-            LOGGER.info("{}: {}: {} is migrating out ", getSimulation().clockStr(), this, 
-            		vgpu);
+            LOGGER.info("{}: {}: {} is migrating out ", getSimulation().clockStr(), this,
+                    vgpu);
             totalAllocatedMips /= getVGpuScheduler().getMaxGpuUsagePercentDuringOutMigration();
         }
 
@@ -1157,7 +1155,7 @@ public class GpuSimple implements Gpu {
     }
 
     private void addStateHistory(final double currentTime) {
-        if(!stateHistoryEnabled){
+        if (!stateHistoryEnabled) {
             return;
         }
 
@@ -1165,84 +1163,84 @@ public class GpuSimple implements Gpu {
 
         for (final VGpu vgpu : getVGpuList()) {
             final double totalRequestedMips = vgpu.getTotalGpuMipsRequested();
-            addVGpuResourceUseToHistoryIfNotMigratingIn (vgpu, currentTime);
+            addVGpuResourceUseToHistoryIfNotMigratingIn(vgpu, currentTime);
             hostTotalRequestedMips += totalRequestedMips;
         }
 
         addStateHistoryEntry(currentTime, getGpuMipsUtilization(), hostTotalRequestedMips, active);
     }
-    
-    private void addStateHistoryEntry (final double time, final double allocatedMips, 
-    		final double requestedMips, final boolean isActive) {
-    	final var newState = new GpuStateHistoryEntry(time, allocatedMips, requestedMips, isActive);
-    	if (!stateHistory.isEmpty()) {
-    		final GpuStateHistoryEntry previousState = stateHistory.get(stateHistory.size()-1);
-        	if (previousState.time() == time) {
-        		stateHistory.set(stateHistory.size() - 1, newState);
-        		return;
+
+    private void addStateHistoryEntry(final double time, final double allocatedMips,
+                                      final double requestedMips, final boolean isActive) {
+        final var newState = new GpuStateHistoryEntry(time, allocatedMips, requestedMips, isActive);
+        if (!stateHistory.isEmpty()) {
+            final GpuStateHistoryEntry previousState = stateHistory.get(stateHistory.size() - 1);
+            if (previousState.time() == time) {
+                stateHistory.set(stateHistory.size() - 1, newState);
+                return;
             }
-    	}
-    	stateHistory.add(newState);
-	}
+        }
+        stateHistory.add(newState);
+    }
 
-	@Override
-	public List<GpuStateHistoryEntry> getStateHistory () {
-    	return Collections.unmodifiableList(stateHistory);
-	}
+    @Override
+    public List<GpuStateHistoryEntry> getStateHistory() {
+        return Collections.unmodifiableList(stateHistory);
+    }
 
-	@Override
-	public List<VGpu> getMigratableVGpus () {
-		return vgpuList.stream().filter(vm -> !vm.isInMigration()).collect(toList());
-	}
+    @Override
+    public List<VGpu> getMigratableVGpus() {
+        return vgpuList.stream().filter(vm -> !vm.isInMigration()).collect(toList());
+    }
 
-	@Override
-	public boolean isLazySuitabilityEvaluation () {
-		return lazySuitabilityEvaluation;
-	}
+    @Override
+    public boolean isLazySuitabilityEvaluation() {
+        return lazySuitabilityEvaluation;
+    }
 
-	@Override
-	public Gpu setLazySuitabilityEvaluation (final boolean lazySuitabilityEvaluation) {
-		this.lazySuitabilityEvaluation = lazySuitabilityEvaluation;
-		return this;
-	}
+    @Override
+    public Gpu setLazySuitabilityEvaluation(final boolean lazySuitabilityEvaluation) {
+        this.lazySuitabilityEvaluation = lazySuitabilityEvaluation;
+        return this;
+    }
 
-	public boolean isActivateOnVideocardStartup () {
-		return activateOnVideocardStartup;
-	}
+    public boolean isActivateOnVideocardStartup() {
+        return activateOnVideocardStartup;
+    }
 
-	@Override
-	public double getGpuPercentUtilization() {
-		return computeGpuUtilizationPercent(getGpuMipsUtilization());
-	}
+    @Override
+    public double getGpuPercentUtilization() {
+        return computeGpuUtilizationPercent(getGpuMipsUtilization());
+    }
 
-	@Override
-	public double getGpuPercentRequested() {
-		return computeGpuUtilizationPercent(getGpuMipsRequested());
-	}
-	
-	private double getGpuMipsRequested() {
+    @Override
+    public double getGpuPercentRequested() {
+        return computeGpuUtilizationPercent(getGpuMipsRequested());
+    }
+
+    private double getGpuMipsRequested() {
         return vgpuList.stream().mapToDouble(VGpu::getTotalGpuMipsRequested).sum();
     }
 
-	@Override
-	public double getGpuMipsUtilization() {
-		return vgpuList.stream().mapToDouble(VGpu::getTotalGpuMipsUtilization).sum();
-	}
-	
-	private double computeGpuUtilizationPercent (final double mipsUsage) {
+    @Override
+    public double getGpuMipsUtilization() {
+        return vgpuList.stream().mapToDouble(VGpu::getTotalGpuMipsUtilization).sum();
+    }
+
+    private double computeGpuUtilizationPercent(final double mipsUsage) {
         final double totalMips = getTotalMipsCapacity();
-        if(totalMips == 0){
+        if (totalMips == 0) {
             return 0;
         }
 
         final double utilization = mipsUsage / totalMips;
         return utilization > 1 && utilization < 1.01 ? 1 : utilization;
     }
-	
-	@Override
-	public Gpu setSimulation (Simulation simulation) {
-		this.simulation = simulation;
-		return this;
-	}
-	
+
+    @Override
+    public Gpu setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+        return this;
+    }
+
 }

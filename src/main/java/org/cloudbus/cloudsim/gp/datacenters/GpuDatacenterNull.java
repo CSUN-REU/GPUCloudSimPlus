@@ -22,52 +22,161 @@ import java.util.stream.Stream;
 
 final class GpuDatacenterNull implements GpuDatacenter, SimEntityNullBase {
 
-	private static final DatacenterStorage STORAGE = new DatacenterStorage();
-	
-	@Override public void requestVmMigration (Vm sourceVm, Host targetHost) { /**/ }
-	@Override public void requestVmMigration (Vm sourceVm) { /**/ }
-	@Override public <T extends Host> List<T> getHostList () { return Collections.emptyList(); }
-	@Override public Stream<? extends Host> getActiveHostStream () { return Stream.empty(); }
-	@Override public Host getHost (int index) { return GpuHost.NULL;  }
-	@Override public long getActiveHostsNumber () { return 0; }
-	@Override public long size () { return 0; }
+    private static final DatacenterStorage STORAGE = new DatacenterStorage();
 
-	@Override public Host getHostById (long id) { return GpuHost.NULL; }
-	@Override public <T extends Host> Datacenter addHostList (List<T> hostList) { return this; }
-	@Override public <T extends Host> Datacenter addHost (T host) { return  this; }
-	@Override public <T extends Host> Datacenter removeHost (T host) { return  this; }
-	@Override public double getSchedulingInterval () { return 0; }
-	@Override public Datacenter setSchedulingInterval (double schedulingInterval) { return this; }
-	@Override public DatacenterCharacteristics getCharacteristics () {
-		return DatacenterCharacteristics.NULL;
-	}
-	@Override public Datacenter setCharacteristics(DatacenterCharacteristics datacenterCharacteristics) { return null; }
+    @Override
+    public void requestVmMigration(Vm sourceVm, Host targetHost) { /**/ }
 
-	@Override public DatacenterStorage getDatacenterStorage () { return STORAGE; }
-	@Override public void setDatacenterStorage (DatacenterStorage datacenterStorage) { /**/ }
-	@Override public double getBandwidthPercentForMigration () { return 0; }
-	@Override public void setBandwidthPercentForMigration (double bandwidthPercentForMigration) {
-		/**/
-	}
-	@Override public Datacenter addOnHostAvailableListener (EventListener<HostEventInfo> listener) { 
-		return this; 
-	}
-	@Override public Datacenter addOnVmMigrationFinishListener (
-			EventListener<DatacenterVmMigrationEventInfo> listener) { return this; }
-	@Override public boolean isMigrationsEnabled () { return false; }
-	@Override public Datacenter enableMigrations () { return this; }
-	@Override public Datacenter disableMigrations () { return this; }
-	@Override public double getHostSearchRetryDelay () { return 0; }
-	@Override public Datacenter setHostSearchRetryDelay (double delay) { return this; }
-	@Override public int compareTo (SimEntity o) { return 0; }
-	@Override public PowerModelDatacenter getPowerModel () { return PowerModelDatacenter.NULL; }
-	@Override public PowerAware<PowerModelDatacenter> setPowerModel (PowerModelDatacenter powerModel) { /**/
-		return null;
-	}
-	@Override public double getTimeZone () { return Integer.MAX_VALUE; }
-	@Override public TimeZoned setTimeZone (double timeZone) { return  this; }
+    @Override
+    public void requestVmMigration(Vm sourceVm) { /**/ }
 
-	@Override public GpuVmAllocationPolicy getVmAllocationPolicy () {
-		return GpuVmAllocationPolicy.NULL;}
-	
+    @Override
+    public <T extends Host> List<T> getHostList() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Stream<? extends Host> getActiveHostStream() {
+        return Stream.empty();
+    }
+
+    @Override
+    public Host getHost(int index) {
+        return GpuHost.NULL;
+    }
+
+    @Override
+    public long getActiveHostsNumber() {
+        return 0;
+    }
+
+    @Override
+    public long size() {
+        return 0;
+    }
+
+    @Override
+    public Host getHostById(long id) {
+        return GpuHost.NULL;
+    }
+
+    @Override
+    public <T extends Host> Datacenter addHostList(List<T> hostList) {
+        return this;
+    }
+
+    @Override
+    public <T extends Host> Datacenter addHost(T host) {
+        return this;
+    }
+
+    @Override
+    public <T extends Host> Datacenter removeHost(T host) {
+        return this;
+    }
+
+    @Override
+    public double getSchedulingInterval() {
+        return 0;
+    }
+
+    @Override
+    public Datacenter setSchedulingInterval(double schedulingInterval) {
+        return this;
+    }
+
+    @Override
+    public DatacenterCharacteristics getCharacteristics() {
+        return DatacenterCharacteristics.NULL;
+    }
+
+    @Override
+    public Datacenter setCharacteristics(DatacenterCharacteristics datacenterCharacteristics) {
+        return null;
+    }
+
+    @Override
+    public DatacenterStorage getDatacenterStorage() {
+        return STORAGE;
+    }
+
+    @Override
+    public void setDatacenterStorage(DatacenterStorage datacenterStorage) { /**/ }
+
+    @Override
+    public double getBandwidthPercentForMigration() {
+        return 0;
+    }
+
+    @Override
+    public void setBandwidthPercentForMigration(double bandwidthPercentForMigration) {
+        /**/
+    }
+
+    @Override
+    public Datacenter addOnHostAvailableListener(EventListener<HostEventInfo> listener) {
+        return this;
+    }
+
+    @Override
+    public Datacenter addOnVmMigrationFinishListener(
+            EventListener<DatacenterVmMigrationEventInfo> listener) {
+        return this;
+    }
+
+    @Override
+    public boolean isMigrationsEnabled() {
+        return false;
+    }
+
+    @Override
+    public Datacenter enableMigrations() {
+        return this;
+    }
+
+    @Override
+    public Datacenter disableMigrations() {
+        return this;
+    }
+
+    @Override
+    public double getHostSearchRetryDelay() {
+        return 0;
+    }
+
+    @Override
+    public Datacenter setHostSearchRetryDelay(double delay) {
+        return this;
+    }
+
+    @Override
+    public int compareTo(SimEntity o) {
+        return 0;
+    }
+
+    @Override
+    public PowerModelDatacenter getPowerModel() {
+        return PowerModelDatacenter.NULL;
+    }
+
+    @Override
+    public PowerAware<PowerModelDatacenter> setPowerModel(PowerModelDatacenter powerModel) { /**/
+        return null;
+    }
+
+    @Override
+    public double getTimeZone() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public TimeZoned setTimeZone(double timeZone) {
+        return this;
+    }
+
+    @Override
+    public GpuVmAllocationPolicy getVmAllocationPolicy() {
+        return GpuVmAllocationPolicy.NULL;
+    }
+
 }

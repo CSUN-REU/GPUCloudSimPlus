@@ -5,21 +5,21 @@ import org.cloudbus.cloudsim.gp.vgpu.VGpu;
 
 public interface CoreProvisioner extends GpuResourceProvisioner {
 
-    CoreProvisioner NULL = new CoreProvisionerNull ();
+    CoreProvisioner NULL = new CoreProvisionerNull();
 
-    void setCore (GpuCore core);
-
-    @Override
-    boolean allocateResourceForVGpu (VGpu vgpu, long mipsCapacity);
+    void setCore(GpuCore core);
 
     @Override
-    long getAllocatedResourceForVGpu (VGpu vgpu);
+    boolean allocateResourceForVGpu(VGpu vgpu, long mipsCapacity);
 
     @Override
-    long deallocateResourceForVGpu (VGpu vgpu);
+    long getAllocatedResourceForVGpu(VGpu vgpu);
 
     @Override
-    long getTotalAllocatedResource ();
+    long deallocateResourceForVGpu(VGpu vgpu);
 
-    double getUtilization ();
+    @Override
+    long getTotalAllocatedResource();
+
+    double getUtilization();
 }

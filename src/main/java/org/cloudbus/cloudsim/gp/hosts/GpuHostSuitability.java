@@ -16,13 +16,13 @@ public final class GpuHostSuitability {
 
     private String reason;
 
-    public GpuHostSuitability () { /**/ }
+    public GpuHostSuitability() { /**/ }
 
-    public GpuHostSuitability (final String reason) {
+    public GpuHostSuitability(final String reason) {
         this.reason = Objects.requireNonNull(reason);
     }
 
-    public void setSuitability (final GpuHostSuitability other) {
+    public void setSuitability(final GpuHostSuitability other) {
         forPes = forPes && other.forPes;
         forRam = forRam && other.forRam;
         forBw = forBw && other.forBw;
@@ -30,33 +30,33 @@ public final class GpuHostSuitability {
         forGpus.setSuitability(other.getForGpus());
     }
 
-    public void setSuitability (final HostSuitability otherHost, final GpuSuitability otherGpu) {
+    public void setSuitability(final HostSuitability otherHost, final GpuSuitability otherGpu) {
         forPes = forPes && otherHost.forPes();
         forRam = forRam && otherHost.forRam();
         forBw = forBw && otherHost.forBw();
         forStorage = forStorage && otherHost.forStorage();
         forGpus.setSuitability(otherGpu);
     }
-    
-    public boolean forStorage () {
+
+    public boolean forStorage() {
         return forStorage;
     }
 
-    GpuHostSuitability setForStorage (final boolean suitable) {
+    GpuHostSuitability setForStorage(final boolean suitable) {
         this.forStorage = suitable;
         return this;
     }
 
-    public boolean forRam () {
+    public boolean forRam() {
         return forRam;
     }
 
-    GpuHostSuitability setForRam (final boolean suitable) {
+    GpuHostSuitability setForRam(final boolean suitable) {
         this.forRam = suitable;
         return this;
     }
 
-    public boolean forBw () {
+    public boolean forBw() {
         return forBw;
     }
 
@@ -65,52 +65,52 @@ public final class GpuHostSuitability {
         return this;
     }
 
-    public boolean forPes () {
+    public boolean forPes() {
         return forPes;
     }
 
-    GpuHostSuitability setForPes (final boolean forPes) {
+    GpuHostSuitability setForPes(final boolean forPes) {
         this.forPes = forPes;
         return this;
     }
 
-    public boolean forGpus () {
+    public boolean forGpus() {
         return forGpus.fully();
     }
-    
-    public GpuSuitability getForGpus () {
-    	return forGpus;
+
+    public GpuSuitability getForGpus() {
+        return forGpus;
     }
 
-    GpuHostSuitability setForGpus (final GpuSuitability forGpus) {
+    GpuHostSuitability setForGpus(final GpuSuitability forGpus) {
         this.forGpus = forGpus;
         return this;
     }
-    
-    public boolean fully () {
+
+    public boolean fully() {
         return forStorage && forRam && forBw && forPes && forGpus.fully();
     }
 
     @Override
-    public String toString(){
-        if(fully())
+    public String toString() {
+        if (fully())
             return "GpuHost is fully suitable for the last requested GpuVM";
 
-        if(reason != null)
+        if (reason != null)
             return reason;
 
         final var builder = new StringBuilder("lack of");
-        if(!forPes)
+        if (!forPes)
             builder.append(" PEs,");
-        if(!forRam)
+        if (!forRam)
             builder.append(" RAM,");
-        if(!forStorage)
+        if (!forStorage)
             builder.append(" Storage,");
-        if(!forBw)
+        if (!forBw)
             builder.append(" BW,");
-        if(!forGpus.fully())
+        if (!forGpus.fully())
             builder.append(" Gpus,");
 
-        return builder.substring(0, builder.length()-1);
+        return builder.substring(0, builder.length() - 1);
     }
 }

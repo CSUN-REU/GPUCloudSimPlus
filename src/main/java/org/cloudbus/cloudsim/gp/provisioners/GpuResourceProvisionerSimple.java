@@ -10,34 +10,34 @@ import java.util.function.Function;
 
 
 public class GpuResourceProvisionerSimple extends GpuResourceProvisionerAbstract {
-	
-	public GpuResourceProvisionerSimple() {
+
+    public GpuResourceProvisionerSimple() {
         super(ResourceManageable.NULL, vgpu -> ResourceManageable.NULL);
     }
 
-    protected GpuResourceProvisionerSimple(final ResourceManageable resource, 
-    		final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
+    protected GpuResourceProvisionerSimple(final ResourceManageable resource,
+                                           final Function<VGpu, ResourceManageable> vGpuResourceFunction) {
         super(resource, vGpuResourceFunction);
     }
-    
-    @Override
-    public boolean allocateResourceForVGpu (final VGpu vgpu, 
-    		final long newTotalVGpuResourceCapacity) {
-    	
-    	Objects.requireNonNull(vgpu);
 
-        if (!isSuitableForVGpu (vgpu, newTotalVGpuResourceCapacity)) {
+    @Override
+    public boolean allocateResourceForVGpu(final VGpu vgpu,
+                                           final long newTotalVGpuResourceCapacity) {
+
+        Objects.requireNonNull(vgpu);
+
+        if (!isSuitableForVGpu(vgpu, newTotalVGpuResourceCapacity)) {
             return false;
         }
 
-        
+
         final ResourceManageable vGpuResource = getVGpuResourceFunction().apply(vgpu);
         final long prevVGpuResourceAllocation = vGpuResource.getAllocatedResource();
         if (prevVGpuResourceAllocation > 0) {
-            deallocateResourceForVGpu (vgpu);
+            deallocateResourceForVGpu(vgpu);
         }
 
-        if(!getPGpuResource().isSubClassOf(Pe.class) && !vGpuResource.setCapacity(newTotalVGpuResourceCapacity)){
+        if (!getPGpuResource().isSubClassOf(Pe.class) && !vGpuResource.setCapacity(newTotalVGpuResourceCapacity)) {
             return false;
         }
 
@@ -46,15 +46,15 @@ public class GpuResourceProvisionerSimple extends GpuResourceProvisionerAbstract
         vGpuResource.setAllocatedResource(newTotalVGpuResourceCapacity);
         return true;
     }
-    
+
     @Override
-    public boolean allocateResourceForVGpu (final VGpu vgpu, 
-    		final double newTotalVGpuResourceCapacity) {
-        return allocateResourceForVGpu(vgpu, (long)newTotalVGpuResourceCapacity);
+    public boolean allocateResourceForVGpu(final VGpu vgpu,
+                                           final double newTotalVGpuResourceCapacity) {
+        return allocateResourceForVGpu(vgpu, (long) newTotalVGpuResourceCapacity);
     }
-    
+
     @Override
-    public long deallocateResourceForVGpu (final VGpu vgpu) {
+    public long deallocateResourceForVGpu(final VGpu vgpu) {
         final ResourceManageable vGpuResource = getVGpuResourceFunction().apply(vgpu);
         final long vGpuAllocatedResource = vGpuResource.getAllocatedResource();
 
@@ -65,14 +65,14 @@ public class GpuResourceProvisionerSimple extends GpuResourceProvisionerAbstract
     }
 
     @Override
-    public boolean isSuitableForVGpu (VGpu vgpu, long newVGpuTotalAllocatedResource) {
-        final long currentAllocatedResource = getAllocatedResourceForVGpu (vgpu);
+    public boolean isSuitableForVGpu(VGpu vgpu, long newVGpuTotalAllocatedResource) {
+        final long currentAllocatedResource = getAllocatedResourceForVGpu(vgpu);
         final long allocationDifference = newVGpuTotalAllocatedResource - currentAllocatedResource;
-        return getPGpuResource().getAvailableResource() >=  allocationDifference;
+        return getPGpuResource().getAvailableResource() >= allocationDifference;
     }
 
     @Override
-    public boolean isSuitableForVGpu (final VGpu vgpu, final Resource resource) {
+    public boolean isSuitableForVGpu(final VGpu vgpu, final Resource resource) {
         return isSuitableForVGpu(vgpu, resource.getCapacity());
     }
 }

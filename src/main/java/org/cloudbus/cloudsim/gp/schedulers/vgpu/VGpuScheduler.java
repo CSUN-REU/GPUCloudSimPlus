@@ -7,38 +7,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public interface VGpuScheduler {
-    Logger LOGGER = LoggerFactory.getLogger (VGpuScheduler.class.getSimpleName());
+    Logger LOGGER = LoggerFactory.getLogger(VGpuScheduler.class.getSimpleName());
 
     double DEF_VGPU_MIGRATION_GPU_OVERHEAD = 0.1;
 
-	VGpuScheduler NULL = new VGpuSchedulerNull ();
-	
-	boolean allocateCoresForVGpu (VGpu vgpu, MipsShare requestedMips);
+    VGpuScheduler NULL = new VGpuSchedulerNull();
 
-    boolean allocateCoresForVGpu (VGpu vgpu);
+    boolean allocateCoresForVGpu(VGpu vgpu, MipsShare requestedMips);
 
-    void deallocateCoresFromVGpu (VGpu vgpu);
+    boolean allocateCoresForVGpu(VGpu vgpu);
 
-    void deallocateCoresFromVGpu (VGpu vgpu, int coresToRemove);
+    void deallocateCoresFromVGpu(VGpu vgpu);
 
-    MipsShare getAllocatedMips (VGpu vgpu);
+    void deallocateCoresFromVGpu(VGpu vgpu, int coresToRemove);
 
-    double getTotalAvailableMips ();
+    MipsShare getAllocatedMips(VGpu vgpu);
 
-	Gpu getGpu ();
+    double getTotalAvailableMips();
 
-	VGpuScheduler setGpu (Gpu gpu);
+    Gpu getGpu();
 
-    MipsShare getRequestedMips (VGpu vgpu);
+    VGpuScheduler setGpu(Gpu gpu);
 
-    boolean isSuitableForVGpu (VGpu vgpu);
+    MipsShare getRequestedMips(VGpu vgpu);
 
-    boolean isSuitableForVGpu (VGpu vgpu, MipsShare requestedMips);
+    boolean isSuitableForVGpu(VGpu vgpu);
 
-    double getTotalAllocatedMipsForVGpu (VGpu vgpu);
+    boolean isSuitableForVGpu(VGpu vgpu, MipsShare requestedMips);
 
-    double getMaxGpuUsagePercentDuringOutMigration ();
+    double getTotalAllocatedMipsForVGpu(VGpu vgpu);
 
-	double getVGpuMigrationGpuOverhead ();
+    double getMaxGpuUsagePercentDuringOutMigration();
+
+    double getVGpuMigrationGpuOverhead();
 
 }

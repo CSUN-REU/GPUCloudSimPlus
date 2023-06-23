@@ -8,10 +8,10 @@ import java.io.Serializable;
 
 
 public interface GpuCloudletScheduler extends Serializable, CloudletScheduler {
-	Logger LOGGER = LoggerFactory.getLogger(GpuCloudletScheduler.class.getSimpleName());
+    Logger LOGGER = LoggerFactory.getLogger(GpuCloudletScheduler.class.getSimpleName());
 
-	GpuCloudletScheduler NULL = new GpuCloudletSchedulerNull();
-	
-	
+    GpuCloudletScheduler NULL = new GpuCloudletSchedulerNull();
+
+
 }
 

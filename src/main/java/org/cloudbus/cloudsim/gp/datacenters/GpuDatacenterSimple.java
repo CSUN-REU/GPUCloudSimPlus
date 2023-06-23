@@ -63,8 +63,8 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
     private double lastProcessTime;
     private double schedulingInterval;
-    
-	private DatacenterStorage datacenterStorage;
+
+    private DatacenterStorage datacenterStorage;
 
     private final List<EventListener<HostEventInfo>> onGpuHostAvailableListeners;
     private final List<EventListener<DatacenterVmMigrationEventInfo>> onGpuVmMigrationFinishListeners;
@@ -77,29 +77,29 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
     private PowerModelDatacenter powerModel = PowerModelDatacenter.NULL;
     private long activeHostsNumber;
 
-    public GpuDatacenterSimple (final Simulation simulation,
-    		final List<? extends GpuHost> hostList) {
+    public GpuDatacenterSimple(final Simulation simulation,
+                               final List<? extends GpuHost> hostList) {
         this(simulation, hostList, new GpuVmAllocationPolicySimple(), new DatacenterStorage());
     }
 
-    public GpuDatacenterSimple (final Simulation simulation, final List<? extends GpuHost> hostList,
-    		final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
-    	this(simulation, hostList, gpuVmAllocationPolicy, new DatacenterStorage());
+    public GpuDatacenterSimple(final Simulation simulation, final List<? extends GpuHost> hostList,
+                               final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
+        this(simulation, hostList, gpuVmAllocationPolicy, new DatacenterStorage());
     }
 
-    public GpuDatacenterSimple ( final Simulation simulation, 
-    		final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
+    public GpuDatacenterSimple(final Simulation simulation,
+                               final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
         this(simulation, new ArrayList<>(), gpuVmAllocationPolicy, new DatacenterStorage());
     }
 
-    public GpuDatacenterSimple (final Simulation simulation, 
-    		final List<? extends GpuHost> hostList,
-    		final GpuVmAllocationPolicy gpuVmAllocationPolicy,final List<SanStorage> storageList) {
+    public GpuDatacenterSimple(final Simulation simulation,
+                               final List<? extends GpuHost> hostList,
+                               final GpuVmAllocationPolicy gpuVmAllocationPolicy, final List<SanStorage> storageList) {
         this(simulation, hostList, gpuVmAllocationPolicy, new DatacenterStorage(storageList));
     }
-    
-    public GpuDatacenterSimple (final Simulation simulation, final List<? extends GpuHost> hostList,
-    		final GpuVmAllocationPolicy gpuVmAllocationPolicy, final DatacenterStorage storage) {
+
+    public GpuDatacenterSimple(final Simulation simulation, final List<? extends GpuHost> hostList,
+                               final GpuVmAllocationPolicy gpuVmAllocationPolicy, final DatacenterStorage storage) {
         super(simulation, hostList, gpuVmAllocationPolicy, storage);
         setGpuHostList(hostList);
         setLastProcessTime(0.0);
@@ -117,7 +117,8 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
                     .getDeclaredConstructor(Datacenter.class);
             constructor.setAccessible(true);
             datacenterCharacteristicsSimple = constructor.newInstance(this);
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException ex) {
             ex.printStackTrace();
         }
 
@@ -130,57 +131,57 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
         setGpuVmAllocationPolicy(gpuVmAllocationPolicy);
     }
-    
-    public final GpuDatacenter setGpuVmAllocationPolicy (
-    		final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
+
+    public final GpuDatacenter setGpuVmAllocationPolicy(
+            final GpuVmAllocationPolicy gpuVmAllocationPolicy) {
         requireNonNull(gpuVmAllocationPolicy);
-        if(gpuVmAllocationPolicy.getDatacenter() != null && 
-        		gpuVmAllocationPolicy.getDatacenter() != Datacenter.NULL &&
-        		!this.equals(gpuVmAllocationPolicy.getDatacenter())){
+        if (gpuVmAllocationPolicy.getDatacenter() != null &&
+                gpuVmAllocationPolicy.getDatacenter() != Datacenter.NULL &&
+                !this.equals(gpuVmAllocationPolicy.getDatacenter())) {
             throw new IllegalStateException("The given GpuVmAllocationPolicy is already used by "
-            		+ "another Datacenter.");
+                    + "another Datacenter.");
         }
 
         gpuVmAllocationPolicy.setDatacenter(this);
         this.gpuVmAllocationPolicy = gpuVmAllocationPolicy;
         return this;
     }
-    
-    private void setGpuHostList (final List<? extends GpuHost> hostList) {
+
+    private void setGpuHostList(final List<? extends GpuHost> hostList) {
         this.gpuhostList = requireNonNull(hostList);
         setupGpuHosts();
     }
-    
-    private void setupGpuHosts () {
+
+    private void setupGpuHosts() {
         long lastGpuHostId = getLastGpuHostId();
         for (final GpuHost host : gpuhostList)
-            lastGpuHostId = setupGpuHost (host, lastGpuHostId);
+            lastGpuHostId = setupGpuHost(host, lastGpuHostId);
     }
 
-    private long getLastGpuHostId () {
-        return gpuhostList.isEmpty() ? -1 : gpuhostList.get(gpuhostList.size()-1).getId();
+    private long getLastGpuHostId() {
+        return gpuhostList.isEmpty() ? -1 : gpuhostList.get(gpuhostList.size() - 1).getId();
     }
-    
-    protected long setupGpuHost (final GpuHost host, long nextId) {
+
+    protected long setupGpuHost(final GpuHost host, long nextId) {
         nextId = Math.max(nextId, -1);
-        if(host.getId() < 0) {
+        if (host.getId() < 0) {
             host.setId(++nextId);
         }
 
         host.setSimulation(getSimulation()).setDatacenter(this);
-        host.setActive(((GpuHostSimple)host).isActivateOnDatacenterStartup());
+        host.setActive(((GpuHostSimple) host).isActivateOnDatacenterStartup());
         return nextId;
     }
-    
+
     @Override
-    public void processEvent (final SimEvent evt) {
-        if (processGpuCloudletEvents(evt) || processGpuVmEvents(evt) || 
-        		processNetworkEvents(evt) || processGpuHostEvents(evt)) {
+    public void processEvent(final SimEvent evt) {
+        if (processGpuCloudletEvents(evt) || processGpuVmEvents(evt) ||
+                processNetworkEvents(evt) || processGpuHostEvents(evt)) {
             return;
         }
 
-        LOGGER.trace("{}: {}: Unknown event {} received.", getSimulation().clockStr(), 
-        		this, evt.getTag());
+        LOGGER.trace("{}: {}: Unknown event {} received.", getSimulation().clockStr(),
+                this, evt.getTag());
     }
 
     @Override
@@ -192,68 +193,66 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         if (evt.getTag() == CloudSimTag.HOST_ADD) {
             processGpuHostAdditionRequest(evt);
             return true;
-        } 
-        else if (evt.getTag() == CloudSimTag.HOST_REMOVE) {
+        } else if (evt.getTag() == CloudSimTag.HOST_REMOVE) {
             processGpuHostRemovalRequest(evt);
             return true;
-        } 
-        else if (evt.getTag() == CloudSimTag.HOST_POWER_ON || 
-        		evt.getTag() == CloudSimTag.HOST_POWER_OFF) {
-            final GpuHostSimple host = (GpuHostSimple)evt.getData();
+        } else if (evt.getTag() == CloudSimTag.HOST_POWER_ON ||
+                evt.getTag() == CloudSimTag.HOST_POWER_OFF) {
+            final GpuHostSimple host = (GpuHostSimple) evt.getData();
             host.processActivation(evt.getTag() == CloudSimTag.HOST_POWER_ON);
         }
 
         return false;
     }
-    
+
     //review how can process a Gpu removal request or GpuFaultInjection
-    
+
     private void processGpuHostRemovalRequest(final SimEvent srcEvt) {
-        final long hostId = (long)srcEvt.getData();
+        final long hostId = (long) srcEvt.getData();
         final Host host = getHostById(hostId);
-        if(Host.NULL.equals(host)) {
+        if (Host.NULL.equals(host)) {
             LOGGER.warn(
-                "{}: {}: Host {} was not found to be removed from {}.",
-                getSimulation().clockStr(), getClass().getSimpleName(), hostId, this);
+                    "{}: {}: Host {} was not found to be removed from {}.",
+                    getSimulation().clockStr(), getClass().getSimpleName(), hostId, this);
             return;
         }
 
         final var fault = new HostFaultInjection(this);
         try {
             LOGGER.error(
-                "{}: {}: Host {} removed from {} due to injected failure.",
-                getSimulation().clockStr(), getClass().getSimpleName(), host.getId(), this);
+                    "{}: {}: Host {} removed from {} due to injected failure.",
+                    getSimulation().clockStr(), getClass().getSimpleName(), host.getId(), this);
             fault.generateHostFault(host);
-        } finally{
+        } finally {
             fault.shutdown();
         }
 
         /*If the Host was found in this Datacenter, cancel the message sent to others
-        * Datacenters to try to find the Host for removal.*/
+         * Datacenters to try to find the Host for removal.*/
         getSimulation().cancelAll(
-            getSimulation().getCis(),
-            evt -> MathUtil.same(evt.getTime(), srcEvt.getTime()) &&
-                   evt.getTag() == CloudSimTag.HOST_REMOVE &&
-                   (long)evt.getData() == host.getId());
+                getSimulation().getCis(),
+                evt -> MathUtil.same(evt.getTime(), srcEvt.getTime()) &&
+                        evt.getTag() == CloudSimTag.HOST_REMOVE &&
+                        (long) evt.getData() == host.getId());
     }
-    
+
     private void processGpuHostAdditionRequest(final SimEvent evt) {
         getGpuHostFromGpuHostEvent(evt).ifPresent(host -> {
             this.addHost(host);
             LOGGER.info(
-                "{}: {}: Host {} added to {} during simulation runtime",
-                getSimulation().clockStr(), getClass().getSimpleName(), host.getId(), this);
+                    "{}: {}: Host {} added to {} during simulation runtime",
+                    getSimulation().clockStr(), getClass().getSimpleName(), host.getId(), this);
             //Notification must be sent only for Hosts added during simulation runtime
             notifyOnGpuHostAvailableListeners(host);
             host.getVideocard().processGpuAdditionRequest();
         });
     }
-    
+
     private <T extends Host> void notifyOnGpuHostAvailableListeners(final T host) {
         onGpuHostAvailableListeners.forEach(listener -> listener.update(HostEventInfo.of(
-        		listener, host, clock())));
+                listener, host, clock())));
     }
-    
+
     private Optional<GpuHost> getGpuHostFromGpuHostEvent(final SimEvent evt) {
         if (evt.getData() instanceof GpuHost host) {
             return Optional.of(host);
@@ -261,7 +260,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
         return Optional.empty();
     }
-    
+
     private boolean processNetworkEvents(final SimEvent evt) {
         if (evt.getTag() == CloudSimTag.ICMP_PKT_SUBMIT) {
             processPingRequest(evt);
@@ -278,11 +277,11 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         // returns the packet to the sender
         sendNow(pkt.getSource(), CloudSimTag.ICMP_PKT_RETURN, pkt);
     }
-    
-    private boolean processGpuVmEvents (final SimEvent evt) {
+
+    private boolean processGpuVmEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
             case VM_CREATE_ACK -> processGpuVmCreate(evt);
-            case VM_VERTICAL_SCALING  -> requestGpuVmVerticalScaling(evt);
+            case VM_VERTICAL_SCALING -> requestGpuVmVerticalScaling(evt);
             case VM_DESTROY -> processGpuVmDestroy(evt, false);
             case VM_DESTROY_ACK -> processGpuVmDestroy(evt, true);
             case VM_MIGRATE -> finishGpuVmMigration(evt, false);
@@ -291,17 +290,17 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
             default -> false;
         };
     }
-    
-    protected boolean finishGpuVmMigration (final SimEvent evt, final boolean ack) {
+
+    protected boolean finishGpuVmMigration(final SimEvent evt, final boolean ack) {
         if (!(evt.getData() instanceof Map.Entry<?, ?>)) {
             throw new InvalidEventDataTypeException(evt, "GPUVM_MIGRATE", "Map.Entry<GpuVm, GpuHost>");
         }
 
         final var entry = (Map.Entry<Vm, Host>) evt.getData();
 
-        final GpuVm vm = (GpuVm)entry.getKey();
-        final GpuHost sourceHost = (GpuHost)vm.getHost();
-        final GpuHost targetHost = (GpuHost)entry.getValue();
+        final GpuVm vm = (GpuVm) entry.getKey();
+        final GpuHost sourceHost = (GpuHost) vm.getHost();
+        final GpuHost targetHost = (GpuHost) entry.getValue();
 
         updateGpuHostsProcessing();
 
@@ -311,12 +310,12 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         targetHost.removeMigratingInVm(vm);
         final HostSuitability suitability = gpuVmAllocationPolicy.allocateHostForVm(vm, targetHost);
         final GpuSuitability gpuSuitability = targetHost.getVideocard().getVGpuAllocationPolicy()
-        		.allocateGpuForVGpu(vm.getVGpu());
-        
-        if(suitability.fully() && gpuSuitability.fully()) {
-            ((GpuVmSimple)vm).updateMigrationFinishListeners(targetHost);
-            ((VGpuSimple)vm.getVGpu()).updateMigrationFinishListeners(vm.getVGpu().getGpu());
-            
+                .allocateGpuForVGpu(vm.getVGpu());
+
+        if (suitability.fully() && gpuSuitability.fully()) {
+            ((GpuVmSimple) vm).updateMigrationFinishListeners(targetHost);
+            ((VGpuSimple) vm.getVGpu()).updateMigrationFinishListeners(vm.getVGpu().getGpu());
+
             vm.getBroker().getVmExecList().add(vm);
 
             if (ack) {
@@ -325,7 +324,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         }
 
         final SimEvent event = getSimulation().findFirstDeferred(this, new PredicateType(
-        		CloudSimTag.VM_MIGRATE));
+                CloudSimTag.VM_MIGRATE));
         if (event == null || event.getTime() > clock()) {
             updateGpuHostsProcessing();
         }
@@ -333,17 +332,17 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         if (suitability.fully() && gpuSuitability.fully())
             LOGGER.info("{}: Migration of {} from {} to {} is completed.", getSimulation().clockStr(), vm, sourceHost, targetHost);
         else LOGGER.error(
-            "{}: {}: Allocation of {} to the destination {} failed due to {} or {}!",
-            getSimulation().clockStr(), this, vm, targetHost, suitability, gpuSuitability);
+                "{}: {}: Allocation of {} to the destination {} failed due to {} or {}!",
+                getSimulation().clockStr(), this, vm, targetHost, suitability, gpuSuitability);
 
         onGpuVmMigrationFinishListeners.forEach(
-        		listener -> listener.update(DatacenterVmMigrationEventInfo.of(
-        				listener, vm, suitability)));
+                listener -> listener.update(DatacenterVmMigrationEventInfo.of(
+                        listener, vm, suitability)));
         return true;
     }
-    
-    protected double updateGpuCloudletProcessing () {
-        if (!isTimeToUpdateGpuCloudletsProcessing()){
+
+    protected double updateGpuCloudletProcessing() {
+        if (!isTimeToUpdateGpuCloudletsProcessing()) {
             return Double.MAX_VALUE;
         }
 
@@ -358,32 +357,32 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         checkIfGpuVmMigrationsAreNeeded();
         return nextSimulationDelay;
     }
-    
+
     //need review for vgpu migration
     private void checkIfGpuVmMigrationsAreNeeded() {
         if (!isTimeToSearchForSuitableGpuHosts()) {
             return;
         }
-        lastMigrationMap = (Map)gpuVmAllocationPolicy.getOptimizedAllocationMap(getGpuVmList());
+        lastMigrationMap = (Map) gpuVmAllocationPolicy.getOptimizedAllocationMap(getGpuVmList());
         for (final Map.Entry<GpuVm, GpuHost> entry : lastMigrationMap.entrySet()) {
             requestVmMigration(entry.getKey(), entry.getValue());
         }
 
-        if(areThereUnderOrOverloadedHostsAndMigrationIsSupported()){
+        if (areThereUnderOrOverloadedHostsAndMigrationIsSupported()) {
             lastUnderOrOverloadedDetection = clock();
         }
     }
-    
+
     private <T extends Vm> List<T> getGpuVmList() {
         return (List<T>) Collections.unmodifiableList(
                 getHostList()
-                    .stream()
-                    .map(Host::getVmList)
-                    .flatMap(List::stream)
-                    .collect(toList()));
+                        .stream()
+                        .map(Host::getVmList)
+                        .flatMap(List::stream)
+                        .collect(toList()));
     }
 
-    private boolean areThereUnderOrOverloadedHostsAndMigrationIsSupported () {
+    private boolean areThereUnderOrOverloadedHostsAndMigrationIsSupported() {
         /*if(gpuVmAllocationPolicy instanceof VmAllocationPolicyMigration migrationPolicy){
             return migrationPolicy.areHostsUnderOrOverloaded();
         }*/
@@ -391,42 +390,42 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         return false;
     }
 
-    private boolean isTimeToSearchForSuitableGpuHosts(){
+    private boolean isTimeToSearchForSuitableGpuHosts() {
         final double elapsedSecs = clock() - lastUnderOrOverloadedDetection;
         return isMigrationsEnabled() && elapsedSecs >= gpuhostSearchRetryDelay;
     }
 
-    protected double updateGpuHostsProcessing () {
+    protected double updateGpuHostsProcessing() {
         double nextSimulationDelay = Double.MAX_VALUE;
         for (final Host host : getHostList()) {
-        	((GpuHost)host).getVideocard().updateGpusProcessing();
+            ((GpuHost) host).getVideocard().updateGpusProcessing();
             final double delay = host.updateProcessing(clock());
             nextSimulationDelay = Math.min(delay, nextSimulationDelay);
         }
 
         // Guarantees a minimal interval before scheduling the event
-        final double minTimeBetweenEvents = getSimulation().getMinTimeBetweenEvents()+0.01;
+        final double minTimeBetweenEvents = getSimulation().getMinTimeBetweenEvents() + 0.01;
         nextSimulationDelay = nextSimulationDelay == 0 ? nextSimulationDelay : Math.max(nextSimulationDelay, minTimeBetweenEvents);
 
         return nextSimulationDelay;
     }
-    
+
     @Override
-    public <T extends Host> List<T> getHostList () {
-        return (List<T>)Collections.unmodifiableList(gpuhostList);
+    public <T extends Host> List<T> getHostList() {
+        return (List<T>) Collections.unmodifiableList(gpuhostList);
     }
-    
-    private boolean isTimeToUpdateGpuCloudletsProcessing () {
+
+    private boolean isTimeToUpdateGpuCloudletsProcessing() {
         return clock() < 0.111 ||
-               clock() >= lastProcessTime + getSimulation().getMinTimeBetweenEvents();
+                clock() >= lastProcessTime + getSimulation().getMinTimeBetweenEvents();
     }
-    
-    protected boolean processGpuVmDestroy (final SimEvent evt, final boolean ack) {
+
+    protected boolean processGpuVmDestroy(final SimEvent evt, final boolean ack) {
         final var vm = (GpuVm) evt.getData();
-        
-        String gpuTaskWarningmsg = ((GpuHost)vm.getHost()).getVideocard().processVGpuDestroy(
-        		vm.getVGpu());
-        
+
+        String gpuTaskWarningmsg = ((GpuHost) vm.getHost()).getVideocard().processVGpuDestroy(
+                vm.getVGpu());
+
         gpuVmAllocationPolicy.deallocateHostForVm(vm);
 
         if (ack) {
@@ -438,35 +437,35 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
             return true;
         }
 
-        final String warningMsg = generateNotFinishedGpuCloudletsWarning (vm);
+        final String warningMsg = generateNotFinishedGpuCloudletsWarning(vm);
         final String msg = String.format(
                 "%s: %s: %s destroyed on %s. %s. %s",
-                getSimulation().clockStr(), getClass().getSimpleName(), vm, vm.getHost(), 
+                getSimulation().clockStr(), getClass().getSimpleName(), vm, vm.getHost(),
                 gpuTaskWarningmsg, warningMsg);
-        if ((warningMsg.isEmpty() && gpuTaskWarningmsg.isEmpty()) || 
-        		getSimulation().isTerminationTimeSet())
+        if ((warningMsg.isEmpty() && gpuTaskWarningmsg.isEmpty()) ||
+                getSimulation().isTerminationTimeSet())
             LOGGER.info(msg);
         else LOGGER.warn(msg);
         return true;
     }
-    
-    private String generateNotFinishedGpuCloudletsWarning (final GpuVm vm) {
+
+    private String generateNotFinishedGpuCloudletsWarning(final GpuVm vm) {
         final int cloudletsNoFinished = vm.getCloudletScheduler().getCloudletList().size();
-        if(cloudletsNoFinished == 0) {
+        if (cloudletsNoFinished == 0) {
             return "";
         }
 
         return String.format(
                 "It had a total of %d cloudlets (running + waiting). %s", cloudletsNoFinished,
                 "Some events may have been missed. You can try: " +
-                "(a) decreasing CloudSim's minTimeBetweenEvents " + 
-                "and/or Datacenter's schedulingInterval attribute; " +
-                "(b) increasing broker's Vm destruction delay for idle VMs if you set it to zero; " +
-                "(c) defining Cloudlets with smaller length (" + 
-                "your Datacenter's scheduling interval may be smaller " + 
-                "than the time to finish some Cloudlets).");
+                        "(a) decreasing CloudSim's minTimeBetweenEvents " +
+                        "and/or Datacenter's schedulingInterval attribute; " +
+                        "(b) increasing broker's Vm destruction delay for idle VMs if you set it to zero; " +
+                        "(c) defining Cloudlets with smaller length (" +
+                        "your Datacenter's scheduling interval may be smaller " +
+                        "than the time to finish some Cloudlets).");
     }
-    
+
     //need add VerticalVGpuScalling
     private boolean requestGpuVmVerticalScaling(final SimEvent evt) {
         if (evt.getData() instanceof VerticalVmScaling scaling) {
@@ -475,22 +474,22 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
         throw new InvalidEventDataTypeException(evt, "VM_VERTICAL_SCALING", "VerticalVmScaling");
     }
-    
-    private boolean processGpuVmCreate (final SimEvent evt) {
+
+    private boolean processGpuVmCreate(final SimEvent evt) {
         final var vm = (GpuVm) evt.getData();
         final boolean gpuHostAllocatedForGpuVm = gpuVmAllocationPolicy.allocateHostForVm(vm).fully();
         boolean gpuAllocatedForVGpu = false;
         if (gpuHostAllocatedForGpuVm) {
-        	gpuAllocatedForVGpu = ((GpuHost)vm.getHost()).getVideocard().processVGpuCreate(
-        			vm.getVGpu());
+            gpuAllocatedForVGpu = ((GpuHost) vm.getHost()).getVideocard().processVGpuCreate(
+                    vm.getVGpu());
             vm.updateProcessing(vm.getHost().getVmScheduler().getAllocatedMips(vm));
         }
 
         send(vm.getBroker(), getSimulation().getMinTimeBetweenEvents(), CloudSimTag.VM_CREATE_ACK, vm);
         return gpuHostAllocatedForGpuVm && gpuAllocatedForVGpu;
     }
-    
-    private boolean processGpuCloudletEvents (final SimEvent evt) {
+
+    private boolean processGpuCloudletEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
             // New Cloudlet arrives
             case CLOUDLET_SUBMIT -> processGpuCloudletSubmit(evt, false);
@@ -509,13 +508,12 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
             default -> false;
         };
     }
-    
-    protected boolean processGpuCloudlet (final SimEvent evt, final CloudSimTag tag) {
+
+    protected boolean processGpuCloudlet(final SimEvent evt, final CloudSimTag tag) {
         final GpuCloudlet cloudlet;
         try {
             cloudlet = (GpuCloudlet) evt.getData();
-        } 
-        catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             LOGGER.error("{}: Error in processing Cloudlet: {}", super.getName(), e.getMessage());
             return false;
         }
@@ -528,54 +526,54 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
             case CLOUDLET_RESUME_ACK -> processGpuCloudletResume(cloudlet, true);
             default -> {
                 LOGGER.trace(
-                    "{}: Unable to handle a request from {} with event tag = {}",
-                    this, evt.getSource().getName(), evt.getTag());
+                        "{}: Unable to handle a request from {} with event tag = {}",
+                        this, evt.getSource().getName(), evt.getTag());
                 yield false;
             }
         };
     }
-    
-    protected boolean processGpuCloudletResume (final GpuCloudlet cloudlet, final boolean ack) {
+
+    protected boolean processGpuCloudletResume(final GpuCloudlet cloudlet, final boolean ack) {
         final double cloudletEstimatedFinishTime = cloudlet.getVm().getCloudletScheduler()
-        		.cloudletResume(cloudlet);
-        
+                .cloudletResume(cloudlet);
+
         final double gpuTaskEstimatedFinishTime = cloudlet.getGpuTask().getVGpu().getGpuTaskScheduler()
-        		.gpuTaskResume(cloudlet.getGpuTask());
+                .gpuTaskResume(cloudlet.getGpuTask());
 
         final double estimatedFinishTime = cloudletEstimatedFinishTime + gpuTaskEstimatedFinishTime;
-        
+
         if (estimatedFinishTime > 0.0 && estimatedFinishTime > clock()) {
             schedule(this,
-                getGpuCloudletProcessingUpdateInterval(estimatedFinishTime),
-                CloudSimTag.VM_UPDATE_CLOUDLET_PROCESSING);
+                    getGpuCloudletProcessingUpdateInterval(estimatedFinishTime),
+                    CloudSimTag.VM_UPDATE_CLOUDLET_PROCESSING);
         }
 
         sendAck(ack, cloudlet, CloudSimTag.CLOUDLET_RESUME_ACK);
         return true;
     }
-    
-    protected boolean processGpuCloudletPause (final GpuCloudlet cloudlet, final boolean ack) {
+
+    protected boolean processGpuCloudletPause(final GpuCloudlet cloudlet, final boolean ack) {
         cloudlet.getVm().getCloudletScheduler().cloudletPause(cloudlet);
         cloudlet.getGpuTask().getVGpu().getGpuTaskScheduler().gpuTaskPause(cloudlet.getGpuTask());
         sendAck(ack, cloudlet, CloudSimTag.CLOUDLET_PAUSE_ACK);
         return true;
     }
-    
-    private void sendAck (final boolean ack, final GpuCloudlet cloudlet, final CloudSimTag tag) {
+
+    private void sendAck(final boolean ack, final GpuCloudlet cloudlet, final CloudSimTag tag) {
         if (ack) {
             sendNow(cloudlet.getBroker(), tag, cloudlet);
         }
     }
 
-    
-    protected boolean processGpuCloudletCancel (final GpuCloudlet cloudlet) {
+
+    protected boolean processGpuCloudletCancel(final GpuCloudlet cloudlet) {
         cloudlet.getVm().getCloudletScheduler().cloudletCancel(cloudlet);
         cloudlet.getGpuTask().getVGpu().getGpuTaskScheduler().gpuTaskCancel(cloudlet.getGpuTask());
         sendNow(cloudlet.getBroker(), CloudSimTag.CLOUDLET_CANCEL, cloudlet);
         return true;
     }
-    
-    protected boolean processGpuCloudletSubmit (final SimEvent evt, final boolean ack) {
+
+    protected boolean processGpuCloudletSubmit(final SimEvent evt, final boolean ack) {
         final var cloudlet = (GpuCloudlet) evt.getData();
         if (cloudlet.isFinished() && cloudlet.getGpuTask().isFinished()) {
             notifyBrokerAboutAlreadyFinishedGpuCloudlet(cloudlet, ack);
@@ -585,66 +583,66 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         submitGpuCloudletToGpuVm(cloudlet, ack);
         return true;
     }
-    
-    private void submitGpuCloudletToGpuVm (final GpuCloudlet cloudlet, final boolean ack) {
-    	
+
+    private void submitGpuCloudletToGpuVm(final GpuCloudlet cloudlet, final boolean ack) {
+
         final double fileTransferTime = getDatacenterStorage().predictFileTransferTime(
-        		Stream.concat(cloudlet.getRequiredFiles().stream(), 
-        				cloudlet.getGpuTask().getRequiredFiles().stream()).toList());
+                Stream.concat(cloudlet.getRequiredFiles().stream(),
+                        cloudlet.getGpuTask().getRequiredFiles().stream()).toList());
 
         final var cloudletScheduler = cloudlet.getVm().getCloudletScheduler();
-        final double estimatedCloudletFinishTime = cloudletScheduler.cloudletSubmit(cloudlet, 
-        		fileTransferTime);
-        
+        final double estimatedCloudletFinishTime = cloudletScheduler.cloudletSubmit(cloudlet,
+                fileTransferTime);
+
         final var gpuTaskScheduler = cloudlet.getGpuTask().getVGpu().getGpuTaskScheduler();
-        final double estimatedGpuTaskFinishTime = gpuTaskScheduler.gpuTaskSubmit(cloudlet.getGpuTask(), 
-        		fileTransferTime);
-        
-        final double estimatedFinishTime = estimatedCloudletFinishTime + 
-        		estimatedGpuTaskFinishTime;
+        final double estimatedGpuTaskFinishTime = gpuTaskScheduler.gpuTaskSubmit(cloudlet.getGpuTask(),
+                fileTransferTime);
+
+        final double estimatedFinishTime = estimatedCloudletFinishTime +
+                estimatedGpuTaskFinishTime;
         // if this cloudlet is in the exec queue
         if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
             send(this,
-                getGpuCloudletProcessingUpdateInterval(estimatedFinishTime),
-                CloudSimTag.VM_UPDATE_CLOUDLET_PROCESSING);
+                    getGpuCloudletProcessingUpdateInterval(estimatedFinishTime),
+                    CloudSimTag.VM_UPDATE_CLOUDLET_PROCESSING);
         }
-        
-        ((CustomerEntityAbstract)cloudlet).setCreationTime();
+
+        ((CustomerEntityAbstract) cloudlet).setCreationTime();
         sendGpuCloudletSubmitAckToBroker(cloudlet, ack);
     }
-    
-    protected double getGpuCloudletProcessingUpdateInterval (
-    		final double nextFinishingGpuCloudletTime) {
-        if(schedulingInterval == 0) {
+
+    protected double getGpuCloudletProcessingUpdateInterval(
+            final double nextFinishingGpuCloudletTime) {
+        if (schedulingInterval == 0) {
             return nextFinishingGpuCloudletTime;
         }
 
         final double time = Math.floor(clock());
         final double mod = time % schedulingInterval;
-        
-        final double delay = mod == 0 ? schedulingInterval : 
-        	(time - mod + schedulingInterval) - time;
+
+        final double delay = mod == 0 ? schedulingInterval :
+                (time - mod + schedulingInterval) - time;
         return Math.min(nextFinishingGpuCloudletTime, delay);
     }
-    
+
     private double clock() {
         return getSimulation().clock();
     }
-    
-    private void notifyBrokerAboutAlreadyFinishedGpuCloudlet (final GpuCloudlet cloudlet, 
-    		final boolean ack) {
+
+    private void notifyBrokerAboutAlreadyFinishedGpuCloudlet(final GpuCloudlet cloudlet,
+                                                             final boolean ack) {
         LOGGER.warn(
-            "{}: {} owned by {} is already completed/finished. It won't be executed again.",
-            getName(), cloudlet, cloudlet.getBroker());
+                "{}: {} owned by {} is already completed/finished. It won't be executed again.",
+                getName(), cloudlet, cloudlet.getBroker());
 
         sendGpuCloudletSubmitAckToBroker(cloudlet, ack);
 
         sendNow(cloudlet.getBroker(), CloudSimTag.CLOUDLET_RETURN, cloudlet);
     }
-    
-    private void sendGpuCloudletSubmitAckToBroker (final GpuCloudlet cloudlet, 
-    		final boolean ack) {
-        if(!ack){
+
+    private void sendGpuCloudletSubmitAckToBroker(final GpuCloudlet cloudlet,
+                                                  final boolean ack) {
+        if (!ack) {
             return;
         }
 
@@ -653,17 +651,17 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
     @Override
     public Datacenter setHostSearchRetryDelay(final double delay) {
-        if(delay == 0){
+        if (delay == 0) {
             throw new IllegalArgumentException("gpuHostSearchRetryDelay cannot be 0. Set a positive "
-            		+ "value to define an actual delay or a negative value to indicate a new Host "
-            		+ "search must be tried as soon as possible.");
+                    + "value to define an actual delay or a negative value to indicate a new Host "
+                    + "search must be tried as soon as possible.");
         }
 
         this.gpuhostSearchRetryDelay = delay;
         super.setHostSearchRetryDelay(delay);
         return this;
     }
-    
+
     @Override
     public boolean isMigrationsEnabled() {
         return migrationsEnabled && gpuVmAllocationPolicy.isVmMigrationSupported();
@@ -682,7 +680,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         this.migrationsEnabled = true;
         return this;
     }*/
-    
+
     @Override
     public void requestVmMigration(final Vm sourceVm) {
         requestVmMigration(sourceVm, Host.NULL);
@@ -690,39 +688,39 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
     @Override
     public void requestVmMigration(final Vm sourceVm, Host targetHost) {
-        if(GpuHost.NULL.equals(targetHost)){
-            targetHost = gpuVmAllocationPolicy.findHostForVm((GpuVm)sourceVm).orElse(GpuHost.NULL);
+        if (GpuHost.NULL.equals(targetHost)) {
+            targetHost = gpuVmAllocationPolicy.findHostForVm((GpuVm) sourceVm).orElse(GpuHost.NULL);
         }
 
-        if(GpuHost.NULL.equals(targetHost)) {
-            LOGGER.warn("{}: {}: No suitable host found for {} in {}", 
-            		sourceVm.getSimulation().clockStr(), getClass().getSimpleName(), sourceVm, this);
+        if (GpuHost.NULL.equals(targetHost)) {
+            LOGGER.warn("{}: {}: No suitable host found for {} in {}",
+                    sourceVm.getSimulation().clockStr(), getClass().getSimpleName(), sourceVm, this);
             return;
         }
 
-        final GpuHost sourceHost = (GpuHost)sourceVm.getHost();
-        final double delay = timeToMigrateGpuVm((GpuVm)sourceVm, (GpuHost)targetHost);
+        final GpuHost sourceHost = (GpuHost) sourceVm.getHost();
+        final double delay = timeToMigrateGpuVm((GpuVm) sourceVm, (GpuHost) targetHost);
         final String msg1 =
-            GpuHost.NULL.equals(sourceHost) ?
-                String.format("%s to %s", sourceVm, targetHost) :
-                String.format("%s from %s to %s", sourceVm, sourceHost, targetHost);
+                GpuHost.NULL.equals(sourceHost) ?
+                        String.format("%s to %s", sourceVm, targetHost) :
+                        String.format("%s from %s to %s", sourceVm, sourceHost, targetHost);
 
         final String currentTime = getSimulation().clockStr();
         final var fmt = "It's expected to finish in %.2f seconds, considering the %.0f%% of "
-        		+ "bandwidth allowed for migration and the GpuVM RAM size.";
-        final String msg2 = String.format(fmt, delay, getBandwidthPercentForMigration()*100);
+                + "bandwidth allowed for migration and the GpuVM RAM size.";
+        final String msg2 = String.format(fmt, delay, getBandwidthPercentForMigration() * 100);
         LOGGER.info("{}: {}: Migration of {} is started. {}", currentTime, getName(), msg1, msg2);
 
-        if(targetHost.addMigratingInVm(sourceVm)) {
+        if (targetHost.addMigratingInVm(sourceVm)) {
             sourceHost.addVmMigratingOut(sourceVm);
-            ((GpuVm)sourceVm).getVGpu().getGpu().addVGpuMigratingOut(((GpuVm)sourceVm).getVGpu());
+            ((GpuVm) sourceVm).getVGpu().getGpu().addVGpuMigratingOut(((GpuVm) sourceVm).getVGpu());
             send(this, delay, CloudSimTag.VM_MIGRATE, new TreeMap.SimpleEntry<>(sourceVm, targetHost));
         }
     }
-    
-    private double timeToMigrateGpuVm (final GpuVm vm, final GpuHost targetHost) {
+
+    private double timeToMigrateGpuVm(final GpuVm vm, final GpuHost targetHost) {
         return vm.getRam().getCapacity() / bitsToBytes(targetHost.getBw().getCapacity() *
-        		getBandwidthPercentForMigration());
+                getBandwidthPercentForMigration());
     }
 
     @Override
@@ -736,7 +734,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         LOGGER.info("{}: {} is starting...", getSimulation().clockStr(), getName());
         gpuhostList.stream()
                 .filter(not(Host::isActive))
-                .map(host -> (GpuHostSimple)host)
+                .map(host -> (GpuHostSimple) host)
                 .forEach(host -> host.setActive(host.isActivateOnDatacenterStartup()));
         sendNow(getSimulation().getCis(), CloudSimTag.DC_REGISTRATION_REQUEST, this);
     }
@@ -750,7 +748,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
     public Datacenter setCharacteristics(DatacenterCharacteristics datacenterCharacteristics) {
         return this;
     }
-    
+
     @Override
     public Host getHost(final int index) {
         if (index >= 0 && index < getHostList().size()) {
@@ -760,7 +758,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         return Host.NULL;
     }
 
-    public void updateActiveGpuHostsNumber(final GpuHost host){
+    public void updateActiveGpuHostsNumber(final GpuHost host) {
         activeHostsNumber += host.isActive() ? 1 : -1;
     }
 
@@ -772,9 +770,9 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
     @Override
     public Host getHostById(final long id) {
         return gpuhostList.stream().filter(host -> host.getId() == id).findFirst()
-        		.map(host -> (GpuHost)host).orElse(GpuHost.NULL);
+                .map(host -> (GpuHost) host).orElse(GpuHost.NULL);
     }
-    
+
     @Override
     public <T extends Host> Datacenter addHostList(final List<T> hostList) {
         requireNonNull(hostList);
@@ -784,16 +782,16 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
     @Override
     public <T extends Host> Datacenter addHost(final T host) {
-        if(gpuVmAllocationPolicy == null || gpuVmAllocationPolicy == gpuVmAllocationPolicy.NULL) {
+        if (gpuVmAllocationPolicy == null || gpuVmAllocationPolicy == gpuVmAllocationPolicy.NULL) {
             throw new IllegalStateException("A GpuVmAllocationPolicy must be set before adding a "
-            		+ "new Host to the Datacenter.");
+                    + "new Host to the Datacenter.");
         }
 
-        setupGpuHost((GpuHost)host, getLastGpuHostId());
-        ((List<T>)gpuhostList).add(host);
+        setupGpuHost((GpuHost) host, getLastGpuHostId());
+        ((List<T>) gpuhostList).add(host);
         return this;
     }
-    
+
     @Override
     public <T extends Host> Datacenter removeHost(final T host) {
         gpuhostList.remove(host);
@@ -810,7 +808,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
         return !characteristics.equals(that.characteristics);
     }
-    
+
     @Override
     public Datacenter addOnHostAvailableListener(final EventListener<HostEventInfo> listener) {
         onGpuHostAvailableListeners.add(requireNonNull(listener));

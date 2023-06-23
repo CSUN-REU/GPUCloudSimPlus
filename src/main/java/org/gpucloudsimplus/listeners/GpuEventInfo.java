@@ -6,14 +6,25 @@ import org.cloudsimplus.listeners.EventListener;
 
 public interface GpuEventInfo extends EventInfo {
 
-    Gpu getGpu ();
+    Gpu getGpu();
 
-    static GpuEventInfo of (final EventListener<? extends EventInfo> listener, 
-    		final Gpu gpu, final double time) {
+    static GpuEventInfo of(final EventListener<? extends EventInfo> listener,
+                           final Gpu gpu, final double time) {
         return new GpuEventInfo() {
-            @Override public Gpu getGpu () { return gpu; }
-            @Override public double getTime () { return time; }
-            @Override public EventListener<? extends EventInfo> getListener () { return listener; }
+            @Override
+            public Gpu getGpu() {
+                return gpu;
+            }
+
+            @Override
+            public double getTime() {
+                return time;
+            }
+
+            @Override
+            public EventListener<? extends EventInfo> getListener() {
+                return listener;
+            }
         };
     }
 }

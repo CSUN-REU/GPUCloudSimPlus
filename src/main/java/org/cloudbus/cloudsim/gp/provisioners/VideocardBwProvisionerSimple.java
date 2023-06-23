@@ -8,55 +8,56 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class VideocardBwProvisionerSimple implements VideocardBwProvisioner {
-	
-	private ResourceManageable videocardBwResource;
-	
-	private Function<Gpu, ResourceManageable> gpuBwFunction;
-	
-	public VideocardBwProvisionerSimple () {
-		this(ResourceManageable.NULL, gpu -> ResourceManageable.NULL);
+
+    private ResourceManageable videocardBwResource;
+
+    private Function<Gpu, ResourceManageable> gpuBwFunction;
+
+    public VideocardBwProvisionerSimple() {
+        this(ResourceManageable.NULL, gpu -> ResourceManageable.NULL);
     }
 
-    protected VideocardBwProvisionerSimple (final ResourceManageable videocardBwResource, 
-    		final Function<Gpu, ResourceManageable> gpuBwFunction) {
-    	setResources (videocardBwResource, gpuBwFunction);
-    }
-	
-    @Override 
-    public long getAllocatedBwForGpu (final Gpu gpu) { 
-    	return gpuBwFunction.apply(gpu).getAllocatedResource();
+    protected VideocardBwProvisionerSimple(final ResourceManageable videocardBwResource,
+                                           final Function<Gpu, ResourceManageable> gpuBwFunction) {
+        setResources(videocardBwResource, gpuBwFunction);
     }
 
-    @Override 
-    public ResourceManageable getVideocardBwResource () {
+    @Override
+    public long getAllocatedBwForGpu(final Gpu gpu) {
+        return gpuBwFunction.apply(gpu).getAllocatedResource();
+    }
+
+    @Override
+    public ResourceManageable getVideocardBwResource() {
         return videocardBwResource;
     }
-    
-    @Override 
-    public void setResources (final ResourceManageable videocardBwResource, 
-    		Function<Gpu, ResourceManageable> gpuBwFunction) {
-    	
-    	this.videocardBwResource = Objects.requireNonNull(videocardBwResource);
+
+    @Override
+    public void setResources(final ResourceManageable videocardBwResource,
+                             Function<Gpu, ResourceManageable> gpuBwFunction) {
+
+        this.videocardBwResource = Objects.requireNonNull(videocardBwResource);
         this.gpuBwFunction = Objects.requireNonNull(gpuBwFunction);
     }
-	
-    @Override 
-    public long getCapacity() { 
-    	return videocardBwResource.getCapacity (); 
-    }
-    
-    @Override 
-    public long getTotalAllocatedBw () { 
-    	return videocardBwResource.getAllocatedResource ();
-    }
-    
-    @Override 
-    public long getAvailableResource() { 
-    	return videocardBwResource.getAvailableResource (); }
 
-    @Override 
-	public boolean allocateBwForGpu (final Gpu gpu, final long bw) { 
-    	Objects.requireNonNull(gpu);
+    @Override
+    public long getCapacity() {
+        return videocardBwResource.getCapacity();
+    }
+
+    @Override
+    public long getTotalAllocatedBw() {
+        return videocardBwResource.getAllocatedResource();
+    }
+
+    @Override
+    public long getAvailableResource() {
+        return videocardBwResource.getAvailableResource();
+    }
+
+    @Override
+    public boolean allocateBwForGpu(final Gpu gpu, final long bw) {
+        Objects.requireNonNull(gpu);
 
         if (!isSuitableForGpu(gpu, bw)) {
             return false;
@@ -64,10 +65,10 @@ public class VideocardBwProvisionerSimple implements VideocardBwProvisioner {
 
         final ResourceManageable gpuResource = getGpuBwFunction().apply(gpu);
         final long prevGpuBwAllocation = gpuResource.getAllocatedResource();
-        if (prevGpuBwAllocation > 0) 
+        if (prevGpuBwAllocation > 0)
             deallocateBwForGpu(gpu);
 
-        if(!gpuResource.setCapacity(bw)){
+        if (!gpuResource.setCapacity(bw)) {
             return false;
         }
 
@@ -75,28 +76,28 @@ public class VideocardBwProvisionerSimple implements VideocardBwProvisioner {
         gpuResource.setCapacity(bw);
         gpuResource.setAllocatedResource(bw);
         return true;
-	}
-    
+    }
+
     @Override
-    public boolean allocateBwForGpu (final Gpu gpu, final double newTotalVmResource) {
-        return allocateBwForGpu (gpu, (long)newTotalVmResource);
+    public boolean allocateBwForGpu(final Gpu gpu, final double newTotalVmResource) {
+        return allocateBwForGpu(gpu, (long) newTotalVmResource);
     }
-    
-    @Override 
-    public boolean isSuitableForGpu (final Gpu gpu, final long newGpuTotalAllocatedBw) {
-    	final long currentAllocatedBw = getAllocatedBwForGpu (gpu);
+
+    @Override
+    public boolean isSuitableForGpu(final Gpu gpu, final long newGpuTotalAllocatedBw) {
+        final long currentAllocatedBw = getAllocatedBwForGpu(gpu);
         final long allocationDifference = newGpuTotalAllocatedBw - currentAllocatedBw;
-        return getVideocardBwResource().getAvailableResource() >=  allocationDifference;
+        return getVideocardBwResource().getAvailableResource() >= allocationDifference;
     }
-    
-    @Override 
-    public boolean isSuitableForGpu (final Gpu gpu, final Resource resource) {
-    	return isSuitableForGpu(gpu, resource.getCapacity()); 
+
+    @Override
+    public boolean isSuitableForGpu(final Gpu gpu, final Resource resource) {
+        return isSuitableForGpu(gpu, resource.getCapacity());
     }
-    
-    @Override 
-    public long deallocateBwForGpu (final Gpu gpu) { 
-    	final ResourceManageable gpuResource = getGpuBwFunction().apply(gpu);
+
+    @Override
+    public long deallocateBwForGpu(final Gpu gpu) {
+        final ResourceManageable gpuResource = getGpuBwFunction().apply(gpu);
         final long gpuAllocatedResource = gpuResource.getAllocatedResource();
 
         gpuResource.deallocateAllResources();
@@ -104,9 +105,10 @@ public class VideocardBwProvisionerSimple implements VideocardBwProvisioner {
         getVideocardBwResource().deallocateResource(gpuAllocatedResource);
         return gpuAllocatedResource;
     }
+
     protected Function<Gpu, ResourceManageable> getGpuBwFunction() {
         return gpuBwFunction;
     }
-    
-    
+
+
 }

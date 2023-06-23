@@ -10,29 +10,29 @@ import java.util.Iterator;
 import java.util.List;
 
 public class VGpuSchedulerSpaceShared extends VGpuSchedulerAbstract {
-	
-	public VGpuSchedulerSpaceShared() {
+
+    public VGpuSchedulerSpaceShared() {
         this(DEF_VGPU_MIGRATION_GPU_OVERHEAD);
     }
 
-    public VGpuSchedulerSpaceShared(final double vgpuMigrationCpuOverhead){
+    public VGpuSchedulerSpaceShared(final double vgpuMigrationCpuOverhead) {
         super(vgpuMigrationCpuOverhead);
     }
 
     @Override
-    protected boolean isSuitableForVGpuInternal (final VGpu vgpu, final MipsShare requestedMips) {
-        final List<GpuCore> selectedCores = getTotalCapacityToBeAllocatedToVGpu (requestedMips);
+    protected boolean isSuitableForVGpuInternal(final VGpu vgpu, final MipsShare requestedMips) {
+        final List<GpuCore> selectedCores = getTotalCapacityToBeAllocatedToVGpu(requestedMips);
         return selectedCores.size() >= requestedMips.pes();
     }
 
-    private List<GpuCore> getTotalCapacityToBeAllocatedToVGpu (final MipsShare requestedMips) {
+    private List<GpuCore> getTotalCapacityToBeAllocatedToVGpu(final MipsShare requestedMips) {
         if (getGpu().getWorkingCoresNumber() < requestedMips.pes()) {
             return getGpu().getWorkingCoreList();
         }
 
         final List<GpuCore> freeCoreList = getGpu().getFreeCoreList();
         final List<GpuCore> selectedCores = new ArrayList<>();
-        if(freeCoreList.isEmpty()){
+        if (freeCoreList.isEmpty()) {
             return selectedCores;
         }
 
@@ -52,19 +52,19 @@ public class VGpuSchedulerSpaceShared extends VGpuSchedulerAbstract {
     }
 
     @Override
-    public boolean allocateCoresForVGpuInternal (final VGpu vgpu, final MipsShare requestedMips) {
+    public boolean allocateCoresForVGpuInternal(final VGpu vgpu, final MipsShare requestedMips) {
         final List<GpuCore> selectedCores = getTotalCapacityToBeAllocatedToVGpu(requestedMips);
-        if(selectedCores.size() < requestedMips.pes()){
+        if (selectedCores.size() < requestedMips.pes()) {
             return false;
         }
 
-        ((VGpuSimple)vgpu).setAllocatedMips(requestedMips);
+        ((VGpuSimple) vgpu).setAllocatedMips(requestedMips);
         return true;
     }
 
     @Override
-    protected long deallocateCoresFromVGpuInternal (final VGpu vgpu, final int coresToRemove) {
-        return removeCoresFromVGpu(vgpu, ((VGpuSimple)vgpu).getAllocatedMips(), coresToRemove);
+    protected long deallocateCoresFromVGpuInternal(final VGpu vgpu, final int coresToRemove) {
+        return removeCoresFromVGpu(vgpu, ((VGpuSimple) vgpu).getAllocatedMips(), coresToRemove);
     }
 }
 

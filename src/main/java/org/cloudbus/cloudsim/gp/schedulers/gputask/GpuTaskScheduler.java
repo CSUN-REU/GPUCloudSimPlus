@@ -13,51 +13,51 @@ import java.util.List;
 
 //extends Serializable
 public interface GpuTaskScheduler {
-	Logger LOGGER = LoggerFactory.getLogger (GpuTaskScheduler.class.getSimpleName());
-	
-	GpuTaskScheduler NULL = new GpuTaskSchedulerNull();
-	
-	GpuTask gpuTaskFail (GpuTask gpuTask);
-	
-	GpuTask gpuTaskCancel (GpuTask gpuTask);
+    Logger LOGGER = LoggerFactory.getLogger(GpuTaskScheduler.class.getSimpleName());
 
-    boolean gpuTaskReady (GpuTask gpuTask);
+    GpuTaskScheduler NULL = new GpuTaskSchedulerNull();
 
-    boolean gpuTaskPause (GpuTask gpuTask);
-    
-    double gpuTaskResume (GpuTask gpuTask);
+    GpuTask gpuTaskFail(GpuTask gpuTask);
 
-    double gpuTaskSubmit (GpuTask gpuTask, double fileTransferTime);
+    GpuTask gpuTaskCancel(GpuTask gpuTask);
 
-    double gpuTaskSubmit (GpuTask gpuTask);
-    
-    List<GpuTaskExecution> getGpuTaskExecList ();
+    boolean gpuTaskReady(GpuTask gpuTask);
 
-    <T extends GpuTask> List<T> getGpuTaskSubmittedList ();
+    boolean gpuTaskPause(GpuTask gpuTask);
 
-    GpuTaskScheduler enableCloudletSubmittedList ();
-    
-    List<GpuTaskExecution> getGpuTaskWaitingList ();
+    double gpuTaskResume(GpuTask gpuTask);
 
-    List<GpuTask> getGpuTaskList ();
+    double gpuTaskSubmit(GpuTask gpuTask, double fileTransferTime);
 
-    List<GpuTaskExecution> getGpuTaskFinishedList ();
+    double gpuTaskSubmit(GpuTask gpuTask);
 
-    boolean isEmpty ();
-    
-    void deallocateCoresFromVGpu (long pcoreToRemove);
+    List<GpuTaskExecution> getGpuTaskExecList();
 
-    double getCurrentRequestedBwPercentUtilization ();
+    <T extends GpuTask> List<T> getGpuTaskSubmittedList();
 
-    double getCurrentRequestedGddramPercentUtilization ();
-    
-    double getPreviousTime ();
+    GpuTaskScheduler enableCloudletSubmittedList();
 
-    double getRequestedGpuPercent (double time);
+    List<GpuTaskExecution> getGpuTaskWaitingList();
 
-    double getAllocatedGpuPercent (double time);
-    
-    boolean hasFinishedGpuTasks ();
+    List<GpuTask> getGpuTaskList();
+
+    List<GpuTaskExecution> getGpuTaskFinishedList();
+
+    boolean isEmpty();
+
+    void deallocateCoresFromVGpu(long pcoreToRemove);
+
+    double getCurrentRequestedBwPercentUtilization();
+
+    double getCurrentRequestedGddramPercentUtilization();
+
+    double getPreviousTime();
+
+    double getRequestedGpuPercent(double time);
+
+    double getAllocatedGpuPercent(double time);
+
+    boolean hasFinishedGpuTasks();
 ////////////////////////////////////////////////////////////
     //CloudletTaskScheduler getTaskScheduler ();
 
@@ -65,25 +65,25 @@ public interface GpuTaskScheduler {
 
     //boolean isThereTaskScheduler ();
 //////////////////////////////////////////////////////////
-    
-    double updateProcessing (double currentTime, MipsShare mipsShare);
 
-    VGpu getVGpu ();
+    double updateProcessing(double currentTime, MipsShare mipsShare);
 
-    void setVGpu (VGpu vgpu);
-    
-    long getUsedCores ();
+    VGpu getVGpu();
 
-    long getFreeCores ();
+    void setVGpu(VGpu vgpu);
 
-	void addGpuTaskToReturnedList (GpuTask gpuTask);
+    long getUsedCores();
+
+    long getFreeCores();
+
+    void addGpuTaskToReturnedList(GpuTask gpuTask);
 
     void clear();
 
-    GpuTaskScheduler addOnGpuTaskResourceAllocationFail (
-    		EventListener<GpuTaskResourceAllocationFailEventInfo> listener);
+    GpuTaskScheduler addOnGpuTaskResourceAllocationFail(
+            EventListener<GpuTaskResourceAllocationFailEventInfo> listener);
 
-    boolean removeOnGpuTaskResourceAllocationFail (
-    		EventListener<GpuTaskResourceAllocationFailEventInfo> listener);
+    boolean removeOnGpuTaskResourceAllocationFail(
+            EventListener<GpuTaskResourceAllocationFailEventInfo> listener);
 }
 

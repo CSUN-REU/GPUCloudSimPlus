@@ -5,6 +5,6 @@ import org.cloudsimplus.listeners.EventInfo;
 
 public interface VideocardEventInfo extends EventInfo {
 
-	Videocard getVideocard();
+    Videocard getVideocard();
 }
 
