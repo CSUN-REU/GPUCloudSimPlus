@@ -100,9 +100,9 @@ public abstract class VGpuAllocationPolicyAbstract implements VGpuAllocationPoli
             return new GpuSuitability("VGpu is already created");
         }
 
-        final Optional<Gpu> optionalGpu = findGpuForVGpu(vgpu);
-        if (optionalGpu.filter(Gpu::isActive).isPresent()) {
-            return allocateGpuForVGpu(vgpu, optionalGpu.get());
+        final Optional<Gpu> foundGpu = findGpuForVGpu(vgpu).map(gpu -> gpu.setActive(true));
+        if (foundGpu.isPresent()) {
+            return allocateGpuForVGpu(vgpu, foundGpu.get());
         }
 
         LOGGER.warn("{}: {}: No suitable gpu found for {} in {}", vgpu.getSimulation().clockStr(),

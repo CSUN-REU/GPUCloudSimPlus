@@ -29,6 +29,7 @@ public class VGpuAllocationPolicySimple extends VGpuAllocationPolicyAbstract {
 
         final Stream<Gpu> gpuStream = isParallelGpuSearchEnabled() ? getGpuList().stream().parallel() :
                 getGpuList().stream();
+
         return gpuStream.filter(gpu -> gpu.isSuitableForVGpu(vgpu)).max(comparator);
     }
 
