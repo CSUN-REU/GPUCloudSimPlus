@@ -13,7 +13,7 @@ following to the `dependencies` section of the `pom.xml` file:
 ```xml
 
 <dependency>
-    <groupId>org.gpuplus.cloudsimplus.gp</groupId>
+    <groupId>org.gpucloudsimplus</groupId>
     <artifactId>gpucloudsimplus</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <scope>compile</scope>
@@ -44,7 +44,7 @@ An example build section of the `pom.xml` to properly shade GPUCloudSimPlus into
                 <minimizeJar>false</minimizeJar>
                 <filters>
                     <filter>
-                        <artifact>org.gpuplus.cloudsimplus.gp:gpucloudsimplus</artifact>
+                        <artifact>org.gpucloudsimplus:gpucloudsimplus</artifact>
                         <includes>
                             <include>**</include>
                         </includes>
