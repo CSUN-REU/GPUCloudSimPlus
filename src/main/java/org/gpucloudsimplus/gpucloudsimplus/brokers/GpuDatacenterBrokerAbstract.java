@@ -623,27 +623,16 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
     }
 
     private boolean processGpuCloudletEvents(final SimEvent evt) {
-        boolean process;
-        switch (evt.getTag()) {
-            case CLOUDLET_FAIL:
-                process = processGpuCloudletFail(evt);
-            case CLOUDLET_READY:
-                process = processGpuCloudletReady(evt);
-            case CLOUDLET_PAUSE:
-                process = processGpuCloudletPause(evt);
-            case CLOUDLET_CANCEL:
-                process = processGpuCloudletCancel(evt);
-            case CLOUDLET_FINISH:
-                process = processGpuCloudletFinish(evt);
-            case CLOUDLET_RETURN:
-                process = processGpuCloudletReturn(evt);
-            case CLOUDLET_UPDATE_ATTRIBUTES:
-                process = executeRunnableEvent(evt);
-            default:
-                process = false;
-        }
-        ;
-        return process;
+        return switch (evt.getTag()) {
+            case CLOUDLET_FAIL -> processGpuCloudletFail(evt);
+            case CLOUDLET_READY -> processGpuCloudletReady(evt);
+            case CLOUDLET_PAUSE -> processGpuCloudletPause(evt);
+            case CLOUDLET_CANCEL -> processGpuCloudletCancel(evt);
+            case CLOUDLET_FINISH -> processGpuCloudletFinish(evt);
+            case CLOUDLET_RETURN -> processGpuCloudletReturn(evt);
+            case CLOUDLET_UPDATE_ATTRIBUTES -> executeRunnableEvent(evt);
+            default -> false;
+        };
     }
 
     private boolean processGpuCloudletFinish(final SimEvent evt) {
