@@ -3,6 +3,8 @@ package org.gpucloudsimplus.gpucloudsimplus.cloudlets;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
 import org.cloudsimplus.cloudlets.CloudletSimple;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
+import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 
 public class GpuCloudletSimple extends CloudletSimple implements GpuCloudlet {
 
@@ -12,22 +14,26 @@ public class GpuCloudletSimple extends CloudletSimple implements GpuCloudlet {
                              final UtilizationModel utilizationModel, GpuTask gpuTask) {
         super(length, pesNumber, utilizationModel);
         setGpuTask(gpuTask);
+        setLastTriedDatacenter(GpuDatacenter.NULL);
     }
 
     public GpuCloudletSimple(final long length, final int pesNumber, GpuTask gpuTask) {
         super(length, pesNumber);
         setGpuTask(gpuTask);
+        setLastTriedDatacenter(GpuDatacenter.NULL);
     }
 
     public GpuCloudletSimple(final long length, final long pesNumber, GpuTask gpuTask) {
         super(length, pesNumber);
         setGpuTask(gpuTask);
+        setLastTriedDatacenter(GpuDatacenter.NULL);
     }
 
     public GpuCloudletSimple(final long id, final long length, final long pesNumber,
                              GpuTask gpuTask) {
         super(id, length, pesNumber);
         setGpuTask(gpuTask);
+        setLastTriedDatacenter(GpuDatacenter.NULL);
     }
 
     @Override

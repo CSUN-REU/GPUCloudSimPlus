@@ -1,6 +1,7 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets;
 
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
 import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.cloudlets.Cloudlet;
@@ -294,8 +295,8 @@ public class GpuCloudletNull implements GpuCloudlet {
     }
 
     @Override
-    public Datacenter getLastTriedDatacenter() {
-        return Datacenter.NULL;
+    public GpuDatacenter getLastTriedDatacenter() {
+        return GpuDatacenter.NULL;
     }
 
     @Override
