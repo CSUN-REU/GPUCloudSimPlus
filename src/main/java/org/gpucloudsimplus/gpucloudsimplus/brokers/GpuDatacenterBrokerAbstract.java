@@ -1,5 +1,6 @@
 package org.gpucloudsimplus.gpucloudsimplus.brokers;
 
+import org.cloudsimplus.brokers.VmCreation;
 import org.cloudsimplus.core.ChangeableId;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudletSimple;
@@ -86,6 +87,8 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
     private boolean shutdownWhenIdle;
     private boolean gpuvmCreationRetrySent;
 
+    private VmCreation vmCreation;
+
     public GpuDatacenterBrokerAbstract(final CloudSimPlus simulation, final String name) {
         super(simulation);
         if (!name.isEmpty()) {
@@ -99,6 +102,7 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
         this.lastSelectedGpuVm = GpuVm.NULL;
         this.lastSelectedGpuDc = GpuDatacenter.NULL;
         this.shutdownWhenIdle = true;
+        this.vmCreation = new VmCreation();
 
         this.gpuvmCreationRequests = 0;
         this.failedGpuVmsRetryDelay = 5;
@@ -1114,6 +1118,22 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
 
         LOGGER.warn("Vm: " + vm.getId() + " does not belong to this broker! Broker: " + this);
         return new ArrayList<>();
+    }
+
+    @Override
+    public VmCreation getVmCreation() {
+        return vmCreation;
+    }
+
+    @Override
+    public DatacenterBroker setLastSelectedDc(Datacenter datacenter) {
+        this.lastSelectedGpuDc = (GpuDatacenter) datacenter;
+        return this;
+    }
+
+    @Override
+    public Datacenter getLastSelectedDc() {
+        return lastSelectedGpuDc;
     }
 
 }

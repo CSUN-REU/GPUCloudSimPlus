@@ -57,21 +57,4 @@ public class GpuDatacenterBrokerSimple extends GpuDatacenterBrokerAbstract {
         return getGpuVmFromCreatedList(lastSelectedGpuVmIndex);
     }
 
-    @Override
-    public VmCreation getVmCreation() {
-        // TODO: Implement
-        return null;
-    }
-
-    @Override
-    public DatacenterBroker setLastSelectedDc(Datacenter datacenter) {
-        // TODO: Implement
-        return null;
-    }
-
-    @Override
-    public Datacenter getLastSelectedDc() {
-        // TODO: Implement
-        return null;
-    }
 }
