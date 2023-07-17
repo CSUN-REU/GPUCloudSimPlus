@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
+import org.cloudsimplus.core.ChangeableId;
 import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
 import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisionerSimple;
-import org.cloudsimplus.core.ChangeableId;
 
 final class GpuCoreNull implements GpuCore {
     @Override

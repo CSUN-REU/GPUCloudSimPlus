@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.hosts;
 
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu;
 
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.gpucloudsimplus.resources.GpuCore;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
-import org.cloudsimplus.schedulers.MipsShare;
 
 import java.util.Iterator;
 

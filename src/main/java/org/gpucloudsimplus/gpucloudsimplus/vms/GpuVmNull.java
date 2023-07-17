@@ -1,6 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.vms;
 
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.autoscaling.HorizontalVmScaling;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.brokers.DatacenterBroker;
@@ -22,6 +21,7 @@ import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmGroup;
 import org.cloudsimplus.vms.VmResourceStats;
 import org.cloudsimplus.vms.VmStateHistoryEntry;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 import java.util.Collections;
 import java.util.List;

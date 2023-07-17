@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu;
 
+import org.cloudsimplus.schedulers.MipsShare;
 import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.cloudsimplus.schedulers.MipsShare;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

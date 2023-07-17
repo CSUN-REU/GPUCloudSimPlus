@@ -1,10 +1,10 @@
 package org.gpucloudsimplus.gpucloudsimplus.allocationpolicies;
 
+import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
-import org.cloudsimplus.autoscaling.VerticalVmScaling;
 
 import java.util.Collection;
 import java.util.Collections;

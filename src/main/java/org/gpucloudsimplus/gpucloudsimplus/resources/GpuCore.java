@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.resources.ResourceManageable;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
 
 public interface GpuCore extends ChangeableId, ResourceManageable {
 

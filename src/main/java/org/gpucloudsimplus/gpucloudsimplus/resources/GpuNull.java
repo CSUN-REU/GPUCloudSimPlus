@@ -1,24 +1,25 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.core.AbstractGpu;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
-import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.Resource;
 import org.cloudsimplus.resources.ResourceManageable;
+import org.gpucloudsimplus.gpucloudsimplus.core.AbstractGpu;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuEventInfo;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
+import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 
-final class GpuNull implements Gpu {
+final class
+GpuNull implements Gpu {
 
     @Override
     public ChangeableId setId(long id) {/**/

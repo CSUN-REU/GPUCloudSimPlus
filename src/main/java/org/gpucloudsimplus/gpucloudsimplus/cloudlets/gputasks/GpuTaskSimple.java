@@ -3,11 +3,6 @@ package org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks;
 
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.CloudSimTag;
-import org.gpucloudsimplus.gpucloudsimplus.brokers.GpuDatacenterBroker;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
-import org.gpucloudsimplus.gpucloudsimplus.resources.GpuCore;
-import org.gpucloudsimplus.gpucloudsimplus.resources.VGpuCore;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.Bandwidth;
@@ -15,7 +10,11 @@ import org.cloudsimplus.resources.Ram;
 import org.cloudsimplus.resources.ResourceManageable;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.cloudsimplus.utilizationmodels.UtilizationModelFull;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuTaskVGpuEventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.resources.GpuCore;
+import org.gpucloudsimplus.gpucloudsimplus.resources.VGpuCore;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 import java.util.HashSet;
 import java.util.LinkedList;

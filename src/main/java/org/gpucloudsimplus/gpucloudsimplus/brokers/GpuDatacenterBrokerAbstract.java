@@ -1,20 +1,10 @@
 package org.gpucloudsimplus.gpucloudsimplus.brokers;
 
-import org.cloudsimplus.brokers.VmCreation;
-import org.cloudsimplus.core.ChangeableId;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudletSimple;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
-import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
-import org.gpucloudsimplus.gpucloudsimplus.datacenters.TimeZoned;
-import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVmSimple;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.brokers.DatacenterBroker;
+import org.cloudsimplus.brokers.VmCreation;
 import org.cloudsimplus.cloudlets.Cloudlet;
+import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.CloudSimEntity;
 import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.core.CloudSimTag;
@@ -29,6 +19,15 @@ import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.util.InvalidEventDataTypeException;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudletSimple;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.TimeZoned;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVmSimple;
 
 import java.util.ArrayList;
 import java.util.Comparator;

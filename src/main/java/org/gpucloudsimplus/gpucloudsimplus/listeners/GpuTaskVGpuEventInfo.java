@@ -1,9 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.listeners;
 
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.listeners.EventListener;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 public interface GpuTaskVGpuEventInfo extends GpuTaskEventInfo, VGpuEventInfo {
 

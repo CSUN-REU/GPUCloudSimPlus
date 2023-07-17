@@ -1,6 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.brokers;
 
-import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.brokers.VmCreation;
 import org.cloudsimplus.cloudlets.Cloudlet;
@@ -11,6 +10,7 @@ import org.cloudsimplus.listeners.DatacenterBrokerEventInfo;
 import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
 
 import java.util.Collections;
 import java.util.Comparator;

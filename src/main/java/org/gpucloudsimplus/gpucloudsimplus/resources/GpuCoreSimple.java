@@ -1,9 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisionerSimple;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.resources.ResourceManageableAbstract;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisionerSimple;
 
 import java.util.Objects;
 

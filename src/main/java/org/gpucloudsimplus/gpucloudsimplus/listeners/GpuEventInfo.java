@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.listeners;
 
-import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.listeners.EventListener;
+import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 
 public interface GpuEventInfo extends EventInfo {
 

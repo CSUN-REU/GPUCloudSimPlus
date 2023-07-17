@@ -1,9 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.listeners;
 
+import org.cloudsimplus.listeners.EventListener;
 import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
-import org.cloudsimplus.listeners.EventListener;
 
 
 public final class VideocardVGpuMigrationEventInfo implements VGpuVideocardEventInfo {

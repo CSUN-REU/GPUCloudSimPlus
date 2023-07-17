@@ -1,8 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets;
 
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
-import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 import org.cloudsimplus.brokers.DatacenterBroker;
 import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.core.ChangeableId;
@@ -14,6 +11,9 @@ import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.ResourceManageable;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 import java.util.Collections;
 import java.util.List;

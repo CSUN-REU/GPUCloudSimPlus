@@ -1,15 +1,15 @@
 package org.gpucloudsimplus.gpucloudsimplus.hosts;
 
 
-import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.VGpuAllocationPolicy;
-import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.VGpuAllocationPolicySimple;
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.cloudsimplus.core.AbstractMachine;
 import org.cloudsimplus.hosts.HostSimple;
 import org.cloudsimplus.provisioners.ResourceProvisioner;
 import org.cloudsimplus.resources.HarddriveStorage;
 import org.cloudsimplus.resources.Pe;
 import org.cloudsimplus.util.BytesConversion;
+import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.VGpuAllocationPolicy;
+import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.VGpuAllocationPolicySimple;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 
 import java.util.List;
 

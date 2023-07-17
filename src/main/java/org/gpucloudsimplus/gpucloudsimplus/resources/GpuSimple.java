@@ -1,16 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.core.GpuResourceStatsComputer;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisionerSimple;
-import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
-import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuSchedulerSpaceShared;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuStateHistoryEntry;
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
-import org.gpucloudsimplus.gpucloudsimplus.videocards.VideocardSimple;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
@@ -21,8 +10,19 @@ import org.cloudsimplus.resources.ResourceManageable;
 import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.util.BytesConversion;
 import org.cloudsimplus.util.TimeUtil;
+import org.gpucloudsimplus.gpucloudsimplus.core.GpuResourceStatsComputer;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuEventInfo;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.CoreProvisioner;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisionerSimple;
+import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
+import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuSchedulerSpaceShared;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuStateHistoryEntry;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.VideocardSimple;
 
 import java.util.ArrayList;
 import java.util.Arrays;

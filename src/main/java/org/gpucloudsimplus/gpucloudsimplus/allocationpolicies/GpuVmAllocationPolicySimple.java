@@ -1,9 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.allocationpolicies;
 
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 import java.util.Comparator;
 import java.util.Optional;

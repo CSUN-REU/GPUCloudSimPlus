@@ -1,8 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.allocationpolicies;
 
-import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
-import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.datacenters.Datacenter;
@@ -10,6 +7,9 @@ import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSuitability;
 import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
+import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 import javax.annotation.processing.Processor;
 import java.util.Collection;

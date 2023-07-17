@@ -1,11 +1,11 @@
 package org.gpucloudsimplus.gpucloudsimplus.schedulers.gputask;
 
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTaskExecution;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.schedulers.MipsShare;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTaskExecution;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuTaskResourceAllocationFailEventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

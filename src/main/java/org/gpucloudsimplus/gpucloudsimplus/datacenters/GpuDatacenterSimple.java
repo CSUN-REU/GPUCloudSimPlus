@@ -1,14 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.datacenters;
 
-import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicy;
-import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicySimple;
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
-import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
-import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHostSimple;
-import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
-import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVmSimple;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.core.CloudSimTag;
 import org.cloudsimplus.core.CustomerEntityAbstract;
@@ -34,6 +25,15 @@ import org.cloudsimplus.resources.SanStorage;
 import org.cloudsimplus.util.InvalidEventDataTypeException;
 import org.cloudsimplus.util.MathUtil;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicy;
+import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicySimple;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
+import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
+import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHostSimple;
+import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVmSimple;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

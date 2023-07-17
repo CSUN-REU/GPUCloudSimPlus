@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.provisioners;
 
-import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.cloudsimplus.resources.Resource;
 import org.cloudsimplus.resources.ResourceManageable;
+import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 
 import java.util.function.Function;
 

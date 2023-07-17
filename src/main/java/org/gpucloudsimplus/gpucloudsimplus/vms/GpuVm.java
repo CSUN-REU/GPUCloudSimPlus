@@ -1,7 +1,7 @@
 package org.gpucloudsimplus.gpucloudsimplus.vms;
 
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 public interface GpuVm extends Vm {
 

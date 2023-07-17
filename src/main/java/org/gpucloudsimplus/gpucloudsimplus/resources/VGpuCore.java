@@ -1,7 +1,7 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.resources.ResourceManageableAbstract;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 public final class VGpuCore extends ResourceManageableAbstract {
     public static final VGpuCore NULL = new VGpuCore(0);

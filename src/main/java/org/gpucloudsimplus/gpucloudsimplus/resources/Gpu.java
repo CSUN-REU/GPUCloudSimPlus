@@ -1,17 +1,17 @@
 package org.gpucloudsimplus.gpucloudsimplus.resources;
 
-import org.gpucloudsimplus.gpucloudsimplus.core.AbstractGpu;
-import org.gpucloudsimplus.gpucloudsimplus.core.GpuResourceStatsComputer;
-import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
-import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.cloudsimplus.core.ChangeableId;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.resources.ResourceManageable;
+import org.gpucloudsimplus.gpucloudsimplus.core.AbstractGpu;
+import org.gpucloudsimplus.gpucloudsimplus.core.GpuResourceStatsComputer;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuEventInfo;
 import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuUpdatesVgpusProcessingEventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.provisioners.GpuResourceProvisioner;
+import org.gpucloudsimplus.gpucloudsimplus.schedulers.vgpu.VGpuScheduler;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

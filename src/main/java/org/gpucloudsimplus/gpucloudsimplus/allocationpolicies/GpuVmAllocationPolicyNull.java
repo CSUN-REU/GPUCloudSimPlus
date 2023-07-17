@@ -1,12 +1,12 @@
 package org.gpucloudsimplus.gpucloudsimplus.allocationpolicies;
 
-import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
 import org.cloudsimplus.allocationpolicies.VmAllocationPolicy;
 import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.cloudsimplus.datacenters.Datacenter;
 import org.cloudsimplus.hosts.Host;
 import org.cloudsimplus.hosts.HostSuitability;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
 
 import java.util.Collection;
 import java.util.Collections;

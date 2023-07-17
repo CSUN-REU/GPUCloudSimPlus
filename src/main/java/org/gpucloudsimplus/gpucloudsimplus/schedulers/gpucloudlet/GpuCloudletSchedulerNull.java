@@ -1,6 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.schedulers.gpucloudlet;
 
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.cloudlets.CloudletExecution;
 import org.cloudsimplus.listeners.CloudletResourceAllocationFailEventInfo;
@@ -8,6 +7,7 @@ import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.schedulers.cloudlet.network.CloudletTaskScheduler;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 
 import java.io.Serial;
 import java.util.Collections;

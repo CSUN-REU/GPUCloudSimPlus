@@ -1,7 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.datacenters;
 
-import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicy;
-import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
 import org.cloudsimplus.core.SimEntity;
 import org.cloudsimplus.core.SimEntityNullBase;
 import org.cloudsimplus.datacenters.Datacenter;
@@ -15,6 +13,8 @@ import org.cloudsimplus.power.PowerAware;
 import org.cloudsimplus.power.models.PowerModelDatacenter;
 import org.cloudsimplus.resources.DatacenterStorage;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.allocationpolicies.GpuVmAllocationPolicy;
+import org.gpucloudsimplus.gpucloudsimplus.hosts.GpuHost;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,6 +1,5 @@
 package org.gpucloudsimplus.gpucloudsimplus.hosts;
 
-import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 import org.cloudsimplus.core.Machine;
 import org.cloudsimplus.core.Simulation;
 import org.cloudsimplus.datacenters.Datacenter;
@@ -19,6 +18,7 @@ import org.cloudsimplus.resources.ResourceManageable;
 import org.cloudsimplus.schedulers.vm.VmScheduler;
 import org.cloudsimplus.vms.HostResourceStats;
 import org.cloudsimplus.vms.Vm;
+import org.gpucloudsimplus.gpucloudsimplus.videocards.Videocard;
 
 import java.util.Collections;
 import java.util.List;

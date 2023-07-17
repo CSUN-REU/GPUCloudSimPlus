@@ -1,10 +1,10 @@
 package org.gpucloudsimplus.gpucloudsimplus.vms;
 
 
-import org.gpucloudsimplus.gpucloudsimplus.schedulers.gpucloudlet.GpuCloudletScheduler;
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.vms.Vm;
 import org.cloudsimplus.vms.VmSimple;
+import org.gpucloudsimplus.gpucloudsimplus.schedulers.gpucloudlet.GpuCloudletScheduler;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 public class GpuVmSimple extends VmSimple implements GpuVm {
 

@@ -1,7 +1,7 @@
 package org.gpucloudsimplus.gpucloudsimplus.listeners;
 
-import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.listeners.EventInfo;
+import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 
 public interface VGpuEventInfo extends EventInfo {
 

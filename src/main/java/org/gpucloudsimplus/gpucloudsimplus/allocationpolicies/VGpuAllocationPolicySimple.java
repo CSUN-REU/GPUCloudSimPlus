@@ -1,8 +1,8 @@
 package org.gpucloudsimplus.gpucloudsimplus.allocationpolicies;
 
+import org.cloudsimplus.autoscaling.VerticalVmScaling;
 import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
-import org.cloudsimplus.autoscaling.VerticalVmScaling;
 
 import java.util.Comparator;
 import java.util.Optional;

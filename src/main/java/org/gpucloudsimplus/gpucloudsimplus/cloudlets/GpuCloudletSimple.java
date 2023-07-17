@@ -1,10 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets;
 
-import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
 import org.cloudsimplus.cloudlets.CloudletSimple;
 import org.cloudsimplus.utilizationmodels.UtilizationModel;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
 import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
-import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 
 public class GpuCloudletSimple extends CloudletSimple implements GpuCloudlet {
 

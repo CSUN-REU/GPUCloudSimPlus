@@ -1,7 +1,6 @@
 package org.gpucloudsimplus.gpucloudsimplus.brokers;
 
 
-import org.cloudsimplus.cloudlets.Cloudlet;
 import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.vms.Vm;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;

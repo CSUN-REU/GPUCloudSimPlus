@@ -1,7 +1,7 @@
 package org.gpucloudsimplus.gpucloudsimplus.hosts;
 
-import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
 import org.cloudsimplus.hosts.HostSuitability;
+import org.gpucloudsimplus.gpucloudsimplus.resources.GpuSuitability;
 
 import java.util.Objects;
 
