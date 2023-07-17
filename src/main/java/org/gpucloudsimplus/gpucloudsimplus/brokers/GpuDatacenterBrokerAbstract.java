@@ -1,10 +1,12 @@
 package org.gpucloudsimplus.gpucloudsimplus.brokers;
 
+import org.cloudsimplus.core.ChangeableId;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudletSimple;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
 import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
 import org.gpucloudsimplus.gpucloudsimplus.datacenters.TimeZoned;
+import org.gpucloudsimplus.gpucloudsimplus.resources.Gpu;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpuSimple;
 import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
@@ -30,6 +32,7 @@ import org.cloudsimplus.vms.Vm;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -352,10 +355,11 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
             return this;
         }
 
-        sortGpuCloudletsIfComparatorIsSet((List<GpuCloudlet>) (List<?>) list);
+        sortGpuCloudletsIfComparatorIsSet((List<GpuCloudlet>) list);
         configureEntities(list);
         lastSubmittedGpuCloudlet = (GpuCloudlet) setIdForEntitiesWithoutOne(list,
                 lastSubmittedGpuCloudlet);
+        setIdForGpuTasksWithoutOne((List<GpuCloudlet>) list);
         gpucloudletSubmittedList.addAll((List<GpuCloudlet>) (List<?>) list);
         setSimulationForGpuCloudletUtilizationModels((List<GpuCloudlet>) (List<?>) list);
         gpucloudletWaitingList.addAll((List<GpuCloudlet>) (List<?>) list);
@@ -373,6 +377,19 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
         requestDatacentersToCreateWaitingGpuCloudlets();
 
         return this;
+    }
+
+    /**
+     * Adapted from {@link Simulation#setIdForEntitiesWithoutOne(List, ChangeableId)}
+     * @param cloudletList
+     * @return
+     */
+    private void setIdForGpuTasksWithoutOne(final List<GpuCloudlet> cloudletList) {
+        Objects.requireNonNull(cloudletList);
+
+        for (GpuCloudlet gpuCloudlet : cloudletList) {
+            gpuCloudlet.getGpuTask().setId(gpuCloudlet.getId());
+        }
     }
 
     @Override

@@ -218,7 +218,7 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
                                                            final List<GpuTaskExecution> list) {
 
         return list.stream()
-                .filter(gte -> gte.getGpuTaskId() == gpuTask.getTaskId())
+                .filter(gte -> gte.getGpuTaskId() == gpuTask.getId())
                 .findFirst();
     }
 
@@ -478,7 +478,6 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
 
     private double gpuTaskExecutedInstructionsForTimeSpan(final GpuTaskExecution gte,
                                                           final double currentTime) {
-
         final double processingTimeSpan = hasGpuTaskFileTransferTimePassed(gte,
                 currentTime) ? timeSpan(gte, currentTime) : 0;
 
@@ -493,6 +492,7 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
         final double gpuTaskUsedMips = getAllocatedMipsForGpuTask(gte, currentTime, true);
         //validateDelay(vMemDelay) +
         final double actualProcessingTime = processingTimeSpan - (validateDelay(reducedBwDelay));
+
         return gpuTaskUsedMips * actualProcessingTime * Conversion.MILLION;
     }
 
@@ -633,7 +633,6 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
     }
 
     protected GpuTaskExecution addWaitingGpuTaskToExecList(final GpuTaskExecution gte) {
-
         gpuTaskWaitingList.remove(gte);
         addGpuTaskToExecList(gte);
         return gte;

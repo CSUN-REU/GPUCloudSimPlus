@@ -1,5 +1,6 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks;
 
+import org.cloudsimplus.core.ChangeableId;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.core.Simulation;
@@ -14,10 +15,10 @@ import java.util.List;
 final class GpuTaskNull implements GpuTask {
 
     @Override
-    public void setTaskId(long id) {/**/}
+    public ChangeableId setId(long id) { return this; }
 
     @Override
-    public long getTaskId() {
+    public long getId() {
         return -1;
     }
     

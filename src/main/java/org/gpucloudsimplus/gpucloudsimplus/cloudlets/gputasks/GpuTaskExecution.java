@@ -1,8 +1,12 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks;
 
 
+import org.cloudsimplus.core.CloudSimTag;
 import org.cloudsimplus.core.Simulation;
+import org.cloudsimplus.core.events.CloudSimEvent;
 import org.cloudsimplus.util.Conversion;
+
+import java.util.Objects;
 
 public class GpuTaskExecution {
 
@@ -125,10 +129,10 @@ public class GpuTaskExecution {
         final double partialFinishedMI = partialFinishedInstructions / Conversion.MILLION;
         gpuTask.addFinishedLengthSoFar((long) partialFinishedMI);
 
-
         if (finishRequestTime <= 0 && terminate && gpuTask.getBlockLength() < 0) {
             finishRequestTime = simulation.clock();
-            //simulation.sendFirst(new CloudSimEvent(cloudlet.getBroker(), CloudSimTag.CLOUDLET_FINISH, cloudlet));
+            simulation.sendFirst(new CloudSimEvent(gpuTask.getGpuCloudlet().getBroker(), CloudSimTag.CLOUDLET_FINISH,
+                    gpuTask.getGpuCloudlet()));
         }
     }
 
@@ -154,7 +158,7 @@ public class GpuTaskExecution {
     }
 
     public long getGpuTaskId() {
-        return gpuTask.getTaskId();
+        return gpuTask.getId();
     }
 
     public double getFileTransferTime() {
@@ -198,21 +202,21 @@ public class GpuTaskExecution {
         this.timeSlice = timeSlice;
     }
 
-    /*@Override
+    @Override
     public String toString() {
-        return String.format("Cloudlet %d", cloudlet.getId());
+        return String.format("GpuTask %d", gpuTask.getId());
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return obj instanceof CloudletExecution that &&
-               that.cloudlet.getId() == this.cloudlet.getId();
+        return obj instanceof GpuTaskExecution that &&
+               that.gpuTask.getId() == this.gpuTask.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cloudlet.getId());
-    }*/
+        return Objects.hash(gpuTask.getId());
+    }
 
     public double getLastAllocatedMips() {
         return lastAllocatedMips;

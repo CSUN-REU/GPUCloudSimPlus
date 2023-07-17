@@ -58,7 +58,6 @@ public class VideocardSimple implements Videocard {
 
     public VideocardSimple(final List<? extends Gpu> gpuList,
                            final VGpuAllocationPolicy vgpuAllocationPolicy) {
-
         this.setSimulation(Simulation.NULL);
         this.setGpuList(gpuList);
         this.setLastProcessTime(0.0);

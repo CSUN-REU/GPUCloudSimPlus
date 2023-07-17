@@ -1,5 +1,6 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks;
 
+import org.cloudsimplus.core.ChangeableId;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.vgpu.VGpu;
 import org.cloudsimplus.cloudlets.Cloudlet;
@@ -11,7 +12,7 @@ import org.gpucloudsimplus.gpucloudsimplus.listeners.GpuTaskVGpuEventInfo;
 
 import java.util.List;
 
-public interface GpuTask extends Comparable<GpuTask> {
+public interface GpuTask extends Comparable<GpuTask>, ChangeableId {
 
     enum Status {
         INSTANTIATED,
@@ -68,9 +69,9 @@ public interface GpuTask extends Comparable<GpuTask> {
 
     double getFinishTime();
 
-    long getTaskId();
+    long getId();
 
-    void setTaskId(long taskId);
+    ChangeableId setId(long taskId);
 
     int getPriority();
 

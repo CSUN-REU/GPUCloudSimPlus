@@ -1,6 +1,9 @@
 package org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks;
 
 
+import org.cloudsimplus.core.ChangeableId;
+import org.cloudsimplus.core.CloudSimTag;
+import org.gpucloudsimplus.gpucloudsimplus.brokers.GpuDatacenterBroker;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
 import org.gpucloudsimplus.gpucloudsimplus.resources.GpuCore;
 import org.gpucloudsimplus.gpucloudsimplus.resources.VGpuCore;
@@ -51,10 +54,12 @@ public class GpuTaskSimple implements GpuTask {
     private double lifeTime;
     private double arrivalTime;
 
+    private boolean returned;
+
     public GpuTaskSimple(final long id, final long blockLength, final long numberOfPes) {
 
         this.requiredFiles = new LinkedList<>();
-        //this.setTaskId(id);
+        this.setId(id);
         this.setNumberOfCores(numberOfPes);
         this.setBlockLength(blockLength);
         this.setFileSize(1);
@@ -88,7 +93,7 @@ public class GpuTaskSimple implements GpuTask {
 
     @Override
     public String toString() {
-        return String.format("GpuCloudlet %d , GpuTask %d ", gpuCloudlet.getId(), getTaskId());
+        return String.format("GpuCloudlet %d , GpuTask %d ", gpuCloudlet.getId(), this.getId());
     }
 
     @Override
@@ -97,7 +102,7 @@ public class GpuTaskSimple implements GpuTask {
         this.execStartTime = 0.0;
         this.status = Status.INSTANTIATED;
         this.priority = 0;
-        //setBroker(DatacenterBroker.NULL);
+        //setBroker(GpuDatacenterBroker.NULL);
         setFinishTime(NOT_ASSIGNED); // meaning this GpuTask hasn't finished yet
         this.vgpu = VGpu.NULL;
         setExecStartTime(0.0);
@@ -168,18 +173,22 @@ public class GpuTaskSimple implements GpuTask {
                 partialFinishedMI :
                 Math.min(partialFinishedMI, absLength() - getFinishedLengthSoFar());
         finishedLengthSoFar += maxLengthToAdd;
-        //returnToGpuCloudletIfFinished ();//returnToBrokerIfFinished
+        returnToGpuCloudletIfFinished ();//returnToBrokerIfFinished
         return true;
     }
     
-    /*private void returnToGpuCloudletIfFinished() {
+    private void returnToGpuCloudletIfFinished() {
         if(isFinished() && !isReturned()){
             returned = true;
-            final var targetEntity = getSimulation().getCloudInfoService();
-            getSimulation().sendNow(targetEntity, getBroker(), CloudSimTag.CLOUDLET_RETURN, this);
-            vm.getCloudletScheduler().addCloudletToReturnedList(this);
+            final var targetEntity = getSimulation().getCis();
+            getSimulation().sendNow(targetEntity, gpuCloudlet.getBroker(), CloudSimTag.CLOUDLET_RETURN, getGpuCloudlet());
+            gpuCloudlet.getVm().getCloudletScheduler().addCloudletToReturnedList(gpuCloudlet);
         }
-    }*/
+    }
+
+    public boolean isReturned() {
+        return returned;
+    }
 
     @Override
     public long getFinishedLengthSoFar() {
@@ -291,12 +300,13 @@ public class GpuTaskSimple implements GpuTask {
     }
 
     @Override
-    public void setTaskId(final long taskId) {
+    public ChangeableId setId(final long taskId) {
         this.taskId = taskId;
+        return this;
     }
 
     @Override
-    public long getTaskId() {
+    public long getId() {
         return taskId;
     }
 
@@ -311,6 +321,8 @@ public class GpuTaskSimple implements GpuTask {
 
         if (gpuCloudlet.getGpuTask() == null)
             gpuCloudlet.setGpuTask(this);
+
+        setId(gpuCloudlet.getId());
     }
 
     @Override
@@ -545,7 +557,7 @@ public class GpuTaskSimple implements GpuTask {
             return 0;
 
         return Double.compare(getBlockLength(), other.getBlockLength()) +
-                Long.compare(this.getTaskId(), other.getTaskId());
+                Long.compare(this.getId(), other.getId());
         //this.getBroker().compareTo(other.getBroker());
     }
 

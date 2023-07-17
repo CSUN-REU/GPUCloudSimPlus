@@ -170,6 +170,8 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
         host.setSimulation(getSimulation()).setDatacenter(this);
         host.setActive(((GpuHostSimple) host).isActivateOnDatacenterStartup());
+        host.getVideocard().setSimulation(getSimulation());
+
         return nextId;
     }
 
