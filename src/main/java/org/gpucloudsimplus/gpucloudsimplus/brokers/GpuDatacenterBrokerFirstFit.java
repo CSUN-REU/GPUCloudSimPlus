@@ -4,10 +4,15 @@ package org.gpucloudsimplus.gpucloudsimplus.brokers;
 import org.cloudsimplus.core.CloudSimPlus;
 import org.cloudsimplus.vms.Vm;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
+import org.gpucloudsimplus.gpucloudsimplus.cloudlets.gputasks.GpuTask;
 import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 /**
  * Adapted from {@link org.cloudsimplus.brokers.DatacenterBrokerBestFit} and modified for GpuCloudSim Plus.
+ *
+ * In order for a GpuCloudlet to fit inside the GpuVm, two conditions must be satisfied:
+ * 1) The GpuTask must fit inside the VGpu
+ * 2) The Cloudlet must fit inside the VM
  */
 public class GpuDatacenterBrokerFirstFit extends GpuDatacenterBrokerSimple {
 
@@ -38,12 +43,14 @@ public class GpuDatacenterBrokerFirstFit extends GpuDatacenterBrokerSimple {
          * When a suitable Host is found, the method returns immediately. */
         final int maxTries = getVmCreatedList().size();
         for (int i = 0; i < maxTries; i++) {
-            final Vm vm = getVmCreatedList().get(lastVmIndex);
-            if (vm.getExpectedFreePesNumber() >= cloudlet.getPesNumber()) {
+            final GpuVm vm = (GpuVm) getVmCreatedList().get(lastVmIndex);
+            GpuTask gpuTask = cloudlet.getGpuTask();
+            if (vm.getExpectedFreePesNumber() >= cloudlet.getPesNumber() &&
+                    vm.getVGpu().getExpectedFreeCoresNumber() >= gpuTask.getNumberOfCores()) {
                 LOGGER.trace("{}: {}: {} (PEs: {}) mapped to {} (available PEs: {}, tot PEs: {})",
                         getSimulation().clockStr(), getName(), cloudlet, cloudlet.getPesNumber(), vm,
-                        vm.getExpectedFreePesNumber(), vm.getFreePesNumber());
-                return (GpuVm) vm;
+                        vm.getVGpu().getExpectedFreeCoresNumber(), vm.getVGpu().getFreeCoresNumber());
+                return vm;
             }
 
             /* If it gets here, the previous Vm doesn't have capacity to place the Cloudlet.
