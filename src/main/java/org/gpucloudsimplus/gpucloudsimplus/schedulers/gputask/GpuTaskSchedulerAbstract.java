@@ -494,8 +494,6 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
         //validateDelay(vMemDelay) +
         final double actualProcessingTime = processingTimeSpan - (validateDelay(reducedBwDelay));
 
-        //LOGGER.error("{} Processing Timespan | {} MIPS | {} Actual Processing", processingTimeSpan, gpuTaskUsedMips, actualProcessingTime);
-
         return gpuTaskUsedMips * actualProcessingTime * Conversion.MILLION;
     }
 

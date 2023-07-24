@@ -216,7 +216,6 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
             //selects a VM for the given Cloudlet
             lastSelectedGpuVm = gpuvmMapper.apply(cloudlet);
             if (!lastSelectedGpuVm.isCreated()) {
-                LOGGER.error("Cloudlet {} NOT ASSIGNED, VM {} NOT CREATED", cloudlet.getId(), lastSelectedGpuVm.getId());
                 logPostponingGpuCloudletExecution(cloudlet);
                 continue;
             }
