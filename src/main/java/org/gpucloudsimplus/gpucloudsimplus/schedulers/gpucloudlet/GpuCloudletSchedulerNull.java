@@ -8,6 +8,7 @@ import org.cloudsimplus.schedulers.MipsShare;
 import org.cloudsimplus.schedulers.cloudlet.network.CloudletTaskScheduler;
 import org.cloudsimplus.vms.Vm;
 import org.gpucloudsimplus.gpucloudsimplus.cloudlets.GpuCloudlet;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 import java.io.Serial;
 import java.util.Collections;
@@ -123,7 +124,7 @@ final class GpuCloudletSchedulerNull implements GpuCloudletScheduler {
 
     @Override
     public Vm getVm() {
-        return Vm.NULL;
+        return GpuVm.NULL;
     }
 
     @Override

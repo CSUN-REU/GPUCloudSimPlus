@@ -186,11 +186,6 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
                 this, evt.getTag());
     }
 
-    @Override
-    public boolean schedule(CloudSimTag tag) {
-        return super.schedule(tag);
-    }
-
     private boolean processGpuHostEvents(final SimEvent evt) {
         if (evt.getTag() == CloudSimTag.HOST_ADD) {
             processGpuHostAdditionRequest(evt);
@@ -282,13 +277,13 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
 
     private boolean processGpuVmEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
-            case VM_CREATE_ACK -> processGpuVmCreate(evt);
-            case VM_VERTICAL_SCALING -> requestGpuVmVerticalScaling(evt);
-            case VM_DESTROY -> processGpuVmDestroy(evt, false);
-            case VM_DESTROY_ACK -> processGpuVmDestroy(evt, true);
-            case VM_MIGRATE -> finishGpuVmMigration(evt, false);
-            case VM_MIGRATE_ACK -> finishGpuVmMigration(evt, true);
-            case VM_UPDATE_CLOUDLET_PROCESSING -> updateGpuCloudletProcessing() != Double.MAX_VALUE;
+            case CloudSimTag.VM_CREATE_ACK -> processGpuVmCreate(evt);
+            case CloudSimTag.VM_VERTICAL_SCALING -> requestGpuVmVerticalScaling(evt);
+            case CloudSimTag.VM_DESTROY -> processGpuVmDestroy(evt, false);
+            case CloudSimTag.VM_DESTROY_ACK -> processGpuVmDestroy(evt, true);
+            case CloudSimTag.VM_MIGRATE -> finishGpuVmMigration(evt, false);
+            case CloudSimTag.VM_MIGRATE_ACK -> finishGpuVmMigration(evt, true);
+            case CloudSimTag.VM_UPDATE_CLOUDLET_PROCESSING -> updateGpuCloudletProcessing() != Double.MAX_VALUE;
             default -> false;
         };
     }
@@ -494,24 +489,24 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
     private boolean processGpuCloudletEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
             // New Cloudlet arrives
-            case CLOUDLET_SUBMIT -> processGpuCloudletSubmit(evt, false);
+            case CloudSimTag.CLOUDLET_SUBMIT -> processGpuCloudletSubmit(evt, false);
             // New Cloudlet arrives, but the sender asks for an ack
-            case CLOUDLET_SUBMIT_ACK -> processGpuCloudletSubmit(evt, true);
+            case CloudSimTag.CLOUDLET_SUBMIT_ACK -> processGpuCloudletSubmit(evt, true);
             // Cancels a previously submitted Cloudlet
-            case CLOUDLET_CANCEL -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_CANCEL);
+            case CloudSimTag.CLOUDLET_CANCEL -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_CANCEL);
             // Pauses a previously submitted Cloudlet
-            case CLOUDLET_PAUSE -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_PAUSE);
+            case CloudSimTag.CLOUDLET_PAUSE -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_PAUSE);
             // Pauses a previously submitted Cloudlet, but the sender asks for an acknowledgement
-            case CLOUDLET_PAUSE_ACK -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_PAUSE_ACK);
+            case CloudSimTag.CLOUDLET_PAUSE_ACK -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_PAUSE_ACK);
             // Resumes a previously submitted Cloudlet
-            case CLOUDLET_RESUME -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_RESUME);
+            case CloudSimTag.CLOUDLET_RESUME -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_RESUME);
             // Resumes a previously submitted Cloudlet, but the sender asks for an acknowledgement
-            case CLOUDLET_RESUME_ACK -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_RESUME_ACK);
+            case CloudSimTag.CLOUDLET_RESUME_ACK -> processGpuCloudlet(evt, CloudSimTag.CLOUDLET_RESUME_ACK);
             default -> false;
         };
     }
 
-    protected boolean processGpuCloudlet(final SimEvent evt, final CloudSimTag tag) {
+    protected boolean processGpuCloudlet(final SimEvent evt, final int tag) {
         final GpuCloudlet cloudlet;
         try {
             cloudlet = (GpuCloudlet) evt.getData();
@@ -521,11 +516,11 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         }
 
         return switch (tag) {
-            case CLOUDLET_CANCEL -> processGpuCloudletCancel(cloudlet);
-            case CLOUDLET_PAUSE -> processGpuCloudletPause(cloudlet, false);
-            case CLOUDLET_PAUSE_ACK -> processGpuCloudletPause(cloudlet, true);
-            case CLOUDLET_RESUME -> processGpuCloudletResume(cloudlet, false);
-            case CLOUDLET_RESUME_ACK -> processGpuCloudletResume(cloudlet, true);
+            case CloudSimTag.CLOUDLET_CANCEL -> processGpuCloudletCancel(cloudlet);
+            case CloudSimTag.CLOUDLET_PAUSE -> processGpuCloudletPause(cloudlet, false);
+            case CloudSimTag.CLOUDLET_PAUSE_ACK -> processGpuCloudletPause(cloudlet, true);
+            case CloudSimTag.CLOUDLET_RESUME -> processGpuCloudletResume(cloudlet, false);
+            case CloudSimTag.CLOUDLET_RESUME_ACK -> processGpuCloudletResume(cloudlet, true);
             default -> {
                 LOGGER.trace(
                         "{}: Unable to handle a request from {} with event tag = {}",
@@ -561,7 +556,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         return true;
     }
 
-    private void sendAck(final boolean ack, final GpuCloudlet cloudlet, final CloudSimTag tag) {
+    private void sendAck(final boolean ack, final GpuCloudlet cloudlet, final int tag) {
         if (ack) {
             sendNow(cloudlet.getBroker(), tag, cloudlet);
         }
@@ -600,8 +595,8 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         final double estimatedGpuTaskFinishTime = gpuTaskScheduler.gpuTaskSubmit(cloudlet.getGpuTask(),
                 fileTransferTime);
 
-        final double estimatedFinishTime = estimatedCloudletFinishTime +
-                estimatedGpuTaskFinishTime;
+        // Cloudlets and GpuTasks run "simultaneously", they don't run one after the other
+        final double estimatedFinishTime = Math.max(estimatedCloudletFinishTime, estimatedGpuTaskFinishTime);
         // if this cloudlet is in the exec queue
         if (estimatedFinishTime > 0.0 && !Double.isInfinite(estimatedFinishTime)) {
             send(this,

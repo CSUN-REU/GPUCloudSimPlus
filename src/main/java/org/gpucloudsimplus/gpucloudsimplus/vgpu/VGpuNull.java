@@ -300,7 +300,7 @@ public class VGpuNull implements VGpu {
 
     @Override
     public String toString() {
-        return "Vm.NULL";
+        return "VGpu.NULL";
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.cloudsimplus.listeners.EventInfo;
 import org.cloudsimplus.listeners.EventListener;
 import org.cloudsimplus.vms.Vm;
 import org.gpucloudsimplus.gpucloudsimplus.datacenters.GpuDatacenter;
+import org.gpucloudsimplus.gpucloudsimplus.vms.GpuVm;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +43,7 @@ final class GpuDatacenterBrokerNull implements GpuDatacenterBroker, SimEntityNul
 
     @Override
     public Vm getWaitingVm(int index) {
-        return Vm.NULL;
+        return GpuVm.NULL;
     }
 
     @Override

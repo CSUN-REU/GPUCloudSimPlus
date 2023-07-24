@@ -208,6 +208,7 @@ public class GpuTaskSimple implements GpuTask {
         if (fileSize <= 0) {
             throw new IllegalArgumentException("GpuTask file size has to be greater than zero.");
         }
+
         this.fileSize = fileSize;
         return this;
     }

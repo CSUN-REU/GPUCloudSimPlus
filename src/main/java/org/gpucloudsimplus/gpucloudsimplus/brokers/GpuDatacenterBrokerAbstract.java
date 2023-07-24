@@ -187,6 +187,7 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
         sortVmsIfComparatorIsSet(listGpuVm);
         configureEntities(listGpuVm);
         lastSubmittedGpuVm = setIdForEntitiesWithoutOne(listGpuVm, lastSubmittedGpuVm);
+        setIdForVGpusWithoutOne(listGpuVm);
         gpuvmWaitingList.addAll(listGpuVm);
 
         if (isStarted() && !list.isEmpty()) {
@@ -215,6 +216,7 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
             //selects a VM for the given Cloudlet
             lastSelectedGpuVm = gpuvmMapper.apply(cloudlet);
             if (!lastSelectedGpuVm.isCreated()) {
+                LOGGER.error("Cloudlet {} NOT ASSIGNED, VM {} NOT CREATED", cloudlet.getId(), lastSelectedGpuVm.getId());
                 logPostponingGpuCloudletExecution(cloudlet);
                 continue;
             }
@@ -271,7 +273,7 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
             return;
 
         final GpuVm vm = (GpuVm) cloudlet.getVm();
-        final String vmMsg = Vm.NULL.equals(vm) ?
+        final String vmMsg = GpuVm.NULL.equals(vm) ?
                 "it couldn't be mapped to any GpuVM" :
                 String.format("bind GpuVM %d is not available", vm.getId());
 
@@ -336,7 +338,7 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
     @Override
     public GpuDatacenterBroker submitCloudletList(final List<? extends Cloudlet> list,
                                                   double submissionDelay) {
-        return submitCloudletList(list, Vm.NULL, submissionDelay);
+        return submitCloudletList(list, GpuVm.NULL, submissionDelay);
     }
 
     @Override
@@ -392,6 +394,14 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
 
         for (GpuCloudlet gpuCloudlet : cloudletList) {
             gpuCloudlet.getGpuTask().setId(gpuCloudlet.getId());
+        }
+    }
+
+    private void setIdForVGpusWithoutOne(final List<GpuVm> gpuvmList) {
+        Objects.requireNonNull(gpuvmList);
+
+        for (GpuVm gpuVm : gpuvmList) {
+            gpuVm.getVGpu().setId(gpuVm.getId());
         }
     }
 
@@ -495,12 +505,12 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
 
     private boolean processGpuVmEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
-            case VM_CREATE_RETRY -> {
+            case CloudSimTag.VM_CREATE_RETRY -> {
                 gpuvmCreationRetrySent = false;
                 yield requestDatacenterToCreateWaitingGpuVms(false, true);
             }
-            case VM_CREATE_ACK -> processGpuVmCreateResponseFromGpuDatacenter(evt);
-            case VM_VERTICAL_SCALING -> requestGpuVmVerticalScaling(evt);
+            case CloudSimTag.VM_CREATE_ACK -> processGpuVmCreateResponseFromGpuDatacenter(evt);
+            case CloudSimTag.VM_VERTICAL_SCALING -> requestGpuVmVerticalScaling(evt);
             default -> false;
         };
     }
@@ -644,13 +654,13 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
 
     private boolean processGpuCloudletEvents(final SimEvent evt) {
         return switch (evt.getTag()) {
-            case CLOUDLET_FAIL -> processGpuCloudletFail(evt);
-            case CLOUDLET_READY -> processGpuCloudletReady(evt);
-            case CLOUDLET_PAUSE -> processGpuCloudletPause(evt);
-            case CLOUDLET_CANCEL -> processGpuCloudletCancel(evt);
-            case CLOUDLET_FINISH -> processGpuCloudletFinish(evt);
-            case CLOUDLET_RETURN -> processGpuCloudletReturn(evt);
-            case CLOUDLET_UPDATE_ATTRIBUTES -> executeRunnableEvent(evt);
+            case CloudSimTag.CLOUDLET_FAIL -> processGpuCloudletFail(evt);
+            case CloudSimTag.CLOUDLET_READY -> processGpuCloudletReady(evt);
+            case CloudSimTag.CLOUDLET_PAUSE -> processGpuCloudletPause(evt);
+            case CloudSimTag.CLOUDLET_CANCEL -> processGpuCloudletCancel(evt);
+            case CloudSimTag.CLOUDLET_FINISH -> processGpuCloudletFinish(evt);
+            case CloudSimTag.CLOUDLET_RETURN -> processGpuCloudletReturn(evt);
+            case CloudSimTag.CLOUDLET_UPDATE_ATTRIBUTES -> executeRunnableEvent(evt);
             default -> false;
         };
     }
@@ -758,11 +768,22 @@ public abstract class GpuDatacenterBrokerAbstract extends CloudSimEntity impleme
 
     private boolean processGpuCloudletReturn(final SimEvent evt) {
         final GpuCloudlet cloudlet = (GpuCloudlet) evt.getData();
+        final GpuTask gpuTask = cloudlet.getGpuTask();
+
+        final GpuVm gpuVm = (GpuVm) cloudlet.getVm();
+        final VGpu vGpu = cloudlet.getGpuTask().getVGpu();
 
         gpucloudletsFinishedList.add(cloudlet);
-        ((GpuVmSimple) cloudlet.getVm()).addExpectedFreePesNumber(cloudlet.getPesNumber());
-        ((VGpuSimple) cloudlet.getGpuTask().getVGpu()).addExpectedFreeCoresNumber(
-                cloudlet.getGpuTask().getNumberOfCores());
+
+        // The CLOUDLET_RETURN flag gets executed twice, so without these checks there is an infinite doubling
+        // of the expected PEs number
+        if (cloudlet.isFinished() && gpuVm.getExpectedFreePesNumber() != gpuVm.getPesNumber()) {
+            ((GpuVmSimple) gpuVm).addExpectedFreePesNumber(cloudlet.getPesNumber());
+        }
+
+        if (gpuTask.isFinished() && vGpu.getExpectedFreeCoresNumber() != vGpu.getNumberOfCores()) {
+            ((VGpuSimple) vGpu).addExpectedFreeCoresNumber(gpuTask.getNumberOfCores());
+        }
 
         String cloudletLifeTime = cloudlet.getLifeTime() == -1 ? "" :
                 " (after defined cloudletLifetime expired)";

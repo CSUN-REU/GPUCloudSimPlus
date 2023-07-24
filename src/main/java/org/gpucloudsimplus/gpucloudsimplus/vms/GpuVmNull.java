@@ -328,7 +328,7 @@ public class GpuVmNull implements GpuVm {
 
     @Override
     public VmResourceStats getCpuUtilizationStats() {
-        return new VmResourceStats(Vm.NULL, vm -> 0.0);
+        return new VmResourceStats(GpuVm.NULL, vm -> 0.0);
     }
 
     @Override
@@ -450,7 +450,7 @@ public class GpuVmNull implements GpuVm {
 
     @Override
     public String toString() {
-        return "Vm.NULL";
+        return "GpuVm.NULL";
     }
 
     @Override

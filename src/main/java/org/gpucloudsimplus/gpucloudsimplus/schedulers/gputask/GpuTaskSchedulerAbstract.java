@@ -183,7 +183,8 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
             gte.setStatus(GpuTask.Status.INEXEC);
             gte.setFileTransferTime(fileTransferTime);
             addGpuTaskToExecList(gte);
-            return fileTransferTime + Math.abs(gte.getGpuTaskLength() / getCoreCapacity());
+
+            return fileTransferTime + Math.abs(gpuTaskEstimatedFinishTime(gte, vgpu.getSimulation().clock()));
         }
 
         // No enough free PEs, then add Cloudlet to the waiting queue
@@ -493,11 +494,13 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
         //validateDelay(vMemDelay) +
         final double actualProcessingTime = processingTimeSpan - (validateDelay(reducedBwDelay));
 
+        //LOGGER.error("{} Processing Timespan | {} MIPS | {} Actual Processing", processingTimeSpan, gpuTaskUsedMips, actualProcessingTime);
+
         return gpuTaskUsedMips * actualProcessingTime * Conversion.MILLION;
     }
 
     private double validateDelay(final double delay) {
-        return delay == Double.MIN_VALUE ? 0 : delay;
+        return delay < 0 ? 0 : delay;
     }
     
     /*private double getVirtualMemoryDelay (final GpuTaskExecution gte, 
@@ -592,7 +595,6 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
 
     protected double gpuTaskEstimatedFinishTime(final GpuTaskExecution gte,
                                                 final double currentTime) {
-
         final double gpuTaskAllocatedMips = getAllocatedMipsForGpuTask(gte, currentTime);
         gte.setLastAllocatedMips(gpuTaskAllocatedMips);
         final double remainingLifeTime = gte.getRemainingLifeTime();
@@ -736,8 +738,9 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
                                              final boolean log) {
         final GpuTask gpuTask = gte.getGpuTask();
         final String resourceName = log ? "GPU" : "";
+        final double totalMipsAllowedToUse = getAvailableMipsByCore() * gte.getGpuTask().getNumberOfCores();
         return getAbsoluteGpuTaskResourceUtilization(gpuTask, gpuTask.getUtilizationModelGpu(),
-                time, getAvailableMipsByCore(), resourceName, false);
+                time, totalMipsAllowedToUse, resourceName, false);
     }
 
     @Override
@@ -787,6 +790,7 @@ public abstract class GpuTaskSchedulerAbstract implements GpuTaskScheduler {
                     vgpu.getSimulation().clockStr(), getClass().getSimpleName(), gpuTask,
                     requestedPercent * 100, resourceName, allocatedPercent * 100);
         }
+
         return allocatedPercent * maxResourceAllowedToUse;
     }
 
