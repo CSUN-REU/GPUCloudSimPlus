@@ -537,7 +537,7 @@ public class GpuDatacenterSimple extends DatacenterSimple implements GpuDatacent
         final double gpuTaskEstimatedFinishTime = cloudlet.getGpuTask().getVGpu().getGpuTaskScheduler()
                 .gpuTaskResume(cloudlet.getGpuTask());
 
-        final double estimatedFinishTime = cloudletEstimatedFinishTime + gpuTaskEstimatedFinishTime;
+        final double estimatedFinishTime = Math.max(cloudletEstimatedFinishTime, gpuTaskEstimatedFinishTime);
 
         if (estimatedFinishTime > 0.0 && estimatedFinishTime > clock()) {
             schedule(this,
